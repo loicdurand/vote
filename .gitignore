@@ -6,7 +6,8 @@ assets/images/uploads/mini/
 .env.local
 .env.local.php
 .env.*
-config/secrets/prod/prod.decrypt.private.php
+config/secrets/*
+###config/secrets/prod/prod.decrypt.private.php
 public/bundles/
 var/
 vendor/
@@ -20,11 +21,6 @@ phpunit.xml
 .phpunit.result.cache
 phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> symfony/asset-mapper ###
-public/assets/
-assets/vendor/
-###< symfony/asset-mapper ###
 .php-cs-fixer.php
 .php-cs-fixer.cache
 ###> symfony/webpack-encore-bundle ###
@@ -33,3 +29,5 @@ assets/vendor/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+migrations/*
