@@ -25,6 +25,12 @@
 		Création d'une élection
 	</h2>
 
+	{% if status == "error" %}
+		<div class="fr-alert fr-alert--error fr-mb-2w">
+			<h3 class="fr-alert__title">Le formulaire a été soumis avec des données invalides.</h3>
+		</div>
+	{% endif %}
+
 	<p class="fr-text--sm fr-mb-1w">
 		Ce formulaire vous permet de créer une élection.
 		<br>
@@ -40,7 +46,7 @@
 		</ul>
 	</p>
 
-	<main class="fr-container">
+	<main>
 
 		{{ form_start(form) }}
 

@@ -16,37 +16,43 @@ final class ElectionController extends AbstractController
 {
     private $env;
 
-    #[Route('/election/create', name: 'app_election')]
-    public function index(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/election/create', name: 'app_election_create')]
+    public function create(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (is_null($user)) {
+        if (is_null($user))
             return $this->redirectToRoute('app_login');
-            // $user = new User();
-        }
-        // $session = $request->getSession();
-
-        // $this->env = $this->getParameter('app.env');
-        // if ($this->env == 'prod' && $session->get('HTTP_LOGIN')) {
-        //     $user->setUserId($session->get('HTTP_LOGIN'));
-        //     $user->setRoles($session->get('HTTP_ROLES'));
-        // }
 
         /**
          * @Todo: Pré-sélectonner les uniés selon la config de l'user
          */
-        //$election = new Election();
 
+        $status = "";
         $form = $this->createForm(ElectionType::class);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $data = $form->getData();
-            $entityManager->persist($data);
-            $entityManager->flush();
+            if ($form->isValid()) {
+                $entityManager->persist($data);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_election_dashboard');
+            } else {
+                $form = $this->createForm(ElectionType::class, $data);
+                $status = "error";
+            }
         }
 
         return $this->render('election/create.html.twig', [
             'user' => $user,
             'form' => $form,
+            'status' => $status
+        ]);
+    }
+
+    #[Route('/election/dashboard', name: 'app_election_dashboard')]
+    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('election/dashboard.html.twig', [
+            'user' => $user
         ]);
     }
 }

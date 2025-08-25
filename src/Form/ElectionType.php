@@ -20,7 +20,7 @@ class ElectionType extends AbstractType
         $builder
             ->add('organizer', EntityType::class, [
                 'class' => Organizer::class,
-                // 'row_attr' => ['class' => 'fr-mt-2w'],
+                'row_attr' => ['class' => 'fr-mt-2w'],
                 'choice_label' => 'name',
                 'label' => 'Unité organisatrice du vote',
             ])

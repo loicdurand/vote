@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon tableau de bord
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<h2 class="fr-mt-2w">
+		Mon tableau de bord
+	</h2>
+
+	<p class="fr-text--sm fr-mb-1w">
+		Retrouvez, sur cette page, les différente élections que vous ou votre unité avez créées.
+		<br>
+		Vous pourrez ainsi vous en servir de modèle, les cloner ou les adapter selon vos besoins.
+	</p>
+
+	<main></main>
+
+{% endblock %}
