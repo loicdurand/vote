@@ -75,10 +75,10 @@
 								<ul class="fr-btns-group">
 									<li>
 
-										{% if user is defined and user.login %}
+										{% if user is defined and user.userId %}
 											<a class="fr-btn fr-icon-logout-box-r-line" href="/logout" title="Se déconnecter">
 												Connecté en tant que&nbsp;
-												<span class="login">{{user.login}}</span>.
+												<span class="login">{{user.userId}}</span>.
 											</a>
 										{% else %}
 											<a class="fr-btn fr-icon-logout-box-r-line" href="/login" title="Se connecter">

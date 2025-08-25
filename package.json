@@ -19,6 +19,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "server": "symfony serve --no-tls --listen-ip=0.0.0.0 -d",
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",

@@ -8,10 +8,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use App\Entity\User;
+use App\Entity\SsoUser as User;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Doctrine\Persistence\ManagerRegistry;
 
-use App\Service\SsoService;
+
+use App\Security\SsoService;
+use App\Security\SsoSimulator;
 
 class SecurityController extends AbstractController
 {
@@ -26,7 +29,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login', name: 'app_login')]
-    public function login(#[CurrentUser] ?User $user, AuthenticationUtils $authenticationUtils): Response
+    public function login(#[CurrentUser] ?User $user, AuthenticationUtils $authenticationUtils, ManagerRegistry $doctrine): Response
     {
         $this->env = $this->getParameter('app.env');
         if ($this->env === 'prod') {
@@ -38,19 +41,39 @@ class SecurityController extends AbstractController
                 $user = new User();
 
             $roles = ['ROLE_USER'];
-            if ($usr->unite === 'SEL BSF COMGENDGP')
-                $roles[] = 'ROLE_SEL';
+            // if ($usr->unite === 'SEL BSF COMGENDGP')
+            //     $roles[] = 'ROLE_SEL';
 
-            if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
-                $roles[] = 'ROLE_SIC';
+            // if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
+            //     $roles[] = 'ROLE_SIC';
 
             $this->session->set('HTTP_LOGIN', $usr->uid);
             $this->session->set('HTTP_ROLES', $roles);
 
             return $this->redirectToRoute('app_index');
-        } elseif (! is_null($user)) {
+        } elseif (!is_null($user)) {
             return $this->redirectToRoute('app_index');
         }
+        // } else {
+        //     $sso = new SsoSimulator($doctrine);
+        //     $usr = $sso->loadUserByIdentifier("00249205");
+
+        //     // /* paramètres session */
+        //     if (is_null($user))
+        //         $user = new User();
+
+        //     // $roles = ['ROLE_USER'];
+        //     // if ($usr->unite === 'SEL BSF COMGENDGP')
+        //     //     $roles[] = 'ROLE_SEL';
+
+        //     // if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
+        //     //     $roles[] = 'ROLE_SIC';
+
+        //     $this->session->set('HTTP_LOGIN', $usr->getUserId());
+        //     // $this->session->set('HTTP_ROLES', $roles);
+
+        //     // return $this->redirectToRoute('app_index');
+        // }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
