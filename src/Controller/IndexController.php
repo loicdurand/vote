@@ -7,9 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\SsoUser as User;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use App\Entity\Categorie;
+use App\Entity\SsoUser as User;
 
 final class IndexController extends AbstractController
 {
@@ -23,9 +22,9 @@ final class IndexController extends AbstractController
         }
         $session = $request->getSession();
         $this->env = $this->getParameter('app.env');
-        if ($session->get('HTTP_LOGIN')) {
+        if ($this->env == 'prod' && $session->get('HTTP_LOGIN')) {
             $user->setUserId($session->get('HTTP_LOGIN'));
-            // $user->setRoles($session->get('HTTP_ROLES'));
+            $user->setRoles($session->get('HTTP_ROLES'));
         }
 
         return $this->render('index/index.html.twig', [

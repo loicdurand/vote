@@ -36,6 +36,12 @@ class Election
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'election')]
     private Collection $votes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title = null;
+
+    #[ORM\Column(length: 1024, nullable: true)]
+    private ?string $explaination = null;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
@@ -139,6 +145,30 @@ class Election
                 $vote->setElection(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getExplaination(): ?string
+    {
+        return $this->explaination;
+    }
+
+    public function setExplaination(string $explaination): static
+    {
+        $this->explaination = $explaination;
 
         return $this;
     }

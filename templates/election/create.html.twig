@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'une élection
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/create">Création d'une élection</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<h2 class="fr-mt-2w">
+		Création d'une élection
+	</h2>
+
+	<p class="fr-text--sm fr-mb-1w">
+		Ce formulaire vous permet de créer une élection.
+		<br>
+		Vous devez lui donner un titre, par exemple: "Élection du conseil d'administration du Cercle-Mixte Gendarmerie de Baie-Mahaut".
+		<br>
+		Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
+		<br>
+		Vous devez préciser:
+		<ul>
+			<li>la date et l'heure d'ouverture des votes,</li>
+			<li>la date et l'heure de clôture des votes,</li>
+			<li>les personnels autorisés à participer au vote (unité, corps d'appartenance, etc...).</li>
+		</ul>
+	</p>
+
+	<main class="fr-container">
+
+		{{ form_start(form) }}
+
+		{{ form_end(form) }}
+	</main>
+
+{% endblock %}
