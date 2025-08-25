@@ -24,9 +24,16 @@ class Groupe
     #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'groupe')]
     private Collection $candidats;
 
+    /**
+     * @var Collection<int, Election>
+     */
+    #[ORM\ManyToMany(targetEntity: Election::class, mappedBy: 'groupes_concernes')]
+    private Collection $elections;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
+        $this->elections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,6 +78,33 @@ class Groupe
             if ($candidat->getGroupe() === $this) {
                 $candidat->setGroupe(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Election>
+     */
+    public function getElections(): Collection
+    {
+        return $this->elections;
+    }
+
+    public function addElection(Election $election): static
+    {
+        if (!$this->elections->contains($election)) {
+            $this->elections->add($election);
+            $election->addGroupesConcerne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElection(Election $election): static
+    {
+        if ($this->elections->removeElement($election)) {
+            $election->removeGroupesConcerne($this);
         }
 
         return $this;

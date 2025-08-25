@@ -42,10 +42,24 @@ class Election
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $explaination = null;
 
+    /**
+     * @var Collection<int, Groupe>
+     */
+    #[ORM\ManyToMany(targetEntity: Groupe::class, inversedBy: 'elections')]
+    private Collection $groupesConcernes;
+
+    /**
+     * @var Collection<int, Organizer>
+     */
+    #[ORM\ManyToMany(targetEntity: Organizer::class)]
+    private Collection $unitesConcernees;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->groupesConcernes = new ArrayCollection();
+        $this->unitesConcernees = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +183,54 @@ class Election
     public function setExplaination(string $explaination): static
     {
         $this->explaination = $explaination;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Groupe>
+     */
+    public function getGroupesConcernes(): Collection
+    {
+        return $this->groupesConcernes;
+    }
+
+    public function addGroupesConcerne(Groupe $groupesConcerne): static
+    {
+        if (!$this->groupesConcernes->contains($groupesConcerne)) {
+            $this->groupesConcernes->add($groupesConcerne);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupesConcerne(Groupe $groupesConcerne): static
+    {
+        $this->groupesConcernes->removeElement($groupesConcerne);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Organizer>
+     */
+    public function getUnitesConcernees(): Collection
+    {
+        return $this->unitesConcernees;
+    }
+
+    public function addUnitesConcernee(Organizer $unitesConcernee): static
+    {
+        if (!$this->unitesConcernees->contains($unitesConcernee)) {
+            $this->unitesConcernees->add($unitesConcernee);
+        }
+
+        return $this;
+    }
+
+    public function removeUnitesConcernee(Organizer $unitesConcernee): static
+    {
+        $this->unitesConcernees->removeElement($unitesConcernee);
 
         return $this;
     }
