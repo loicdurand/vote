@@ -53,27 +53,28 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_index');
         } elseif (!is_null($user)) {
             return $this->redirectToRoute('app_index');
+        } else {
+
+            return $this->redirect('http://localhost:5000/login');
+            // $sso = new SsoSimulator($doctrine);
+            // $usr = $sso->loadUserByIdentifier("00249205");
+
+            // // /* paramètres session */
+            // if (is_null($user))
+            //     $user = new User();
+
+            // $roles = ['ROLE_USER'];
+            // if ($usr->unite === 'SEL BSF COMGENDGP')
+            //     $roles[] = 'ROLE_SEL';
+
+            // if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
+            //     $roles[] = 'ROLE_SIC';
+
+            // $this->session->set('HTTP_LOGIN', $usr->getUserId());
+            // $this->session->set('HTTP_ROLES', $roles);
+
+            // return $this->redirectToRoute('app_index');
         }
-        // } else {
-        //     $sso = new SsoSimulator($doctrine);
-        //     $usr = $sso->loadUserByIdentifier("00249205");
-
-        //     // /* paramètres session */
-        //     if (is_null($user))
-        //         $user = new User();
-
-        //     // $roles = ['ROLE_USER'];
-        //     // if ($usr->unite === 'SEL BSF COMGENDGP')
-        //     //     $roles[] = 'ROLE_SEL';
-
-        //     // if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
-        //     //     $roles[] = 'ROLE_SIC';
-
-        //     $this->session->set('HTTP_LOGIN', $usr->getUserId());
-        //     // $this->session->set('HTTP_ROLES', $roles);
-
-        //     // return $this->redirectToRoute('app_index');
-        // }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
