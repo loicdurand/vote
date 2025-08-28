@@ -26,8 +26,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "test-ldap-host": "ldapsearch -x -H ldap://localhost:389 -b \"dc=example,dc=org\" -D \"uid=admin,ou=people,dc=example,dc=org\" -w adminpass -s sub \"(objectClass=*)\"",
-        "test-ldap-ctnr": "ldapsearch -x -H ldap://lldap:3890 -b \"dc=example,dc=org\" -D \"uid=admin,ou=people,dc=example,dc=org\" -w adminpass -s sub \"(objectClass=*)\""
+        "test-ldap-host": "ldapsearch -x -H ldap://localhost:389 -b \"dc=gendarmerie,dc=defense,dc=gouv,dc=fr\" -D \"uid=admin,ou=people,dc=gendarmerie,dc=defense,dc=gouv,dc=fr\" -w my_password -s sub \"(objectClass=*)\"",
+        "test-ldap-ctnr": "ldapsearch -x -H ldap://lldap:3890 -b \"dc=gendarmerie,dc=defense,dc=gouv,dc=fr\" -D \"uid=admin,ou=people,dc=gendarmerie,dc=defense,dc=gouv,dc=fr\" -w my_password -s sub \"(objectClass=*)\""
     },
     "dependencies": {
         "@gouvfr/dsfr": "^1.14.0"
