@@ -19,7 +19,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "sso": "../python_venv/bin/python3 ../python_venv/sso_server.py",
+        "sso": "../python_venv/bin/python3 ../sso_server.py",
         "serve": "symfony serve --no-tls --listen-ip=0.0.0.0",
         "server": "symfony serve --no-tls --listen-ip=0.0.0.0 -d",
         "dev-server": "encore dev-server",
