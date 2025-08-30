@@ -43,7 +43,12 @@ class SsoServiceDEV
             setcookie(self::COOKIE_NAME, "", time() - 3600, "/", self::COOKIE_DOMAIN);
             if ($json = file_get_contents($url, false, stream_context_create($opts))) {
                 $payload = json_decode($json);
-                $_SESSION['user'] = $payload->user_data;
+                $user = $payload->user_data;
+                $grp = $payload->group_data;
+                unset($user->memberOf);
+                $user->codeunite = $grp->codeunite;
+                $user->unite = $grp->displayname;
+                $_SESSION['user'] = $user;
             } else {
                 echo '<html><body>BAD<pre>X ' . $url . ' X</pre>' . file_get_contents($url, false, stream_context_create($opts)) . '</body></html>';
             }
