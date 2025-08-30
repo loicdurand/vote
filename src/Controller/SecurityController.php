@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 
 use App\Security\SsoService;
-use App\Security\SsoSimulator;
+use App\Security\SsoServiceDEV;
 
 class SecurityController extends AbstractController
 {
@@ -32,7 +32,9 @@ class SecurityController extends AbstractController
     public function login(#[CurrentUser] ?User $user, AuthenticationUtils $authenticationUtils, ManagerRegistry $doctrine): Response
     {
         $this->env = $this->getParameter('app.env');
+
         if ($this->env === 'prod') {
+
             $sso = new SsoService(true);
             $usr = $sso::user();
 
@@ -55,25 +57,22 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_index');
         } else {
 
-            return $this->redirect('http://localhost:5000/login');
-            // $sso = new SsoSimulator($doctrine);
-            // $usr = $sso->loadUserByIdentifier("00249205");
+            $sso = new SsoServiceDEV();
+            $usr = $sso::user();
 
-            // // /* paramètres session */
-            // if (is_null($user))
-            //     $user = new User();
+            if (is_null($user))
+                $user = new User();
 
             // $roles = ['ROLE_USER'];
+            // dd($roles);
             // if ($usr->unite === 'SEL BSF COMGENDGP')
             //     $roles[] = 'ROLE_SEL';
 
             // if (in_array($usr->unite, ['SOLC SAJ COMGENDGP', 'DSOLC BAIE-MAHAULT', 'DSOLC ST-MARTIN']))
             //     $roles[] = 'ROLE_SIC';
 
-            // $this->session->set('HTTP_LOGIN', $usr->getUserId());
+            $this->session->set('HTTP_LOGIN', $usr->uid);
             // $this->session->set('HTTP_ROLES', $roles);
-
-            // return $this->redirectToRoute('app_index');
         }
 
         // get the login error if there is one

@@ -14,13 +14,13 @@ class SsoService
     const MAIL_URL      = 'https://auth2.local.gendarmerie.fr/mail';
     const GRP_URL       = 'https://auth2.local.gendarmerie.fr/getgroups.pl';
 
-    public function __construct($autostart = true)
+    public function __construct()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        if ($autostart && !isset($_SESSION['user'])) {
+        if (!isset($_SESSION['user'])) {
             SsoService::authenticate();
         }
     }
