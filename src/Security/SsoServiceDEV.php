@@ -60,7 +60,7 @@ class SsoServiceDEV
     /**
      * Redirige l'utilisateur sur sa page d'origine
      */
-    static private function redirect()
+    static public function redirect()
     {
         $isSecure = false;
         if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {

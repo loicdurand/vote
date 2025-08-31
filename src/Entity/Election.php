@@ -16,7 +16,7 @@ class Election
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'elections')]
-    private ?Organizer $organizer = null;
+    private ?Unite $unite = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $startDate = null;
@@ -49,9 +49,9 @@ class Election
     private Collection $groupesConcernes;
 
     /**
-     * @var Collection<int, Organizer>
+     * @var Collection<int, Unite>
      */
-    #[ORM\ManyToMany(targetEntity: Organizer::class)]
+    #[ORM\ManyToMany(targetEntity: Unite::class)]
     private Collection $unitesConcernees;
 
     public function __construct()
@@ -67,14 +67,14 @@ class Election
         return $this->id;
     }
 
-    public function getOrganizer(): ?Organizer
+    public function getUnite(): ?Unite
     {
-        return $this->organizer;
+        return $this->unite;
     }
 
-    public function setOrganizer(?Organizer $organizer): static
+    public function setUnite(?Unite $unite): static
     {
-        $this->organizer = $organizer;
+        $this->unite = $unite;
 
         return $this;
     }
@@ -212,14 +212,14 @@ class Election
     }
 
     /**
-     * @return Collection<int, Organizer>
+     * @return Collection<int, Unite>
      */
     public function getUnitesConcernees(): Collection
     {
         return $this->unitesConcernees;
     }
 
-    public function addUnitesConcernee(Organizer $unitesConcernee): static
+    public function addUnitesConcernee(Unite $unitesConcernee): static
     {
         if (!$this->unitesConcernees->contains($unitesConcernee)) {
             $this->unitesConcernees->add($unitesConcernee);
@@ -228,7 +228,7 @@ class Election
         return $this;
     }
 
-    public function removeUnitesConcernee(Organizer $unitesConcernee): static
+    public function removeUnitesConcernee(Unite $unitesConcernee): static
     {
         $this->unitesConcernees->removeElement($unitesConcernee);
 

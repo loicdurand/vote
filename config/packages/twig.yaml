@@ -3,7 +3,7 @@ twig:
     form_themes: ['form/dsfr.html.twig']
     globals:
         app_env: '%env(APP_ENV)%'
-        app_name: 'Vote en ligne' 
+        app_name: 'Elèksyon' 
         app_tagline: 'COMGENDGP'
         app_slug: 'Le système de vote en ligne du COMGENDGP'
 

@@ -5,9 +5,8 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use App\Entity\SsoUser as User;
 use App\Entity\Groupe;
-use App\Entity\Organizer;
+use App\Entity\Unite;
 
 class AppFixtures extends Fixture
 {
@@ -21,30 +20,36 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
 
-        $restos = ['SCL', 'DUG'];
-        foreach ($restos as $name) {
-            $organizer = new Organizer();
-            $organizer->setName($name);
-            $manager->persist($organizer);
-        }
+        // $restos = ['SCL', 'DUG'];
+        // foreach ($restos as $name) {
+        //     $unite = new Unite();
+        //     $unite->setName($name);
+        //     $manager->persist($unite);
+        // }
 
-        $groups = ['Officier', 'Sous-Officier', 'Volontaire', 'Civil'];
+        $groups = [
+            [
+                'OG',
+                'Officier'
+            ],
+            [
+                'SOG',
+                'Sous-Officier'
+            ],
+            [
+                'GAV',
+                'Volontaire'
+            ],
+            [
+                'CIV',
+                'Civil'
+            ]
+        ];
         foreach ($groups as $grp) {
             $groupe = new Groupe();
-            $groupe->setName($grp);
+            $groupe->setShortName($grp[0]);
+            $groupe->setName($grp[1]);
             $manager->persist($groupe);
-            if ($grp == 'Sous-Officier') {
-                $user = new User();
-                $user->setUserId('00249205');
-                $user->setUniteId('00086977');
-                $user->setGrade('adjudant');
-                $user->setGroupe($groupe);
-                $user->setRoles(['ROLE_USER']);
-                $password = $this->hasher->hashPassword($user, 'secret');
-                $user->setPassword($password);
-                $manager->persist($user);
-
-            }
         }
 
         $manager->flush();

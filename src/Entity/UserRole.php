@@ -20,7 +20,7 @@ class UserRole
     private ?string $role = null;
 
     #[ORM\ManyToOne(inversedBy: 'userRoles')]
-    private ?Organizer $organizer = null;
+    private ?Unite $unite = null;
 
     public function getId(): ?int
     {
@@ -51,14 +51,14 @@ class UserRole
         return $this;
     }
 
-    public function getOrganizer(): ?Organizer
+    public function getUnite(): ?Unite
     {
-        return $this->organizer;
+        return $this->unite;
     }
 
-    public function setOrganizer(?Organizer $organizer): static
+    public function setUnite(?Unite $unite): static
     {
-        $this->organizer = $organizer;
+        $this->unite = $unite;
 
         return $this;
     }

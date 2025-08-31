@@ -16,7 +16,7 @@ class VoteController extends AbstractController
     #[Route('/election/{id}/vote', name: 'vote')]
     public function vote(Request $request, Election $election, EntityManagerInterface $em, Security $security): Response
     {
-        $user = $security->getUser(); // SsoUser
+        $user = $security->getUser();
         if (!$election->isOpen() || $user->getRestaurant() != $election->getRestaurant()) { // Check user resto
             throw $this->createAccessDeniedException();
         }

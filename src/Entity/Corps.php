@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GroupeRepository;
+use App\Repository\CorpsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: GroupeRepository::class)]
-class Groupe
+#[ORM\Entity(repositoryClass: CorpsRepository::class)]
+class Corps
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,9 +29,6 @@ class Groupe
      */
     #[ORM\ManyToMany(targetEntity: Election::class, mappedBy: 'groupes_concernes')]
     private Collection $elections;
-
-    #[ORM\Column(length: 10)]
-    private ?string $shortName = null;
 
     public function __construct()
     {
@@ -68,7 +65,7 @@ class Groupe
     {
         if (!$this->candidats->contains($candidat)) {
             $this->candidats->add($candidat);
-            $candidat->setGroupe($this);
+            $candidat->setCorps($this);
         }
 
         return $this;
@@ -78,8 +75,8 @@ class Groupe
     {
         if ($this->candidats->removeElement($candidat)) {
             // set the owning side to null (unless already changed)
-            if ($candidat->getGroupe() === $this) {
-                $candidat->setGroupe(null);
+            if ($candidat->getCorps() === $this) {
+                $candidat->setCorps(null);
             }
         }
 
@@ -98,7 +95,7 @@ class Groupe
     {
         if (!$this->elections->contains($election)) {
             $this->elections->add($election);
-            $election->addGroupesConcerne($this);
+            $election->addCorpssConcerne($this);
         }
 
         return $this;
@@ -107,20 +104,8 @@ class Groupe
     public function removeElection(Election $election): static
     {
         if ($this->elections->removeElement($election)) {
-            $election->removeGroupesConcerne($this);
+            $election->removeCorpssConcerne($this);
         }
-
-        return $this;
-    }
-
-    public function getShortName(): ?string
-    {
-        return $this->shortName;
-    }
-
-    public function setShortName(string $shortName): static
-    {
-        $this->shortName = $shortName;
 
         return $this;
     }

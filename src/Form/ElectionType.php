@@ -3,11 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Election;
-use App\Entity\Organizer;
+use App\Entity\Unite;
 use App\Entity\Groupe;
-use Dom\Entity;
+// use Dom\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+// use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,12 +18,12 @@ class ElectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('organizer', EntityType::class, [
-                'class' => Organizer::class,
-                'row_attr' => ['class' => 'fr-mt-2w'],
-                'choice_label' => 'name',
-                'label' => 'Unité organisatrice du vote',
-            ])
+            // ->add('unite', EntityType::class, [
+            //     'class' => Unite::class,
+            //     'row_attr' => ['class' => 'fr-mt-2w'],
+            //     'choice_label' => 'name',
+            //     'label' => 'Unité organisatrice du vote',
+            // ])
             ->add('title', null, [
                 'help_attr' => ['content' => 'Obligatoire. 255 caractères maximum'],
                 'label' => 'Titre de l\'élection',
@@ -64,7 +64,7 @@ class ElectionType extends AbstractType
                 'label' => 'Groupes concernés par l\'élection',
             ])
             ->add('unitesConcernees', EntityType::class, [
-                'class' => Organizer::class,
+                'class' => Unite::class,
                 "multiple" => true,
                 // 'row_attr' => ['class' => 'fr-mt-2w'],
                 'help_attr' => ['content' => 'Un choix minimum. Les personnels des unités non sélectionnées ne pourront pas participer au vote.'],

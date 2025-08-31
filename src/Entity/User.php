@@ -4,22 +4,27 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
-#[UniqueEntity(fields: ['login'], message: 'There is already an account with this login')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
-    private ?string $login = null;
+    #[ORM\Column(length: 8)]
+    private ?string $userId = null;
+
+    #[ORM\Column(length: 8)]
+    private ?string $uniteId = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $grade = null;
+
+    #[ORM\ManyToOne]
+    private ?Groupe $groupe = null;
 
     /**
      * @var list<string> The user roles
@@ -27,42 +32,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLogin(): ?string
+    public function getUserId(): ?string
     {
-        return $this->login;
+        return $this->userId;
     }
 
-    public function setLogin(string $login): static
+    public function setUserId(string $userId): static
     {
-        $this->login = $login;
+        $this->userId = $userId;
 
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
+    public function getUniteId(): ?string
     {
-        return (string) $this->login;
+        return $this->uniteId;
     }
 
-    /**
-     * @see UserInterface
-     */
+    public function setUniteId(string $uniteId): static
+    {
+        $this->uniteId = $uniteId;
+
+        return $this;
+    }
+
+    public function getGrade(): ?string
+    {
+        return $this->grade;
+    }
+
+    public function setGrade(?string $grade): static
+    {
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): static
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->userId;
+    }
+
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -82,27 +109,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
-        return $this->password;
+        return null; // Pas de mot de passe avec SSO
     }
 
-    public function setPassword(string $password): static
+    public function getSalt(): ?string
     {
-        $this->password = $password;
-
-        return $this;
+        return null; // Pas de sel avec SSO
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Rien à effacer dans ce cas
     }
 }

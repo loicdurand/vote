@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use App\Entity\SsoUser as User;
+use App\Entity\User;
 use App\Form\ElectionType;
 
 final class ElectionController extends AbstractController
