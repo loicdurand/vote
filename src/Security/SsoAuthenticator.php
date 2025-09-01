@@ -65,32 +65,34 @@ class SsoAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException('Invalid SSO token');
         }
 
+        // Cherche ou crée l'unité dans la base
+        $codeunite = $ssoData->codeunite;
+        $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
+        if (!$unite) {
+            $unite = new Unite();
+            $unite->setCodeunite($codeunite);
+            $unite->setName($ssoData->unite);
+            $this->entityManager->persist($unite);
+            $this->entityManager->flush();
+        }
+
         // Cherche ou crée l'utilisateur dans la base
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['userId' => $ssoData->nigend]);
 
         if (!$user) {
+
             $user = new User();
             $user->setUserId($ssoData->nigend);
-            $codeunite = $ssoData->codeunite;
             $user->setUniteId($codeunite);
             $user->setGrade($ssoData->title);
             $grp_shortname = $ssoData->employeeType;
             $groupe = $this->entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
-
+            $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
+            $user->setUnite($unite);
             $user->setGroupe($groupe);
             $user->setRoles(['ROLE_USER']);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-
-            // Cherche ou crée l'unité dans la base
-            $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
-            if (!$unite) {
-                $unite = new Unite();
-                $unite->setCodeunite($codeunite);
-                $unite->setName($ssoData->unite);
-                $this->entityManager->persist($unite);
-                $this->entityManager->flush();
-            }
         }
 
         return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), fn() => $user));

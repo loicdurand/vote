@@ -17,9 +17,6 @@ class User implements UserInterface
     #[ORM\Column(length: 8)]
     private ?string $userId = null;
 
-    #[ORM\Column(length: 8)]
-    private ?string $uniteId = null;
-
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $grade = null;
 
@@ -31,6 +28,10 @@ class User implements UserInterface
      */
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Unite $unite = null;
 
     public function getId(): ?int
     {
@@ -122,5 +123,17 @@ class User implements UserInterface
     public function eraseCredentials(): void
     {
         // Rien à effacer dans ce cas
+    }
+
+    public function getUnite(): ?Unite
+    {
+        return $this->unite;
+    }
+
+    public function setUnite(?Unite $unite): static
+    {
+        $this->unite = $unite;
+
+        return $this;
     }
 }

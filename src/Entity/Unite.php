@@ -15,6 +15,9 @@ class Unite
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column]
+    private ?int $codeunite = null;
+
     #[ORM\Column(length: 25, nullable: true)]
     private ?string $name = null;
 
@@ -30,13 +33,17 @@ class Unite
     #[ORM\OneToMany(targetEntity: UserRole::class, mappedBy: 'unite')]
     private Collection $userRoles;
 
-    #[ORM\Column]
-    private ?int $codeunite = null;
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'unite')]
+    private Collection $users;
 
     public function __construct()
     {
         $this->elections = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,6 +131,36 @@ class Unite
     public function setCodeunite(int $codeunite): static
     {
         $this->codeunite = $codeunite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setUnite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getUnite() === $this) {
+                $user->setUnite(null);
+            }
+        }
 
         return $this;
     }
