@@ -9,8 +9,8 @@ class SsoServiceDEV
 {
     const COOKIE_NAME   = 'lldap';
     const COOKIE_DOMAIN = 'localhost';
-    const PORTAL_URL    = 'http://localhost:5000/login';
-    const REST_URL      = 'http://localhost:5000/validate';
+    const PORTAL_URL    = 'http://localhost/sso/login'; // <- l'URL est http://localhost car l'utilisateur est redirigé
+    const REST_URL      = 'http://sso:5000/validate';  // <- l'URL est http://sso car on requête en GET le service sso
     // const MAIL_URL      = 'https://localhost:5000/mail';
     // const GRP_URL       = 'https://localhost:5000/getgroups.pl';
 
