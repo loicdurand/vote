@@ -13,15 +13,15 @@
 
 		{# FAVICON #}
 		<link
-		rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
+		rel="apple-touch-icon" href="{{ asset('favicons/apple-touch-icon.png') }}">
 
 		<!-- 180×180 -->
-		<link rel="icon" href="/favicons/favicon.svg" type="image/svg+xml">
+		<link rel="icon" href="{{ asset('favicons/favicon.svg') }}" type="image/svg+xml">
 		<link
-		rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
+		rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" type="image/x-icon">
 
 		<!-- 32×32 -->
-		<link rel="manifest" href="/favicons/manifest.webmanifest" crossorigin="use-credentials">
+		<link rel="manifest" href="{{ asset('favicons/manifest.webmanifest') }}" crossorigin="use-credentials">
 
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}

@@ -38,7 +38,7 @@
 		<br>
 		Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
 		<br>
-		Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction de votre sélection.
+		Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction des groupes que vous choisirez.
 	</p>
 
 	<main>
@@ -58,6 +58,10 @@
 			</div>
 
 			{{ form_start(form) }}
+
+			{{ form_row(form.user) }}
+
+			{{ form_row(form.unite) }}
 
 			{{ form_row(form.title) }}
 
@@ -95,6 +99,12 @@
 				<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
 			</div>
 
+			<div class="fr-highlight">
+				<p>Si vous souhaitez créer une élection par corps d'appartenance, ne faite qu'un choix dans la liste ci-dessous.
+					<br>Vous pourrez cloner cette élection en l'adaptant au corps voulu.
+				</p>
+			</div>
+
 			{{ form_rest(form) }}
 
 		</div>
@@ -121,7 +131,7 @@
 			</li>
 
 			<li>
-				<button type="submit" id="submit" class="fr-hidden fr-btn">
+				<button id="pre-submit" class="fr-hidden fr-btn" data-fr-opened="false" aria-controls="fr-modal--submit">
 					Enregister cette élection
 				</button>
 			</li>
@@ -156,6 +166,47 @@
 								<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
 									<button type="reset" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--reset">
 										Réinitialiser le formulaire
+									</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</dialog>
+
+		{# MODALE DE CONFIRMATION D'ENREGISTREMENT DES DONNÉES DU FORMULAIRE #}
+		<dialog aria-labelledby="fr-modal--submit-title" id="fr-modal--submit" class="fr-modal" role="dialog">
+			<div class="fr-container fr-container--fluid fr-container-md">
+				<div class="fr-grid-row fr-grid-row--center">
+					<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+						<div class="fr-modal__body">
+							<div class="fr-modal__header">
+								<button class="fr-btn--close fr-btn" aria-controls="fr-modal--submit">
+									Fermer
+								</button>
+							</div>
+							<div class="fr-modal__content">
+								<h1 id="fr-modal--submit-title" class="fr-modal__title">
+									<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+									À lire avant d'enregister
+								</h1>
+								<p>
+									Depuis votre tableau de bord, vous pourrez cloner cette élection, de manière par exemple à en créer une nouvelle portant les mêmes caractéristiques mais ouverte à un corps d'appartenance différent.
+									<br>
+									<br>
+									Vous pourrez également paramétrer les candidats à l'élection:
+									<ul>
+										<li>si vous avez déjà une liste de candidats, vous pourrez les inscrire directement,</li>
+										<li>sinon, vous pourrez permettre à tout utilisateur dans le périmètre de l'élection (corps d'appartenance, unité) de se porter candidat.</li>
+									</ul>
+								</p>
+							</div>
+							<div class="fr-modal__footer">
+								<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+									<button type="submit" id="submit" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--submit">
+										J'enregistre cette élection
 									</button>
 
 								</div>

@@ -16,6 +16,10 @@ class Election
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'elections')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'elections')]
     private ?Unite $unite = null;
 
     #[ORM\Column(nullable: true)]
@@ -231,6 +235,18 @@ class Election
     public function removeUnitesConcernee(Unite $unitesConcernee): static
     {
         $this->unitesConcernees->removeElement($unitesConcernee);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

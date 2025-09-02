@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
+
 use App\Form\ElectionType;
 
 final class ElectionController extends AbstractController
@@ -27,7 +28,12 @@ final class ElectionController extends AbstractController
          */
 
         $status = "";
-        $form = $this->createForm(ElectionType::class);
+
+        $election = new Election();
+        $election->setUser($user);
+        $election->setUnite($user->getUnite());
+
+        $form = $this->createForm(ElectionType::class, $election);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $data = $form->getData();

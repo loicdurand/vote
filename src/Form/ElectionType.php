@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Election;
+use App\Entity\User;
 use App\Entity\Unite;
 use App\Entity\Groupe;
 // use Dom\Entity;
@@ -10,6 +11,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 // use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,12 +21,18 @@ class ElectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('unite', EntityType::class, [
-            //     'class' => Unite::class,
-            //     'row_attr' => ['class' => 'fr-mt-2w'],
-            //     'choice_label' => 'name',
-            //     'label' => 'Unité organisatrice du vote',
-            // ])
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'row_attr' => ['class' => 'fr-mt-2w fr-hidden'],
+                'choice_label' => 'userId',
+                'label' => 'Organisateur du vote',
+            ])
+            ->add('unite', EntityType::class, [
+                'class' => Unite::class,
+                'row_attr' => ['class' => 'fr-mt-2w fr-hidden'],
+                'choice_label' => 'name',
+                'label' => 'Unité organisatrice du vote',
+            ])
             ->add('title', null, [
                 'help_attr' => ['content' => 'Obligatoire. 255 caractères maximum'],
                 'label' => 'Titre de l\'élection',
@@ -58,10 +67,10 @@ class ElectionType extends AbstractType
                 'class' => Groupe::class,
                 "multiple" => true,
                 // 'row_attr' => ['class' => 'fr-mt-2w'],
-                'help_attr' => ['content' => 'Un choix minimum. Les membres des groupes non sélectionnés ne pourront pas participer au vote.'],
+                'help_attr' => ['content' => 'Un choix minimum. Les membres des corps d\'appartenance non sélectionnés ne pourront pas participer au vote.'],
                 'choice_label' => 'name',
                 "required" => true,
-                'label' => 'Groupes concernés par l\'élection',
+                'label' => 'Corps d\'appartenance concernés par l\'élection',
             ])
             ->add('unitesConcernees', EntityType::class, [
                 'class' => Unite::class,
@@ -71,8 +80,7 @@ class ElectionType extends AbstractType
                 "required" => true,
                 'choice_label' => 'name',
                 'label' => 'Unités concernées par l\'élection',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

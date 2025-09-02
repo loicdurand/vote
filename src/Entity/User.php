@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -32,6 +34,17 @@ class User implements UserInterface
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Unite $unite = null;
+
+    /**
+     * @var Collection<int, Election>
+     */
+    #[ORM\OneToMany(targetEntity: Election::class, mappedBy: 'user')]
+    private Collection $elections;
+
+    public function __construct()
+    {
+        $this->elections = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -133,6 +146,36 @@ class User implements UserInterface
     public function setUnite(?Unite $unite): static
     {
         $this->unite = $unite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Election>
+     */
+    public function getElections(): Collection
+    {
+        return $this->elections;
+    }
+
+    public function addElection(Election $election): static
+    {
+        if (!$this->elections->contains($election)) {
+            $this->elections->add($election);
+            $election->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElection(Election $election): static
+    {
+        if ($this->elections->removeElement($election)) {
+            // set the owning side to null (unless already changed)
+            if ($election->getUser() === $this) {
+                $election->setUser(null);
+            }
+        }
 
         return $this;
     }
