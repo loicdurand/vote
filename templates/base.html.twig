@@ -80,9 +80,7 @@
 
 										{% if user is defined and user.userId %}
 											<a class="fr-btn fr-icon-logout-box-r-line" href="/logout" title="Se déconnecter">
-												Connecté en tant que&nbsp;
-												<span class="login">{{user.userId}}
-													(Déconnexion)</span>.
+												<span class="login">{{user.title}}&nbsp;- Déconnexion</span>.
 											</a>
 										{% else %}
 											<a class="fr-btn fr-icon-logout-box-r-line" href="/login" title="Se connecter">

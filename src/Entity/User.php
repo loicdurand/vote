@@ -41,6 +41,12 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: Election::class, mappedBy: 'user')]
     private Collection $elections;
 
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(length: 25, nullable: true)]
+    private ?string $specialite = null;
+
     public function __construct()
     {
         $this->elections = new ArrayCollection();
@@ -176,6 +182,30 @@ class User implements UserInterface
                 $election->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSpecialite(): ?string
+    {
+        return $this->specialite;
+    }
+
+    public function setSpecialite(?string $specialite): static
+    {
+        $this->specialite = $specialite;
 
         return $this;
     }
