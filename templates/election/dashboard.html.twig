@@ -79,9 +79,9 @@
 						<div class="custom-tile-menu">
 							<menu class="fr-btns-group">
 								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
-								<li><button id="election-{{ election.id }}-clone-btn" class="fr-btn fr-btn--tertiary">Cloner cette élection</button></li>
-								<li><button id="election-{{ election.id }}-candidats-btn" class="fr-btn fr-btn--tertiary">Gérer les candidats</button></li>
-								<li><button id="election-{{ election.id }}-share-btn" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
+								<li><a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
+								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
+								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</a></li>
 							</menu>
 						</div>
 

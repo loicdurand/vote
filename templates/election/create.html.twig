@@ -32,13 +32,19 @@
 	{% endif %}
 
 	<p class="fr-text--sm fr-mb-1w">
-		Ce formulaire vous permet de créer une élection.
-		<br>
-		Vous devez lui donner un titre, par exemple: "Élection du conseil d'administration du Cercle-Mixte Gendarmerie de Baie-Mahaut".
-		<br>
-		Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
-		<br>
-		Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction des groupes que vous choisirez.
+		{% if is_clone %}
+			Ce formulaire vous permet de créer une élection en reprenant les données saisies pour une élection précédente.
+			<br>
+			Apportez les modifications que vous jugez nécessaires.
+		{% else %}
+			Ce formulaire vous permet de créer une élection.
+			<br>
+			Vous devez lui donner un titre, par exemple: "Élection du conseil d'administration du Cercle-Mixte Gendarmerie de Baie-Mahaut".
+			<br>
+			Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
+			<br>
+			Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction des groupes que vous choisirez.
+		{% endif %}
 	</p>
 
 	<main>
