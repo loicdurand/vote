@@ -38,19 +38,66 @@
 		<br>
 		Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
 		<br>
-		Vous devez préciser:
-		<ul>
-			<li>la date et l'heure d'ouverture des votes,</li>
-			<li>la date et l'heure de clôture des votes,</li>
-			<li>les personnels autorisés à participer au vote (unité, corps d'appartenance, etc...).</li>
-		</ul>
+		Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction de votre sélection.
 	</p>
 
 	<main>
 
-		{{ form_start(form) }}
+		<div id="step-0">
 
-		{{ form_rest(form) }}
+			<div class="fr-stepper">
+				<h2 class="fr-stepper__title">
+					Informations concernant l'élection:
+					<span class="fr-stepper__state">Étape 1 sur 3</span>
+				</h2>
+				<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
+				<p class="fr-stepper__details">
+					<span class="fr-text--bold">Étape suivante :</span>
+					Dates d'ouverture et de fermeture des votes.
+				</p>
+			</div>
+
+			{{ form_start(form) }}
+
+			{{ form_row(form.title) }}
+
+			{{ form_row(form.explaination) }}
+
+		</div>
+
+		<div id="step-1" class="fr-hidden">
+
+			<div class="fr-stepper">
+				<h2 class="fr-stepper__title">
+					Dates d'ouverture et de fermeture des votes:
+					<span class="fr-stepper__state">Étape 2 sur 3</span>
+				</h2>
+				<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
+				<p class="fr-stepper__details">
+					<span class="fr-text--bold">Étape suivante :</span>
+					Sélection des participants à l'élection.
+				</p>
+			</div>
+
+			{{ form_row(form.startDate) }}
+
+			{{ form_row(form.endDate) }}
+
+		</div>
+
+		<div id="step-2" class="fr-hidden">
+
+			<div class="fr-stepper">
+				<h2 class="fr-stepper__title">
+					Périmètre des participants à l'élection:
+					<span class="fr-stepper__state">Étape 2 sur 3</span>
+				</h2>
+				<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
+			</div>
+
+			{{ form_rest(form) }}
+
+		</div>
 
 		<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 
@@ -59,11 +106,22 @@
 				<button class="fr-btn fr-btn--secondary" data-fr-opened="false" aria-controls="fr-modal--reset">
 					Réinitialiser le formulaire
 				</button>
-
 			</li>
 
 			<li>
-				<button type="submit" class="fr-btn">
+				<button type="button" id="prev-btn" class="fr-hidden fr-btn fr-btn fr-btn--secondary">
+					Étape précendante
+				</button>
+			</li>
+
+			<li>
+				<button type="button" id="next-btn" class="fr-btn">
+					Étape suivante
+				</button>
+			</li>
+
+			<li>
+				<button type="submit" id="submit" class="fr-hidden fr-btn">
 					Enregister cette élection
 				</button>
 			</li>
@@ -109,6 +167,7 @@
 		</dialog>
 
 		{{ form_end(form) }}
+
 	</main>
 
 {% endblock %}
