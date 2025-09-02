@@ -7,5 +7,7 @@ import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import './bootstrap.ts';
 
 import './javascripts/stepper.ts';
+import './javascripts/tile-menu.ts';
+
 
 console.log('This log comes from assets/app.ts - welcome to AssetMapper! 🎉');

@@ -250,4 +250,22 @@ class Election
 
         return $this;
     }
+
+    public function isNotOpenYet(): bool
+    {
+        $now = new \DateTime("now");
+        return $now < $this->startDate;
+    }
+
+    public function isOpen(): bool
+    {
+        $now = new \DateTime("now");
+        return $this->startDate < $now && $now < $this->endDate;
+    }
+
+    public function isClosed(): bool
+    {
+        $now = new \DateTime("now");
+        return $this->startDate < $now;
+    }
 }

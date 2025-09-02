@@ -4,59 +4,62 @@
 {% endblock %}
 
 {% block body %}
-	{# Fil d'arianne #}
-	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
-		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+{# Fil d'arianne #}
+<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+	<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
 
-		<div class="fr-collapse" id="breadcrumb">
-			<ol class="fr-breadcrumb__list">
-				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
-				</li>
-				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord</a>
-				</li>
-			</ol>
-		</div>
-	</nav>
-	{# Fin fil d'arianne #}
+	<div class="fr-collapse" id="breadcrumb">
+		<ol class="fr-breadcrumb__list">
+			<li>
+				<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+			</li>
+			<li>
+				<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord</a>
+			</li>
+		</ol>
+	</div>
+</nav>
+{# Fin fil d'arianne #}
 
-	<h2 class="fr-mt-2w">
-		Mon tableau de bord
-	</h2>
+<h2 class="fr-mt-2w">
+	Mon tableau de bord
+</h2>
 
-	<p class="fr-text--sm fr-mb-1w">
-		Retrouvez, sur cette page, les différente élections que vous ou votre unité avez créées.
-		<br>
-		Vous pourrez ainsi vous en servir de modèle, les cloner ou les adapter selon vos besoins.
-		<br>
-		C'est aussi dans cet espace que vous pourrez inscrire les candidats ou autoriser les utilisateurs à candidater.
-	</p>
+<p class="fr-text--sm fr-mb-1w">
+	Retrouvez, sur cette page, les différente élections que vous ou votre unité avez créées.
+	<br>
+	Vous pourrez ainsi vous en servir de modèle, les cloner ou les adapter selon vos besoins.
+	<br>
+	C'est aussi dans cet espace que vous pourrez inscrire les candidats ou autoriser les utilisateurs à candidater.
+</p>
 
-	<main>
+<main>
 
-		<h3>Élections créées par des membres de mon unité:</h3>
+	<h3>Élections créées au sein de mon unité:</h3>
 
-		<div class="fr-grid-row fr-grid-row--gutters">
+	<div class="fr-grid-row fr-grid-row--gutters">
 
-			{% for election in elections %}
+		{% for election in elections %}
 
-				<div class="fr-col-sm-6 fr-col-md-4 fr-col-lg-4">
+			<div class="fr-col-sm-6 fr-col-md-4 fr-col-lg-4 custom-card-container">
 
-					<div class="fr-tile fr-enlarge-link" id="tile-4">
-						<div class="fr-tile__body">
-							<div class="fr-tile__content">
-								<h3 class="fr-tile__title">
-									<a href="[URL - à modifier]">{{ election.title }}</a>
-								</h3>
-								<p class="fr-tile__desc">{{ election.explaination }}</p>
-								<p class="fr-tile__detail">
-									Créée par&nbsp;
-									{{ election.user.title }}
-								</p>
+				<div class="fr-tile fr-enlarge-link" id="tile-4">
+					<div class="fr-tile__body">
+						<div class="fr-tile__content">
+							<h3 class="fr-tile__title">
+								<button type="button" class="custom-tile-menu--opener fr-icon-more-fill" id="election-{{ election.id }}-btn">{{ election.title }}</a>
+							</h3>
+							<p class="fr-tile__desc">{{ election.explaination }}</p>
+							<p class="fr-tile__detail">
+								Créée par&nbsp;
+								{{ election.user.title }}
+							</p>
 
-								<div class="fr-tile__start">
-									<p class="fr-badge fr-badge--purple-glycine">Votes ouverts du
+							<div class="fr-tile__start">
+								{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+								{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+
+									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
 										{{ election.startDate | date('d/m/Y') }}
 										au
 										{{ election.endDate | date('d/m/Y') }}</p>
@@ -72,9 +75,21 @@
 								</svg>
 							</div>
 						</div>
+
+						<div class="custom-tile-menu">
+							<menu class="fr-btns-group">
+								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
+								<li><button id="election-{{ election.id }}-clone-btn" class="fr-btn fr-btn--tertiary">Cloner cette élection</button></li>
+								<li><button id="election-{{ election.id }}-candidats-btn" class="fr-btn fr-btn--tertiary">Gérer les candidats</button></li>
+								<li><button id="election-{{ election.id }}-share-btn" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
+							</menu>
+						</div>
+
+					</div>
+					
 					</div>
 
-					{%endfor%}
+					{% endfor %}
 
 				</div>
 
