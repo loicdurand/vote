@@ -23,10 +23,6 @@ final class ElectionController extends AbstractController
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
-        /**
-         * @Todo: Pré-sélectonner les uniés selon la config de l'user
-         */
-
         $status = "";
 
         $election = new Election();
@@ -57,8 +53,12 @@ final class ElectionController extends AbstractController
     #[Route('/election/dashboard', name: 'app_election_dashboard')]
     public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite()]);
+
         return $this->render('election/dashboard.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'elections' => $elections
         ]);
     }
 }
