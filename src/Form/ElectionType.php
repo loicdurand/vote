@@ -42,6 +42,7 @@ class ElectionType extends AbstractType
                 ]
             ])
             ->add('explaination', TextareaType::class, [
+                'empty_data' => '',
                 'help_attr' => ['content' => 'Facultatif. 1024 caractères maximum'],
                 'label' => 'Renseignements utiles pour les électeurs',
                 "required" => false,

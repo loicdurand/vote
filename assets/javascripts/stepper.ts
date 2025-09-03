@@ -15,7 +15,7 @@ export default () => {
         step_contents.push(step_content);
     }
 
-    prev.addEventListener('click', e => {
+    prev !== null && prev.addEventListener('click', e => {
         current_step -= 1;
         next.classList.remove('fr-hidden');
         presubmit.classList.add('fr-hidden');
@@ -29,7 +29,7 @@ export default () => {
 
     })
 
-    next.addEventListener('click', e => {
+    next !== null && next.addEventListener('click', e => {
         current_step += 1;
         prev.classList.remove('fr-hidden');
         if (current_step < nb_steps - 1) {

@@ -73,7 +73,7 @@ final class ElectionController extends AbstractController
         $election->setStartDate($election->getStartDate());
         $election->setEndDate($election->getEndDate());
         $election->setTitle($election->getTitle());
-        $election->setExplaination($election->getExplaination());
+        $election->setExplaination(is_null($election->getExplaination()) ? '' : $election->getExplaination());
         $groupes_concernes = $election->getGroupesConcernes();
         foreach ($groupes_concernes as $grp)
             $election->addGroupesConcerne($grp);

@@ -3,6 +3,7 @@ export default () => {
     if (document.querySelector('.fr-tile') === null)
         return false;
 
+    console.log('tile exists');
     const tiles = document.querySelectorAll('.fr-tile');
     tiles.forEach(tile => {
         const opener = tile.querySelector('.custom-tile-menu--opener');
