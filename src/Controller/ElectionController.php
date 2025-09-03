@@ -12,11 +12,12 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
 
 use App\Form\ElectionType;
+use phpDocumentor\Reflection\Types\Boolean;
 
 final class ElectionController extends AbstractController
 {
 
-    #[Route('/election/create/', name: 'app_election_create')]
+    #[Route('/election/create', name: 'app_election_create')]
     public function create(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (is_null($user))
@@ -46,11 +47,58 @@ final class ElectionController extends AbstractController
             'user' => $user,
             'form' => $form,
             'status' => $status,
-            'is_clone' => false
+            'is_clone' => false,
+            'disable' => false
         ]);
     }
 
-    #[Route('/election/clone/{election_id}', name: 'app_election_create')]
+    #[Route('/election/edit/{election_id}/{form_cancel}', name: 'app_election_edit')]
+    public function edit(string $election_id, string $form_cancel = 'false', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        $status = "";
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $election->setUser($user);
+        $election->setUnite($user->getUnite());
+        $election->setStartDate($election->getStartDate());
+        $election->setEndDate($election->getEndDate());
+        $election->setTitle($election->getTitle());
+        $election->setExplaination($election->getExplaination());
+        $groupes_concernes = $election->getGroupesConcernes();
+        foreach ($groupes_concernes as $grp)
+            $election->addGroupesConcerne($grp);
+
+        $unites_concernees = $election->getUnitesConcernees();
+        foreach ($unites_concernees as $unt)
+            $election->addUnitesConcernee($unt);
+
+        $form = $this->createForm(ElectionType::class, $election);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            if ($form->isValid()) {
+                $entityManager->persist($data);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_election_dashboard');
+            } else {
+                $form = $this->createForm(ElectionType::class, $data);
+                $status = "error";
+            }
+        }
+
+        return $this->render('election/create.html.twig', [
+            'user' => $user,
+            'form' => $form,
+            'status' => $status,
+            'is_clone' => false,
+            'disable' => boolval($form_cancel)
+        ]);
+    }
+
+    #[Route('/election/clone/{election_id}', name: 'app_election_clone')]
     public function clone(string $election_id, #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (is_null($user))
@@ -93,7 +141,8 @@ final class ElectionController extends AbstractController
             'user' => $user,
             'form' => $form,
             'status' => $status,
-            'is_clone' => true
+            'is_clone' => true,
+            'disable' => false
         ]);
     }
 

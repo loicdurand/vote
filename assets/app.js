@@ -6,8 +6,12 @@ import './styles/app.scss';
 import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import './bootstrap.ts';
 
-import './javascripts/stepper.ts';
-import './javascripts/tile-menu.ts';
+import stepper_init from './javascripts/stepper.ts';
+import tile_menu_init from './javascripts/tile-menu.ts';
+
+document.addEventListener('DOMContentLoaded', () => {
+    stepper_init();
+    tile_menu_init();
+});
 
 
-console.log('This log comes from assets/app.ts - welcome to AssetMapper! 🎉');

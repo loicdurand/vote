@@ -58,6 +58,9 @@ class Election
     #[ORM\ManyToMany(targetEntity: Unite::class)]
     private Collection $unitesConcernees;
 
+    #[ORM\Column]
+    private ?bool $isCancelled = false;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
@@ -267,5 +270,17 @@ class Election
     {
         $now = new \DateTime("now");
         return $this->startDate < $now;
+    }
+
+    public function isCancelled(): ?bool
+    {
+        return $this->isCancelled;
+    }
+
+    public function setIsCancelled(?bool $isCancelled = false): static
+    {
+        $this->isCancelled = $isCancelled;
+
+        return $this;
     }
 }

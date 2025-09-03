@@ -1,5 +1,22 @@
 @use "./colors";
 
+fieldset.custom-form-disable {
+    display: contents;
+
+    &:disabled .fr-stepper {
+        display: none;
+    }
+
+    &:disabled .fr-hidden {
+        display: block !important;
+    }
+}
+
+.custom-btn--icon {
+    max-width: unset !important;
+    justify-content: center !important;
+}
+
 .custom-card-container .custom-tile-menu {
     position: absolute;
     bottom: 3px;

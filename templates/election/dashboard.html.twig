@@ -28,7 +28,7 @@
 <p class="fr-text--sm fr-mb-1w">
 	Retrouvez, sur cette page, les différente élections que vous ou votre unité avez créées.
 	<br>
-	Vous pourrez ainsi vous en servir de modèle, les cloner ou les adapter selon vos besoins.
+	Vous pourrez ainsi vous en servir de modèle en les clonant, les modifier ou les adapter selon vos besoins.
 	<br>
 	C'est aussi dans cet espace que vous pourrez inscrire les candidats ou autoriser les utilisateurs à candidater.
 </p>
@@ -47,12 +47,23 @@
 					<div class="fr-tile__body">
 						<div class="fr-tile__content">
 							<h3 class="fr-tile__title">
-								<button type="button" class="custom-tile-menu--opener fr-icon-more-fill" id="election-{{ election.id }}-btn">{{ election.title }}</a>
+								<button type="button" class="custom-tile-menu--opener fr-icon-more-fill" id="election-{{ election.id }}-btn">
+									{{ election.title }}
+								</button>
 							</h3>
 							<p class="fr-tile__desc">{{ election.explaination }}</p>
 							<p class="fr-tile__detail">
 								Créée par&nbsp;
 								{{ election.user.title }}
+
+								<ul class="fr-tags-group">
+									{% for grp in election.groupesConcernes %}
+										<li>
+											<p class="fr-tag fr-tag--défaut" id="tag-group-0">{{ grp.shortName }}</p>
+										</li>
+									{% endfor %}
+								</ul>
+
 							</p>
 
 							<div class="fr-tile__start">
@@ -62,10 +73,12 @@
 									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
 										{{ election.startDate | date('d/m/Y') }}
 										au
-										{{ election.endDate | date('d/m/Y') }}</p>
-								</div>
+										{{ election.endDate | date('d/m/Y') }}
+									</p>
 							</div>
-						</div>
+						</div> <!-- fin .fr-tile__content -->
+					</div> <!-- fin .fr-tile__body -->
+
 						<div class="fr-tile__header">
 							<div class="fr-tile__pictogram">
 								<svg aria-hidden="true" class="fr-artwork" viewbox="0 0 80 80" width="80px" height="80px">
@@ -80,19 +93,33 @@
 							<menu class="fr-btns-group">
 								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 								<li><a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
+								<li><a target="_self" href="/election/edit/{{election.id}}/0" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
+								<li><button type="button" onclick="window.location.href = '/election/edit/{{election.id}}/1';" class="custom-btn--icon fr-btn fr-btn--tertiary fr-icon-warning-line fr-btn--icon-left">Supprimer cette élection</button></li>
 								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
-								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</a></li>
+								<li><button disabled target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
 							</menu>
 						</div>
 
-					</div>
+					</div> <!-- fin .fr-tile -->
 					
-					</div>
+				</div> <!-- fin .fr-col -->
 
-					{% endfor %}
-
+			{% else %}
+					
+			<div class="fr-notice fr-notice--info">
+				<div class="fr-container">
+					<div class="fr-notice__body">
+					<p>
+						<span class="fr-notice__title">Vous n'avez pas encore créé d'élection.</span>
+						<a href="/election/create" target="_self" class="fr-notice__link">C'est le moment de s'y mettre!</a>
+					</p>
 				</div>
+			</div>
 
-			</main>
+		{% endfor %}
 
-		{% endblock %}
+	</div>
+
+</main>
+
+{% endblock %}

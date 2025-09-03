@@ -1,4 +1,4 @@
-(() => {
+export default () => {
 
     if (document.querySelector('.fr-tile') === null)
         return false;
@@ -19,4 +19,6 @@
 
     });
 
-})()
+    return true;
+
+};

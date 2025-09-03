@@ -47,73 +47,77 @@
 		{% endif %}
 	</p>
 
+	{{ form_start(form) }}
+
 	<main>
 
-		<div id="step-0">
+		<fieldset class="custom-form-disable" {{ disable ? ' disabled' : '' }}>
 
-			<div class="fr-stepper">
-				<h2 class="fr-stepper__title">
-					Informations concernant l'élection:
-					<span class="fr-stepper__state">Étape 1 sur 3</span>
-				</h2>
-				<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
-				<p class="fr-stepper__details">
-					<span class="fr-text--bold">Étape suivante :</span>
-					Dates d'ouverture et de fermeture des votes.
-				</p>
+			<div id="step-0">
+
+				<div class="fr-stepper">
+					<h2 class="fr-stepper__title">
+						Informations concernant l'élection:
+						<span class="fr-stepper__state">Étape 1 sur 3</span>
+					</h2>
+					<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
+					<p class="fr-stepper__details">
+						<span class="fr-text--bold">Étape suivante :</span>
+						Dates d'ouverture et de fermeture des votes.
+					</p>
+				</div>
+
+				{{ form_row(form.user) }}
+
+				{{ form_row(form.unite) }}
+
+				{{ form_row(form.title) }}
+
+				{{ form_row(form.explaination) }}
+
 			</div>
 
-			{{ form_start(form) }}
+			<div id="step-1" class="fr-hidden">
 
-			{{ form_row(form.user) }}
+				<div class="fr-stepper">
+					<h2 class="fr-stepper__title">
+						Dates d'ouverture et de fermeture des votes:
+						<span class="fr-stepper__state">Étape 2 sur 3</span>
+					</h2>
+					<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
+					<p class="fr-stepper__details">
+						<span class="fr-text--bold">Étape suivante :</span>
+						Sélection des participants à l'élection.
+					</p>
+				</div>
 
-			{{ form_row(form.unite) }}
+				{{ form_row(form.startDate) }}
 
-			{{ form_row(form.title) }}
+				{{ form_row(form.endDate) }}
 
-			{{ form_row(form.explaination) }}
-
-		</div>
-
-		<div id="step-1" class="fr-hidden">
-
-			<div class="fr-stepper">
-				<h2 class="fr-stepper__title">
-					Dates d'ouverture et de fermeture des votes:
-					<span class="fr-stepper__state">Étape 2 sur 3</span>
-				</h2>
-				<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
-				<p class="fr-stepper__details">
-					<span class="fr-text--bold">Étape suivante :</span>
-					Sélection des participants à l'élection.
-				</p>
 			</div>
 
-			{{ form_row(form.startDate) }}
+			<div id="step-2" class="fr-hidden">
 
-			{{ form_row(form.endDate) }}
+				<div class="fr-stepper">
+					<h2 class="fr-stepper__title">
+						Périmètre des participants à l'élection:
+						<span class="fr-stepper__state">Étape 2 sur 3</span>
+					</h2>
+					<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
+				</div>
 
-		</div>
+				<div class="fr-highlight">
+					<p>Si vous souhaitez créer une élection par corps d'appartenance, ne faite qu'un choix dans la liste ci-dessous.
+						<br>Vous pourrez cloner cette élection en l'adaptant au corps voulu.
+					</p>
+				</div>
 
-		<div id="step-2" class="fr-hidden">
+				{{ form_rest(form) }}
 
-			<div class="fr-stepper">
-				<h2 class="fr-stepper__title">
-					Périmètre des participants à l'élection:
-					<span class="fr-stepper__state">Étape 2 sur 3</span>
-				</h2>
-				<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
 			</div>
 
-			<div class="fr-highlight">
-				<p>Si vous souhaitez créer une élection par corps d'appartenance, ne faite qu'un choix dans la liste ci-dessous.
-					<br>Vous pourrez cloner cette élection en l'adaptant au corps voulu.
-				</p>
-			</div>
-
-			{{ form_rest(form) }}
-
-		</div>
+		</fieldset>
 
 		<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 
@@ -144,87 +148,87 @@
 
 		</ul>
 
-		{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
-		<dialog aria-labelledby="fr-modal--reset-title" id="fr-modal--reset" class="fr-modal" role="dialog">
-			<div class="fr-container fr-container--fluid fr-container-md">
-				<div class="fr-grid-row fr-grid-row--center">
-					<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-						<div class="fr-modal__body">
-							<div class="fr-modal__header">
-								<button class="fr-btn--close fr-btn" aria-controls="fr-modal--reset">
-									Fermer
-								</button>
-							</div>
-							<div class="fr-modal__content">
-								<h1 id="fr-modal--reset-title" class="fr-modal__title">
-									<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
-									Confirmer
-								</h1>
-								<p>
-									Vous allez réinitialiser le formulaire.
-									<br/>
-									Tous les champs remplis précédemment vont être effacés.
-									<br/>
-									Cliquez sur le bouton ci-dessous pour confirmer cette action.
-								</p>
-							</div>
-							<div class="fr-modal__footer">
-								<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-									<button type="reset" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--reset">
-										Réinitialiser le formulaire
-									</button>
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</dialog>
-
-		{# MODALE DE CONFIRMATION D'ENREGISTREMENT DES DONNÉES DU FORMULAIRE #}
-		<dialog aria-labelledby="fr-modal--submit-title" id="fr-modal--submit" class="fr-modal" role="dialog">
-			<div class="fr-container fr-container--fluid fr-container-md">
-				<div class="fr-grid-row fr-grid-row--center">
-					<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
-						<div class="fr-modal__body">
-							<div class="fr-modal__header">
-								<button class="fr-btn--close fr-btn" aria-controls="fr-modal--submit">
-									Fermer
-								</button>
-							</div>
-							<div class="fr-modal__content">
-								<h1 id="fr-modal--submit-title" class="fr-modal__title">
-									<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
-									À lire avant d'enregister
-								</h1>
-								<p>
-									Depuis votre tableau de bord, vous pourrez cloner cette élection, de manière par exemple à en créer une nouvelle portant les mêmes caractéristiques mais ouverte à un corps d'appartenance différent.
-									<br>
-									<br>
-									Vous pourrez également paramétrer les candidats à l'élection:
-									<ul>
-										<li>si vous avez déjà une liste de candidats, vous pourrez les inscrire directement,</li>
-										<li>sinon, vous pourrez permettre à tout utilisateur dans le périmètre de l'élection (corps d'appartenance, unité) de se porter candidat.</li>
-									</ul>
-								</p>
-							</div>
-							<div class="fr-modal__footer">
-								<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-									<button type="submit" id="submit" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--submit">
-										J'enregistre cette élection
-									</button>
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</dialog>
-
-		{{ form_end(form) }}
-
 	</main>
+
+	{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
+	<dialog aria-labelledby="fr-modal--reset-title" id="fr-modal--reset" class="fr-modal" role="dialog">
+		<div class="fr-container fr-container--fluid fr-container-md">
+			<div class="fr-grid-row fr-grid-row--center">
+				<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+					<div class="fr-modal__body">
+						<div class="fr-modal__header">
+							<button class="fr-btn--close fr-btn" aria-controls="fr-modal--reset">
+								Fermer
+							</button>
+						</div>
+						<div class="fr-modal__content">
+							<h1 id="fr-modal--reset-title" class="fr-modal__title">
+								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+								Confirmer
+							</h1>
+							<p>
+								Vous allez réinitialiser le formulaire.
+								<br/>
+								Tous les champs remplis précédemment vont être effacés.
+								<br/>
+								Cliquez sur le bouton ci-dessous pour confirmer cette action.
+							</p>
+						</div>
+						<div class="fr-modal__footer">
+							<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+								<button type="reset" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--reset">
+									Réinitialiser le formulaire
+								</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</dialog>
+
+	{# MODALE DE CONFIRMATION D'ENREGISTREMENT DES DONNÉES DU FORMULAIRE #}
+	<dialog aria-labelledby="fr-modal--submit-title" id="fr-modal--submit" class="fr-modal" role="dialog">
+		<div class="fr-container fr-container--fluid fr-container-md">
+			<div class="fr-grid-row fr-grid-row--center">
+				<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+					<div class="fr-modal__body">
+						<div class="fr-modal__header">
+							<button class="fr-btn--close fr-btn" aria-controls="fr-modal--submit">
+								Fermer
+							</button>
+						</div>
+						<div class="fr-modal__content">
+							<h1 id="fr-modal--submit-title" class="fr-modal__title">
+								<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+								À lire avant d'enregister
+							</h1>
+							<p>
+								Depuis votre tableau de bord, vous pourrez cloner cette élection, de manière par exemple à en créer une nouvelle portant les mêmes caractéristiques mais ouverte à un corps d'appartenance différent.
+								<br>
+								<br>
+								Vous pourrez également paramétrer les candidats à l'élection:
+								<ul>
+									<li>si vous avez déjà une liste de candidats, vous pourrez les inscrire directement,</li>
+									<li>sinon, vous pourrez permettre à tout utilisateur dans le périmètre de l'élection (corps d'appartenance, unité) de se porter candidat.</li>
+								</ul>
+							</p>
+						</div>
+						<div class="fr-modal__footer">
+							<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+								<button type="submit" id="submit" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--submit">
+									J'enregistre cette élection
+								</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</dialog>
+
+	{{ form_end(form) }}
 
 {% endblock %}

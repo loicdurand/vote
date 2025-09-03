@@ -1,4 +1,4 @@
-(() => {
+export default () => {
 
     if (document.querySelector('.fr-stepper') === null)
         return false;
@@ -52,4 +52,6 @@
         });
     }
 
-})();
+    return true;
+
+};
