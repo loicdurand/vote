@@ -73,6 +73,8 @@
 
 				{{ form_row(form.title) }}
 
+				<div class="fr-mb-2w"></div>
+
 				{{ form_row(form.explaination) }}
 
 			</div>
@@ -93,6 +95,8 @@
 
 				{{ form_row(form.startDate) }}
 
+				<div class="fr-mb-2w"></div>
+
 				{{ form_row(form.endDate) }}
 
 			</div>
@@ -107,8 +111,9 @@
 					<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
 				</div>
 
-				<div class="fr-highlight">
-					<p>Si vous souhaitez créer une élection par corps d'appartenance, cochez la case ci-dessous.
+				<div class="fr-highlight fr-mb-2w">
+					<p class="fr-highlight__text">Si vous souhaitez créer une élection par corps d'appartenance, cochez la case ci-dessous.
+						<br>
 						<div class="fr-checkbox-group">
 							{{ form_widget(form.one_election_by_group) }}
 							{{ form_label(form.one_election_by_group) }}
@@ -118,8 +123,6 @@
 				</div>
 
 				{{ form_row(form.groupesConcernes) }}
-
-				<br>
 
 				{{ form_row(form.unitesConcernees) }}
 
@@ -238,5 +241,14 @@
 	</dialog>
 
 	{{ form_end(form) }}
+
+	<script>
+		var checkbox = document.getElementById('election_one_election_by_group');
+var target = document.querySelector('.select-groups');
+console.log({checkbox, target});
+checkbox.addEventListener('change', function () {
+target.classList[checkbox.checked ? 'add' : 'remove']('fr-hidden');
+});
+	</script>
 
 {% endblock %}

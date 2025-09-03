@@ -66,10 +66,9 @@ class ElectionType extends AbstractType
             ->add('one_election_by_group', CheckboxType::class, [
                 'row_attr' => [
                     'aria-describedby' => "checkbox-select-groups-messages",
-                    'onchange' => "document.querySelector('.select-groups').classList.toggle('fr-hidden');",
                     'name' => 'one_election_by_group'
                 ],
-                'label' => 'Je veux créer une élection distincte pour chacun des groupes ci-dessous.',
+                'label' => 'Je veux créer une élection distincte pour chaque corps d\'appartenance.',
                 'required' => false,
                 'mapped' => false // Indique que ce champ n'est pas lié à l'entité
             ])
