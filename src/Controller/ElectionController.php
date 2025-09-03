@@ -86,13 +86,15 @@ final class ElectionController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $data = $form->getData();
+            $checkboxValue = $form->get('one_election_by_group')->getData();
+
             if ($form->isValid()) {
-                if (boolval($form_cancel)) {
-                    $entityManager->remove($data);
+                if ($checkboxValue) {
+                    $this->createElections($data, $user, $entityManager);
                 } else {
                     $entityManager->persist($data);
+                    $entityManager->flush();
                 }
-                $entityManager->flush();
                 return $this->redirectToRoute('app_election_dashboard');
             } else {
                 $form = $this->createForm(ElectionType::class, $data);
@@ -138,9 +140,15 @@ final class ElectionController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $data = $form->getData();
+            $checkboxValue = $form->get('one_election_by_group')->getData();
+
             if ($form->isValid()) {
-                $entityManager->persist($data);
-                $entityManager->flush();
+                if ($checkboxValue) {
+                    $this->createElections($data, $user, $entityManager);
+                } else {
+                    $entityManager->persist($data);
+                    $entityManager->flush();
+                }
                 return $this->redirectToRoute('app_election_dashboard');
             } else {
                 $form = $this->createForm(ElectionType::class, $data);

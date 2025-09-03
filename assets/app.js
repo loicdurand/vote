@@ -6,12 +6,23 @@ import './styles/app.scss';
 import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import './bootstrap.ts';
 
+import * as utils from './javascripts/utils.ts';
 import stepper_init from './javascripts/stepper.ts';
-import tile_menu_init from './javascripts/tile-menu.ts';
 
-document.addEventListener('DOMContentLoaded', () => {
-    stepper_init();
-    tile_menu_init();
+document.addEventListener('click', ({ target }) => {
+
+    // Initialisation du menu dans les tuiles
+    if (target.matches('.custom-tile-menu--opener')) {
+        const tile = utils.getParent(target, '.custom-card-container');
+        const menu = tile.querySelector('.custom-tile-menu');
+        menu.classList.add('active');
+    } else if (target.matches('.custom-tile-menu--closer')) {
+        const tile = utils.getParent(target, '.custom-card-container');
+        const menu = tile.querySelector('.custom-tile-menu');
+        menu.classList.remove('active');
+    }
+
 });
 
+stepper_init();
 
