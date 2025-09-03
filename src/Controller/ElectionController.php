@@ -87,7 +87,11 @@ final class ElectionController extends AbstractController
         if ($form->isSubmitted()) {
             $data = $form->getData();
             if ($form->isValid()) {
-                $entityManager->persist($data);
+                if (boolval($form_cancel)) {
+                    $entityManager->remove($data);
+                } else {
+                    $entityManager->persist($data);
+                }
                 $entityManager->flush();
                 return $this->redirectToRoute('app_election_dashboard');
             } else {

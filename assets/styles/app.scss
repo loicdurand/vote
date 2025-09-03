@@ -7,14 +7,17 @@ fieldset.custom-form-disable {
         display: none;
     }
 
-    &:disabled .fr-hidden {
+    &:disabled .fr-hidden:not(.fr-highlight) {
         display: block !important;
     }
 }
 
-.custom-btn--icon {
-    max-width: unset !important;
-    justify-content: center !important;
+.custom-link--icon {
+    position: absolute;
+    bottom: -1.5rem;
+    text-align: center;
+    width: 100%;
+    color: var(--text-action-high-red-marianne);
 }
 
 .fr-highlight .fr-checkbox-group {

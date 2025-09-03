@@ -14,7 +14,7 @@
 				<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
 			</li>
 			<li>
-				<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord</a>
+				<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord des élections</a>
 			</li>
 		</ol>
 	</div>
@@ -94,9 +94,9 @@
 								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 								<li><a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
 								<li><a target="_self" href="/election/edit/{{election.id}}/0" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
-								<li><button type="button" onclick="window.location.href = '/election/edit/{{election.id}}/1';" class="custom-btn--icon fr-btn fr-btn--tertiary fr-icon-warning-line fr-btn--icon-left">Supprimer cette élection</button></li>
 								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
 								<li><button disabled target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
+								<li><a target="_self" href="/election/edit/{{election.id}}/1" class="custom-link--icon fr-link">Annuler cette élection</a></li>
 							</menu>
 						</div>
 
