@@ -92,6 +92,8 @@ final class ElectionController extends AbstractController
                 if ($checkboxValue) {
                     $this->createElections($data, $user, $entityManager);
                 } else {
+                    if (boolval($form_cancel))
+                        $data->setIsCancelled(true);
                     $entityManager->persist($data);
                     $entityManager->flush();
                 }
@@ -169,7 +171,7 @@ final class ElectionController extends AbstractController
     public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
 
-        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite()]);
+        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
 
         return $this->render('election/dashboard.html.twig', [
             'user' => $user,
