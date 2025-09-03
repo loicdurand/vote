@@ -108,12 +108,20 @@
 				</div>
 
 				<div class="fr-highlight">
-					<p>Si vous souhaitez créer une élection par corps d'appartenance, ne faite qu'un choix dans la liste ci-dessous.
-						<br>Vous pourrez cloner cette élection en l'adaptant au corps voulu.
+					<p>Si vous souhaitez créer une élection par corps d'appartenance, cochez la case ci-dessous.
+						<div class="fr-checkbox-group">
+							{{ form_widget(form.one_election_by_group) }}
+							{{ form_label(form.one_election_by_group) }}
+							<div class="fr-messages-group" id="one_election_by_group-messages" aria-live="polite"></div>
+						</div>
 					</p>
 				</div>
 
-				{{ form_rest(form) }}
+				{{ form_row(form.groupesConcernes) }}
+
+				<br>
+
+				{{ form_row(form.unitesConcernees) }}
 
 			</div>
 

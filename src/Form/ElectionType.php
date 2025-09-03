@@ -8,11 +8,10 @@ use App\Entity\Unite;
 use App\Entity\Groupe;
 // use Dom\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-// use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+// use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -63,13 +62,24 @@ class ElectionType extends AbstractType
                 "required" => true,
                 'label' => 'Date et heure de fermeture des votes',
             ])
+            // <input  type="checkbox" aria-describedby="checkbox-select-groups-messages" onchange="document.querySelector('.select-groups').classList.toggle('fr-hidden');">
+            ->add('one_election_by_group', CheckboxType::class, [
+                'row_attr' => [
+                    'aria-describedby' => "checkbox-select-groups-messages",
+                    'onchange' => "document.querySelector('.select-groups').classList.toggle('fr-hidden');",
+                    'name' => 'one_election_by_group'
+                ],
+                'label' => 'Je veux créer une élection distincte pour chacun des groupes ci-dessous.',
+                'required' => false,
+                'mapped' => false // Indique que ce champ n'est pas lié à l'entité
+            ])
             ->add('groupesConcernes', EntityType::class, [
                 'class' => Groupe::class,
                 "multiple" => true,
-                // 'row_attr' => ['class' => 'fr-mt-2w'],
+                'row_attr' => ['class' => 'select-groups'],
                 'help_attr' => ['content' => 'Un choix minimum. Les membres des corps d\'appartenance non sélectionnés ne pourront pas participer au vote.'],
                 'choice_label' => 'name',
-                "required" => true,
+                "required" => false,
                 'label' => 'Corps d\'appartenance concernés par l\'élection',
             ])
             ->add('unitesConcernees', EntityType::class, [
