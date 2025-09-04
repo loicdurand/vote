@@ -17,84 +17,73 @@ use phpDocumentor\Reflection\Types\Boolean;
 
 final class ElectionController extends AbstractController
 {
-
-    #[Route('/election/create', name: 'app_election_create')]
-    public function create(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/election/{action}/{election_id}', name: 'app_election_prepare')]
+    public function prepare(string $action, string $election_id = '0', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
         $status = "";
+
+        // $action = ('create'|'clone'|'edit'|'cancel')
 
         $election = new Election();
         $election->setUser($user);
         $election->setUnite($user->getUnite());
 
-        $form = $this->createForm(ElectionType::class, $election);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-            $checkboxValue = $form->get('one_election_by_group')->getData();
+        if ($action !== 'create') {
+            /**
+             * Si édition ou suppression, on marque l'ancienne élection comme annulée (on ne la supprime pas réellement).
+             * En cas d'édition, on crée une nouvelle élection ayant l'ID de l'ancienne dans son historique
+             */
+            $prev_election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+            if ($action === 'cancel')
+                $election = $prev_election;
+            $election->setStartDate($prev_election->getStartDate());
+            $election->setEndDate($prev_election->getEndDate());
+            $election->setTitle($prev_election->getTitle());
+            $election->setExplaination(is_null($prev_election->getExplaination()) ? '' : $prev_election->getExplaination());
+            $groupes_concernes = $prev_election->getGroupesConcernes();
+            foreach ($groupes_concernes as $grp)
+                $election->addGroupesConcerne($grp);
 
-            if ($form->isValid()) {
-                if ($checkboxValue) {
-                    $this->createElections($data, $user, $entityManager);
-                } else {
-                    $entityManager->persist($data);
-                    $entityManager->flush();
-                }
-                return $this->redirectToRoute('app_election_dashboard');
-            } else {
-                $form = $this->createForm(ElectionType::class, $data);
-                $status = "error";
-            }
+            $unites_concernees = $prev_election->getUnitesConcernees();
+            foreach ($unites_concernees as $unt)
+                $election->addUnitesConcernee($unt);
         }
 
-        return $this->render('election/create.html.twig', [
-            'user' => $user,
-            'form' => $form,
-            'status' => $status,
-            'is_clone' => false,
-            'disable' => false
-        ]);
-    }
-
-    #[Route('/election/edit/{election_id}/{form_cancel}', name: 'app_election_edit')]
-    public function edit(string $election_id, string $form_cancel = 'false', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        if (is_null($user))
-            return $this->redirectToRoute('app_login');
-
-        $status = "";
-
-        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
-        $election->setUser($user);
-        $election->setUnite($user->getUnite());
-        $election->setStartDate($election->getStartDate());
-        $election->setEndDate($election->getEndDate());
-        $election->setTitle($election->getTitle());
-        $election->setExplaination(is_null($election->getExplaination()) ? '' : $election->getExplaination());
-        $groupes_concernes = $election->getGroupesConcernes();
-        foreach ($groupes_concernes as $grp)
-            $election->addGroupesConcerne($grp);
-
-        $unites_concernees = $election->getUnitesConcernees();
-        foreach ($unites_concernees as $unt)
-            $election->addUnitesConcernee($unt);
-
         $form = $this->createForm(ElectionType::class, $election);
         $form->handleRequest($request);
+
         if ($form->isSubmitted()) {
             $data = $form->getData();
             $checkboxValue = $form->get('one_election_by_group')->getData();
 
             if ($form->isValid()) {
+                // Si on a coché la case "une élection par corps d'appartenance"
                 if ($checkboxValue) {
                     $this->createElections($data, $user, $entityManager);
                 } else {
-                    if (boolval($form_cancel))
+                    if ($action === 'cancel') {
                         $data->setIsCancelled(true);
-                    $entityManager->persist($data);
+                        $entityManager->persist($data);
+                    } else if ($action === 'edit') {
+                        $grps = $data->getGroupesConcernes();
+                        foreach ($grps as $grp) {
+                            $copy = $this->copy_election($data, $grp, $user);
+                            $entityManager->persist($copy);
+                        }
+                        $data->setIsCancelled(true);
+                        $entityManager->persist($data);
+                    } else if ($action === 'clone') {
+                        $grps = $data->getGroupesConcernes();
+                        foreach ($grps as $grp) {
+                            $copy = $this->copy_election($data, $grp, $user);
+                            $entityManager->persist($copy);
+                        }
+                    } else {
+                        $entityManager->persist($data);
+                    }
                     $entityManager->flush();
                 }
                 return $this->redirectToRoute('app_election_dashboard');
@@ -109,61 +98,7 @@ final class ElectionController extends AbstractController
             'form' => $form,
             'status' => $status,
             'is_clone' => false,
-            'disable' => boolval($form_cancel)
-        ]);
-    }
-
-    #[Route('/election/clone/{election_id}', name: 'app_election_clone')]
-    public function clone(string $election_id, #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        if (is_null($user))
-            return $this->redirectToRoute('app_login');
-
-        $status = "";
-
-        $election = new Election();
-        $election->setUser($user);
-        $election->setUnite($user->getUnite());
-
-        $election_origine = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
-        $election->setStartDate($election_origine->getStartDate());
-        $election->setEndDate($election_origine->getEndDate());
-        $election->setTitle($election_origine->getTitle());
-        $election->setExplaination($election_origine->getExplaination());
-        $groupes_concernes = $election_origine->getGroupesConcernes();
-        foreach ($groupes_concernes as $grp)
-            $election->addGroupesConcerne($grp);
-
-        $unites_concernees = $election_origine->getUnitesConcernees();
-        foreach ($unites_concernees as $unt)
-            $election->addUnitesConcernee($unt);
-
-        $form = $this->createForm(ElectionType::class, $election);
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-            $checkboxValue = $form->get('one_election_by_group')->getData();
-
-            if ($form->isValid()) {
-                if ($checkboxValue) {
-                    $this->createElections($data, $user, $entityManager);
-                } else {
-                    $entityManager->persist($data);
-                    $entityManager->flush();
-                }
-                return $this->redirectToRoute('app_election_dashboard');
-            } else {
-                $form = $this->createForm(ElectionType::class, $data);
-                $status = "error";
-            }
-        }
-
-        return $this->render('election/create.html.twig', [
-            'user' => $user,
-            'form' => $form,
-            'status' => $status,
-            'is_clone' => true,
-            'disable' => false
+            'disable' => $action === 'cancel'
         ]);
     }
 
@@ -183,21 +118,26 @@ final class ElectionController extends AbstractController
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
         foreach ($groupes as $grp) {
-            $election = new Election();
-            $election->setUser($user);
-            $election->setUnite($user->getUnite());
-
-            $election->setStartDate($data->getStartDate());
-            $election->setEndDate($data->getEndDate());
-            $election->setTitle($data->getTitle());
-            $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
-            $election->addGroupesConcerne($grp);
-            $unites_concernees = $data->getUnitesConcernees();
-            foreach ($unites_concernees as $unt)
-                $election->addUnitesConcernee($unt);
-
+            $election = $this->copy_election($data, $grp, $user);
             $entityManager->persist($election);
             $entityManager->flush();
         }
+    }
+
+    private function copy_election($data, $grp, $user)
+    {
+        $election = new Election();
+        $election->setUser($user);
+        $election->setUnite($user->getUnite());
+
+        $election->setStartDate($data->getStartDate());
+        $election->setEndDate($data->getEndDate());
+        $election->setTitle($data->getTitle());
+        $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
+        $election->addGroupesConcerne($grp);
+        $unites_concernees = $data->getUnitesConcernees();
+        foreach ($unites_concernees as $unt)
+            $election->addUnitesConcernee($unt);
+        return $election;
     }
 }
