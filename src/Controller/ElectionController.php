@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Election;
+use App\Entity\ElectionHistory;
 use App\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,7 @@ final class ElectionController extends AbstractController
         // $action = ('create'|'clone'|'edit'|'cancel')
 
         $election = new Election();
+        $prev_election = new Election();
         $election->setUser($user);
         $election->setUnite($user->getUnite());
 
@@ -68,17 +70,18 @@ final class ElectionController extends AbstractController
                         $data->setIsCancelled(true);
                         $entityManager->persist($data);
                     } else if ($action === 'edit') {
-                        $grps = $data->getGroupesConcernes();
-                        foreach ($grps as $grp) {
-                            $copy = $this->copy_election($data, $grp, $user);
-                            $entityManager->persist($copy);
-                        }
-                        $data->setIsCancelled(true);
-                        $entityManager->persist($data);
+                        $copy = $this->copy_election($data, $user);
+                        $prev_election->setIsCancelled(true);
+                        $history = new ElectionHistory();
+                        $history->setCurrent($copy);
+                        $history->setPrevious($prev_election);
+                        $entityManager->persist($history);
+                        $entityManager->persist($copy);
+                        $entityManager->persist($prev_election);
                     } else if ($action === 'clone') {
                         $grps = $data->getGroupesConcernes();
                         foreach ($grps as $grp) {
-                            $copy = $this->copy_election($data, $grp, $user);
+                            $copy = $this->copy_election($data, $user);
                             $entityManager->persist($copy);
                         }
                     } else {
@@ -124,7 +127,7 @@ final class ElectionController extends AbstractController
         }
     }
 
-    private function copy_election($data, $grp, $user)
+    private function copy_election($data, $user)
     {
         $election = new Election();
         $election->setUser($user);
@@ -134,7 +137,9 @@ final class ElectionController extends AbstractController
         $election->setEndDate($data->getEndDate());
         $election->setTitle($data->getTitle());
         $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
-        $election->addGroupesConcerne($grp);
+        $groupes  = $data->getGroupesConcernes();
+        foreach ($groupes as $grp)
+            $election->addGroupesConcerne($grp);
         $unites_concernees = $data->getUnitesConcernees();
         foreach ($unites_concernees as $unt)
             $election->addUnitesConcernee($unt);

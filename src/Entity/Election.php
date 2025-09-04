@@ -61,6 +61,9 @@ class Election
     #[ORM\Column]
     private ?bool $isCancelled = false;
 
+    #[ORM\OneToOne(mappedBy: 'current', cascade: ['persist', 'remove'])]
+    private ?ElectionHistory $electionHistory = null;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
@@ -280,6 +283,23 @@ class Election
     public function setIsCancelled(?bool $isCancelled = false): static
     {
         $this->isCancelled = $isCancelled;
+
+        return $this;
+    }
+
+    public function getElectionHistory(): ?ElectionHistory
+    {
+        return $this->electionHistory;
+    }
+
+    public function setElectionHistory(ElectionHistory $electionHistory): static
+    {
+        // set the owning side of the relation if necessary
+        if ($electionHistory->getCurrent() !== $this) {
+            $electionHistory->setCurrent($this);
+        }
+
+        $this->electionHistory = $electionHistory;
 
         return $this;
     }
