@@ -14,11 +14,26 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
 
 use App\Form\ElectionType;
-use phpDocumentor\Reflection\Types\Boolean;
 
 final class ElectionController extends AbstractController
 {
-    #[Route('/election/{action}/{election_id}', name: 'app_election_prepare')]
+
+    #[Route('/election/dashboard', name: 'app_election_dashboard')]
+    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+
+        return $this->render('election/dashboard.html.twig', [
+            'user' => $user,
+            'elections' => $elections
+        ]);
+    }
+
+    #[Route('/election/action/{action}/{election_id}', name: 'app_election_prepare')]
     public function prepare(string $action, string $election_id = '0', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (is_null($user))
@@ -107,15 +122,17 @@ final class ElectionController extends AbstractController
         ]);
     }
 
-    #[Route('/election/dashboard', name: 'app_election_dashboard')]
-    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/election/candidats/{election_id}', name: 'app_election_candidats')]
+    public function candidats(string $election_id = '0', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
 
-        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
 
-        return $this->render('election/dashboard.html.twig', [
+        return $this->render('election/candidats.html.twig', [
             'user' => $user,
-            'elections' => $elections
+            'election' => $election
         ]);
     }
 

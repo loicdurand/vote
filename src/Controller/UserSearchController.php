@@ -41,8 +41,8 @@ class UserSearchController extends AbstractController
     /**
      * Route pour l'autocomplete (recherche partielle par nom, renvoie JSON pour JS).
      */
-    #[Route("/autocomplete/lastname", name: "autocomplete_lastname", methods: ["GET"])]
-    public function autocompleteLastname(Request $request): JsonResponse
+    #[Route("/autocomplete/candidat", name: "autocomplete_candidat", methods: ["GET"])]
+    public function autocompleteCandidat(Request $request): JsonResponse
     {
         $term = $request->query->get('term');
 
@@ -59,9 +59,8 @@ class UserSearchController extends AbstractController
         $suggestions = [];
         foreach ($results as $entry) {
             $suggestions[] = [
-                'label' => $entry['sn'][0] . ' (' . ($entry['ni'][0] ?? 'N/A') . ')',
-                'value' => $entry['sn'][0],
-                'ni' => $entry['ni'][0] ?? null,
+                'label' =>  $entry['nigend'][0] . ' - ' . $entry['displayname'][0],
+                'value' => $entry['nigend'][0]
             ];
         }
 

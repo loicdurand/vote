@@ -1,5 +1,9 @@
 @use "./colors";
 
+.center {
+    text-align: center !important;
+}
+
 [type="submit"],
 [type="reset"] {
     z-index: 1000;
@@ -63,4 +67,9 @@ fieldset.custom-form-disable {
             }
         }
     }
+}
+
+[class^="fr-table__"],
+table#table-candidats {
+    width: 100% !important;
 }

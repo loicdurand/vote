@@ -8,6 +8,7 @@ import './bootstrap.ts';
 
 import * as utils from './javascripts/utils.ts';
 import stepper_init from './javascripts/stepper.ts';
+import autcomplete_candidats_init from './javascripts/autocomplete-candidats.ts';
 
 document.addEventListener('click', ({ target }) => {
 
@@ -25,4 +26,5 @@ document.addEventListener('click', ({ target }) => {
 });
 
 stepper_init();
+autcomplete_candidats_init();
 
