@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>Résultats</h1>
+	<ul>
+		{% for entry in results %}
+			<li>{{ entry.sn.0 }}
+				(NI:
+				{{ entry.ni.0 ?? 'N/A' }}) - Email:
+				{{ entry.mail.0 ?? 'N/A' }}</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

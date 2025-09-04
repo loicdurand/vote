@@ -10,15 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserSearchController extends AbstractController
 {
-    private string $ldapHost = 'ldap://ldap:389'; // Ajuste si port spécifique, ex: ldap://ldap:389
-    private string $baseDn = 'dc=exemple,dc=fr';
+    private string $ldapHost = 'lldap://ldap:3890'; // Ajuste si port spécifique, ex: ldap://ldap:389
+    private string $baseDn = 'dc=gendarmerie,dc=defense,dc=gouv,dc=fr';
 
     /**
      * Route pour la recherche complète (par nom ou par NI).
      * Appelée via formulaire POST ou GET.
-     *
-     * @Route("/search/users", name="search_users", methods={"GET", "POST"})
      */
+
+    #[Route("/search/users", name: "search_users", methods: ["GET", "POST"])]
     public function searchUsers(Request $request): Response
     {
         $lastname = $request->query->get('lastname') ?? $request->request->get('lastname');
@@ -40,9 +40,8 @@ class UserSearchController extends AbstractController
     /**
      * Route pour l'autocomplete (recherche partielle par nom, renvoie JSON pour JS).
      * Appelée via AJAX.
-     *
-     * @Route("/autocomplete/lastname", name="autocomplete_lastname", methods={"GET"})
      */
+    #[Route("/autocomplete/lastname", name: "autocomplete_lastname", methods: ["GET"])]
     public function autocompleteLastname(Request $request): JsonResponse
     {
         $term = $request->query->get('term'); // Le terme saisi par l'utilisateur
@@ -92,7 +91,7 @@ class UserSearchController extends AbstractController
         if ($lastname) {
             $filter = '(&(objectClass=person)(sn=*' . ldap_escape($lastname, '', LDAP_ESCAPE_FILTER) . '*))'; // Recherche partielle avec wildcard
         } elseif ($ni) {
-            $filter = '(&(objectClass=person)(ni=' . ldap_escape($ni, '', LDAP_ESCAPE_FILTER) . '))'; // Recherche exacte
+            $filter = '(&(objectClass=person)(nigend=' . ldap_escape($ni, '', LDAP_ESCAPE_FILTER) . '))'; // Recherche exacte
         }
 
         $search = ldap_search($ldapConn, $this->baseDn, $filter, ['sn', 'ni', 'cn', 'mail']); // Attributs à récupérer (ajoute d'autres si besoin)
