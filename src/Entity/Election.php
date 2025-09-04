@@ -64,6 +64,12 @@ class Election
     #[ORM\OneToOne(mappedBy: 'current', cascade: ['persist', 'remove'])]
     private ?ElectionHistory $electionHistory = null;
 
+    #[ORM\Column]
+    private ?\DateTime $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $deletedAt = null;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
@@ -300,6 +306,30 @@ class Election
         }
 
         $this->electionHistory = $electionHistory;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(): static
+    {
+        $this->createdAt = new \Datetime('now');
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTime
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(): static
+    {
+        $this->deletedAt = new \Datetime('now');
 
         return $this;
     }

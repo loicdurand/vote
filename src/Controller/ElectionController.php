@@ -68,6 +68,7 @@ final class ElectionController extends AbstractController
                 } else {
                     if ($action === 'cancel') {
                         $data->setIsCancelled(true);
+                        $data->setDeletedAt();
                         $entityManager->persist($data);
                     } else if ($action === 'edit') {
                         $copy = $this->copy_election($data, $user);
@@ -85,6 +86,7 @@ final class ElectionController extends AbstractController
                             $entityManager->persist($copy);
                         }
                     } else {
+                        $data->setCreatedAt();
                         $entityManager->persist($data);
                     }
                     $entityManager->flush();
@@ -143,6 +145,7 @@ final class ElectionController extends AbstractController
         $unites_concernees = $data->getUnitesConcernees();
         foreach ($unites_concernees as $unt)
             $election->addUnitesConcernee($unt);
+        $election->setCreatedAt();
         return $election;
     }
 }
