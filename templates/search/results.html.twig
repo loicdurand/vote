@@ -4,9 +4,9 @@
 	<h1>Résultats</h1>
 	<ul>
 		{% for entry in results %}
-			<li>{{ entry.sn.0 }}
-				(NI:
-				{{ entry.ni.0 ?? 'N/A' }}) - Email:
+			<li>{{ entry.displayname.0 }}
+				(NIGEND:
+				{{ entry.nigend.0 ?? 'N/A' }}) - Email:
 				{{ entry.mail.0 ?? 'N/A' }}</li>
 		{% endfor %}
 	</ul>

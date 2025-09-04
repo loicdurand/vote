@@ -19,6 +19,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
+        "start": "symfony serve --no-tls --listen-ip=0.0.0.0 -d && encore dev --watch",
         "sso": "../.devcontainer/python_venv/bin/python3 ../sso_server.py",
         "serve": "symfony serve --no-tls --listen-ip=0.0.0.0",
         "server": "symfony serve --no-tls --listen-ip=0.0.0.0 -d",
