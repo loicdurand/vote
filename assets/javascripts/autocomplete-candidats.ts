@@ -80,34 +80,43 @@ export default () => {
             throw new Error(message);
         }
 
-        const result = await response.json();
-        console.log(result);
+        const // 
+            result = await response.json(),
+            alert = document.getElementById('error-insertion-candidat'),
+            alert_title = document.getElementById('error-insertion-candidat__title');
         // FIN AJAX POST
 
         if (zero !== null)
             zero.outerHTML = '';
 
-        // ajout des colonnes "nigend" et "displayname"
-        values.forEach(v => {
+        if (result.success) {        // ajout des colonnes "nigend" et "displayname"
+
+            alert.classList.add('fr-hidden');
+
+            values.forEach(v => {
+                const td = document.createElement('td');
+                td.innerText = v;
+                tr.appendChild(td);
+            })
+
+            // ajout d'un bouton de suppr. du candidat
             const td = document.createElement('td');
-            td.innerText = v;
+            const btn = document.createElement('button');
+            btn.setAttribute('type', 'button');
+            btn.innerText = 'Retirer de la liste';
+            btn.setAttribute('title', 'Retirer de la liste');
+
+            ['fr-btn', 'fr-icon-delete-line', 'fr-btn--tertiary-no-outline'].forEach(cls => {
+                btn.classList.add(cls);
+            });
+            td.appendChild(btn);
             tr.appendChild(td);
-        })
 
-        // ajout d'un bouton de suppr. du candidat
-        const td = document.createElement('td');
-        const btn = document.createElement('button');
-        btn.setAttribute('type', 'button');
-        btn.innerText = 'Retirer de la liste';
-        btn.setAttribute('title', 'Retirer de la liste');
-
-        ['fr-btn', 'fr-icon-delete-line', 'fr-btn--tertiary-no-outline'].forEach(cls => {
-            btn.classList.add(cls);
-        });
-        td.appendChild(btn);
-        tr.appendChild(td);
-
-        tbody.appendChild(tr);
+            tbody.appendChild(tr);
+        } else {
+            alert_title.innerText = result.error;
+            alert.classList.remove('fr-hidden');
+        }
 
 
         submit.classList.add('fr-hidden');

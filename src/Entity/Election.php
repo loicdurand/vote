@@ -31,7 +31,7 @@ class Election
     /**
      * @var Collection<int, Candidat>
      */
-    #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'election')]
+    #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'election', cascade: ['persist'])]
     private Collection $candidats;
 
     /**

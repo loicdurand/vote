@@ -6,6 +6,7 @@ use App\Entity\Election;
 use App\Entity\ElectionHistory;
 use App\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -146,29 +147,38 @@ final class ElectionController extends AbstractController
         $displayname = $data['displayname'];
         $mail = $data['mail'];
 
-        $candidat = new Candidat();
-        // @TODO: FINIR L'ENREGISTREMENT DU CANDIDAT
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $candidats = $election->getCandidats();
 
-        // Cherche ou crée l'utilisateur dans la base
-        // $user = $entityManager->getRepository(User::class)->findOneBy(['userId' => $ssoData->nigend]);
+        $exists = false;
+        foreach ($candidats as $c) {
+            if ($nigend == $c->getUserId())
+                $exists = true;
+        }
 
-        // if (!$user) {
+        $result = [
+            'nigend' => $nigend,
+            'displayname' => $displayname,
+            'mail' => $mail
+        ];
 
-        //     $user = new User();
-        //     $user->setUserId($ssoData->nigend);
-        //     $user->setUniteId($codeunite);
-        //     $user->setGrade($ssoData->title);
-        //     $user->setTitle($ssoData->displayname);
-        //     $user->setSpecialite($ssoData->specialite);
-        //     $grp_shortname = $ssoData->employeeType;
-        //     $groupe = $entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
-        //     $unite = $entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
-        //     $user->setUnite($unite);
-        //     $user->setGroupe($groupe);
-        //     $user->setRoles(['ROLE_USER']);
-        //     $entityManager->persist($user);
-        //     $entityManager->flush();
-        // }
+        if (!$exists) {
+            $candidat = new Candidat();
+            $candidat->setElection($election);
+            $candidat->setUserId($nigend);
+            $candidat->setDisplayname($displayname);
+            $candidat->setMail($mail);
+            $election->addCandidat($candidat);
+
+            $entityManager->persist($election);
+            $entityManager->flush();
+            $result['success'] = true;
+        } else {
+            $result['success'] = false;
+            $result['error'] = 'La candidat a déjà été inscrit.';
+        }
+
+        return new JsonResponse($result);
     }
 
     private function createElections($data, $user, $entityManager)

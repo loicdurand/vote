@@ -70,15 +70,15 @@
 								</p>
 
 								{# <div class="fr-tile__start">
-																																	{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
-																																	{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
-																								
-																																	<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
-																																		{{ election.startDate | date('d/m/Y') }}
-																																		au
-																																		{{ election.endDate | date('d/m/Y') }}
-																																	</p>
-																															</div> #}
+																																																																																																	{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+																																																																																																	{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+																																																																																								
+																																																																																																	<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
+																																																																																																		{{ election.startDate | date('d/m/Y') }}
+																																																																																																		au
+																																																																																																		{{ election.endDate | date('d/m/Y') }}
+																																																																																																	</p>
+																																																																																															</div> #}
 							</div>
 							<!-- fin .fr-tile__content -->
 						</div>
@@ -160,10 +160,9 @@
 						</div>
 					</form>
 
-					{# {% if error %}
-																								⟿&nbsp;<p style="color: red;">{{ error }}</p>
-																							{% endif %}
-																							#}
+					<div id="error-insertion-candidat" class="fr-alert fr-alert--error fr-hidden">
+						<h3 id="error-insertion-candidat__title" class="fr-alert__title"></h3>
+					</div>
 
 					<div class="fr-table fr-table--no-scroll" id="table-candidats-component">
 						<div class="fr-table__wrapper">
@@ -185,16 +184,19 @@
 											</tr>
 										</thead>
 										<tbody id="candidats-tbody">
-											{% if election.candidats | length %}
+											{% for candidat in election.candidats %}
+
 												<tr id="table-candidats-row-key-1" data-row-key="1">
 													<td>
-														Lorem ipsum dolor sit ame
+														{{ candidat.userId }}
 													</td>
 													<td>
-														Lorem ipsum dolor sit ame
+														{{ candidat.displayname }}
 													</td>
 													<td>
-														Lorem ipsum dolor sit ame
+														<button type="button" title="Retirer de la liste" class="fr-btn fr-icon-delete-line fr-btn--tertiary-no-outline">
+															Retirer de la liste
+														</button>
 													</td>
 												</tr>
 
@@ -206,35 +208,33 @@
 													</td>
 												</tr>
 
-											{% endif %}
-
+											{% endfor %}
 										</tbody>
-									</table>
-								</div>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
-
 				</div>
-				<!-- fin .fr-col -->
 
-			{% else %}
+			</div>
+			<!-- fin .fr-col -->
 
-				<div class="fr-notice fr-notice--info">
-					<div class="fr-container">
-						<div class="fr-notice__body">
-							<p>
-								<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-								<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
-							</p>
-						</div>
+		{% else %}
+
+			<div class="fr-notice fr-notice--info">
+				<div class="fr-container">
+					<div class="fr-notice__body">
+						<p>
+							<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
+							<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+						</p>
 					</div>
 				</div>
+			</div>
 
-			{% endif %}
+		{% endif %}
 
-		</div>
+	</div>
 
-	</main>
-
-{% endblock %}
+</main>{% endblock %}

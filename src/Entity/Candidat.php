@@ -18,9 +18,6 @@ class Candidat
     #[ORM\ManyToOne(inversedBy: 'candidats')]
     private ?Election $election = null;
 
-    #[ORM\ManyToOne(inversedBy: 'candidats')]
-    private ?Groupe $groupe = null;
-
     #[ORM\Column(length: 8, nullable: true)]
     private ?string $userId = null;
 
@@ -54,18 +51,6 @@ class Candidat
     public function setElection(?Election $election): static
     {
         $this->election = $election;
-
-        return $this;
-    }
-
-    public function getGroupe(): ?Groupe
-    {
-        return $this->groupe;
-    }
-
-    public function setGroupe(?Groupe $groupe): static
-    {
-        $this->groupe = $groupe;
 
         return $this;
     }
