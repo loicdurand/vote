@@ -30,6 +30,12 @@ class Candidat
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat')]
     private Collection $votes;
 
+    #[ORM\Column(length: 255)]
+    private ?string $displayname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $mail = null;
+
     public function __construct()
     {
         $this->votes = new ArrayCollection();
@@ -102,6 +108,30 @@ class Candidat
                 $vote->setCandidat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDisplayname(): ?string
+    {
+        return $this->displayname;
+    }
+
+    public function setDisplayname(string $displayname): static
+    {
+        $this->displayname = $displayname;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
 
         return $this;
     }

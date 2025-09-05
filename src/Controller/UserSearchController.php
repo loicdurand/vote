@@ -50,15 +50,15 @@ class UserSearchController extends AbstractController
             return new JsonResponse([]);
         }
 
-        $nigend=null;
-        $lastname=null;
-        if(is_numeric($term)){
+        $nigend = null;
+        $lastname = null;
+        if (is_numeric($term)) {
             $nigend = $term;
-        }else{
+        } else {
             $lastname = $term;
         }
 
-        $results = $this->performLdapSearch($lastname,$nigend);
+        $results = $this->performLdapSearch($lastname, $nigend);
 
         if (isset($results['error'])) {
             return new JsonResponse(['error' => $results['error']]);
@@ -67,7 +67,7 @@ class UserSearchController extends AbstractController
         $suggestions = [];
         foreach ($results as $entry) {
             $suggestions[] = [
-                'label' =>  $entry['nigend'][0] . ' - ' . $entry['displayname'][0] . ' - ' .$entry['mail'][0],
+                'label' =>  $entry['nigend'][0] . ' - ' . $entry['displayname'][0],
                 'value' => $entry['nigend'][0]
             ];
         }
@@ -107,7 +107,7 @@ class UserSearchController extends AbstractController
             $entries = [];
             foreach ($results as $entry) {
                 $attributes = [];
-                foreach (['displayname', 'nigend', 'mail'] as $attr) {
+                foreach (['displayname', 'nigend', 'mail', 'dptunite', 'employeetype', 'title', 'specialite'] as $attr) {
                     $attributes[$attr] = $entry->getAttribute($attr) ?? [];
                 }
                 $entries[] = $attributes;

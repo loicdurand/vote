@@ -64,7 +64,7 @@ export default () => {
         const zero = document.getElementById('table-zero-candidat');
         const tr = document.createElement('tr');
         const { nigend, displayname, mail } = data;
-        const values = [nigend, displayname, mail, '--'];
+        const values = [nigend, displayname];
 
         if (zero !== null)
             zero.outerHTML = '';
@@ -73,6 +73,19 @@ export default () => {
             td.innerText = v;
             tr.appendChild(td);
         })
+
+        // ajout d'un bouton de suppr. du candidat
+        const td = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.setAttribute('type', 'button');
+        btn.innerText = 'Retirer de la liste';
+        btn.setAttribute('title', 'Retirer de la liste');
+
+        ['fr-btn', 'fr-icon-delete-line', 'fr-btn--tertiary-no-outline'].forEach(cls => {
+            btn.classList.add(cls);
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
 
         tbody.appendChild(tr);
 

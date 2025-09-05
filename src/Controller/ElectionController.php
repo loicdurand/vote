@@ -70,7 +70,7 @@ final class ElectionController extends AbstractController
         }
 
         $form = $this->createForm(ElectionType::class, $election);
-        $form->handleRequest($request); 
+        $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
@@ -136,6 +136,33 @@ final class ElectionController extends AbstractController
         ]);
     }
 
+    #[Route("/create/candidat/{election_id}", name: "create_candidat", methods: ["POST"])]
+    public function create_candidat(string $election_id = '0', Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $nigend = $request->get('nigend');
+        dd($nigend);
+        // Cherche ou crée l'utilisateur dans la base
+        $user = $entityManager->getRepository(User::class)->findOneBy(['userId' => $ssoData->nigend]);
+
+        if (!$user) {
+
+            $user = new User();
+            $user->setUserId($ssoData->nigend);
+            $user->setUniteId($codeunite);
+            $user->setGrade($ssoData->title);
+            $user->setTitle($ssoData->displayname);
+            $user->setSpecialite($ssoData->specialite);
+            $grp_shortname = $ssoData->employeeType;
+            $groupe = $entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
+            $unite = $entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
+            $user->setUnite($unite);
+            $user->setGroupe($groupe);
+            $user->setRoles(['ROLE_USER']);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+    }
+
     private function createElections($data, $user, $entityManager)
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
@@ -156,9 +183,9 @@ final class ElectionController extends AbstractController
         $election->setEndDate($data->getEndDate());
         $election->setTitle($data->getTitle());
         $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
-        if($grp){
+        if ($grp) {
             $election->addGroupesConcerne($grp);
-        }else{
+        } else {
             $groupes  = $data->getGroupesConcernes();
             foreach ($groupes as $grp)
                 $election->addGroupesConcerne($grp);
