@@ -70,7 +70,7 @@ final class ElectionController extends AbstractController
         }
 
         $form = $this->createForm(ElectionType::class, $election);
-        $form->handleRequest($request);
+        $form->handleRequest($request); 
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
@@ -140,7 +140,7 @@ final class ElectionController extends AbstractController
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
         foreach ($groupes as $grp) {
-            $election = $this->copy_election($data, $grp, $user);
+            $election = $this->copy_election($data, $user);
             $entityManager->persist($election);
             $entityManager->flush();
         }
