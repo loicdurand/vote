@@ -67,7 +67,7 @@ class UserSearchController extends AbstractController
         $suggestions = [];
         foreach ($results as $entry) {
             $suggestions[] = [
-                'label' =>  $entry['nigend'][0] . ' - ' . $entry['displayname'][0],
+                'label' =>  $entry['nigend'][0] . ' - ' . $entry['displayname'][0] . ' - ' . $entry['mail'][0],
                 'value' => $entry['nigend'][0]
             ];
         }

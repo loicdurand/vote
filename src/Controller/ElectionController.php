@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
+use App\Entity\Candidat;
 
 use App\Form\ElectionType;
 
@@ -137,30 +138,37 @@ final class ElectionController extends AbstractController
     }
 
     #[Route("/create/candidat/{election_id}", name: "create_candidat", methods: ["POST"])]
-    public function create_candidat(string $election_id = '0', Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function create_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
     {
-        $nigend = $request->get('nigend');
-        dd($nigend);
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $nigend = $data['nigend'];
+        $displayname = $data['displayname'];
+        $mail = $data['mail'];
+
+        $candidat = new Candidat();
+        // @TODO: FINIR L'ENREGISTREMENT DU CANDIDAT
+
         // Cherche ou crée l'utilisateur dans la base
-        $user = $entityManager->getRepository(User::class)->findOneBy(['userId' => $ssoData->nigend]);
+        // $user = $entityManager->getRepository(User::class)->findOneBy(['userId' => $ssoData->nigend]);
 
-        if (!$user) {
+        // if (!$user) {
 
-            $user = new User();
-            $user->setUserId($ssoData->nigend);
-            $user->setUniteId($codeunite);
-            $user->setGrade($ssoData->title);
-            $user->setTitle($ssoData->displayname);
-            $user->setSpecialite($ssoData->specialite);
-            $grp_shortname = $ssoData->employeeType;
-            $groupe = $entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
-            $unite = $entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
-            $user->setUnite($unite);
-            $user->setGroupe($groupe);
-            $user->setRoles(['ROLE_USER']);
-            $entityManager->persist($user);
-            $entityManager->flush();
-        }
+        //     $user = new User();
+        //     $user->setUserId($ssoData->nigend);
+        //     $user->setUniteId($codeunite);
+        //     $user->setGrade($ssoData->title);
+        //     $user->setTitle($ssoData->displayname);
+        //     $user->setSpecialite($ssoData->specialite);
+        //     $grp_shortname = $ssoData->employeeType;
+        //     $groupe = $entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
+        //     $unite = $entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
+        //     $user->setUnite($unite);
+        //     $user->setGroupe($groupe);
+        //     $user->setRoles(['ROLE_USER']);
+        //     $entityManager->persist($user);
+        //     $entityManager->flush();
+        // }
     }
 
     private function createElections($data, $user, $entityManager)
@@ -173,7 +181,7 @@ final class ElectionController extends AbstractController
         }
     }
 
-    private function copy_election($data, $user, $grp = false)
+    private function copy_election($data, $user, Groupe | false $grp = false)
     {
         $election = new Election();
         $election->setUser($user);

@@ -3,14 +3,10 @@ export default () => {
     if (document.getElementById('suggest-candidat-list') === null)
         return false;
 
-    type Data = {
-        nigend, displayname, mail
-    };
-
     const input = document.getElementById('suggest-candidat');
     const suggestionsList = document.getElementById('suggest-candidat-list');
     const submit = document.getElementById('suggestion-submit');
-    let data: Data;
+    let data;
 
     input.addEventListener('input', async (e) => {
         const term = (input as HTMLInputElement).value.trim();
@@ -59,15 +55,39 @@ export default () => {
         }
     });
 
-    submit.addEventListener('click', e => {
+    submit.addEventListener('click', async e => {
+        console.log(data);
         const tbody = document.getElementById('candidats-tbody');
         const zero = document.getElementById('table-zero-candidat');
         const tr = document.createElement('tr');
-        const { nigend, displayname, mail } = data;
+        const { nigend, displayname } = data;
         const values = [nigend, displayname];
+
+        // AJAX POST
+        const // 
+            [, , , election_id] = location.pathname.split(/\//),
+            url = '/create/candidat/' + election_id,
+            body = JSON.stringify(data),
+            options = {
+                method: 'post',
+                headers: {},
+                body
+            },
+            response = await fetch(url, options);
+
+        if (!response.ok) {
+            const message = 'Error with Status Code: ' + response.status;
+            throw new Error(message);
+        }
+
+        const result = await response.json();
+        console.log(result);
+        // FIN AJAX POST
 
         if (zero !== null)
             zero.outerHTML = '';
+
+        // ajout des colonnes "nigend" et "displayname"
         values.forEach(v => {
             const td = document.createElement('td');
             td.innerText = v;
