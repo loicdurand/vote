@@ -50,7 +50,7 @@
 						<div class="fr-tile__body">
 							<div class="fr-tile__content">
 								<h3 class="fr-tile__title">
-									<button type="button" class="custom-tile-menu--opener fr-icon-more-fill" id="election-{{ election.id }}-btn">
+									<button type="button" class="custom-tile-menu--opener{# fr-icon-more-fill#}" id="election-{{ election.id }}-btn">
 										{{ election.title }}
 									</button>
 								</h3>
@@ -69,18 +69,20 @@
 
 								</p>
 
-								<div class="fr-tile__start">
-									{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
-									{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
-
-									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
-										{{ election.startDate | date('d/m/Y') }}
-										au
-										{{ election.endDate | date('d/m/Y') }}
-									</p>
+								{# <div class="fr-tile__start">
+																	{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+																	{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+								
+																	<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
+																		{{ election.startDate | date('d/m/Y') }}
+																		au
+																		{{ election.endDate | date('d/m/Y') }}
+																	</p>
+															</div> #}
 							</div>
-						</div> <!-- fin .fr-tile__content -->
-					</div> <!-- fin .fr-tile__body -->
+							<!-- fin .fr-tile__content -->
+						</div>
+						<!-- fin .fr-tile__body -->
 
 						<div class="fr-tile__header">
 							<div class="fr-tile__pictogram">
@@ -92,38 +94,53 @@
 							</div>
 						</div>
 
-						{# <div class="custom-tile-menu">
+						<div class="custom-tile-menu">
 							<menu class="fr-btns-group">
-								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
-								<li><a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
-								<li><a target="_self" href="/election/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
-								<li><a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
-								<li><button disabled target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
-								<li><a target="_self" href="/election/cancel/{{election.id}}" class="custom-link--icon fr-link">Annuler cette élection</a></li>
+								<li>
+									<button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button>
+								</li>
+								<li>
+									<a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a>
+								</li>
+								<li>
+									<a target="_self" href="/election/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a>
+								</li>
+								<li>
+									<a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a>
+								</li>
+								<li>
+									<button disabled target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Partager cette élection</button>
+								</li>
+								<li>
+									<a target="_self" href="/election/cancel/{{election.id}}" class="custom-link--icon fr-link">Annuler cette élection</a>
+								</li>
 							</menu>
-						</div> #}
+						</div>
 
-					</div> <!-- fin .fr-tile -->
-					
-				</div> <!-- fin .fr-col -->
+					</div>
+					<!-- fin .fr-tile -->
+
+				</div>
+				<!-- fin .fr-col -->
 
 				<div class="fr-col-sm-12 fr-col-md-7 fr-col-lg-7 fr-col-xl-8 custom-card-container">
 
 					<div class="fr-grid-row">
 
-					<h3 class="fr-h4 center">Candidatures</h3>
+						<h3 class="fr-h4 center">Candidatures</h3>
 
 						<form method="GET" action="{{ path('search_users') }}">
 
 							<div class="fr-grid-row fr-grid-row--gutters">
 
 								<h4 class="fr-h6 fr-col-12 fr-mb-1w fr-mb-0">
-									Inscrire un candidat	
+									Inscrire un candidat
 								</h4>
 
 								<div class="fr-col-md-10 fr-col-lg-8 fr-mb-2w">
 									<div class="fr-input-group" id="input-group-suggest-candidat">
-										<label class="fr-label" for="suggest-candidat"> Recherche d'utilisateur 
+										<label class="fr-label" for="suggest-candidat">
+											Recherche d'utilisateur
 											<span class="fr-hint-text">Recherche possible par nom ou par nigend.</span>
 										</label>
 										<input class="fr-input" id="suggest-candidat" type="search" placeholder="Nom ou nigend de l'utilisateur" list="suggest-candidat-list">
@@ -132,7 +149,8 @@
 								</div>
 								<div class="fr-col-md-2 fr-col-lg-4 fr-mb-2w">
 									<div class="fr-input-group">
-										<label class="fr-label" for="suggestion-submit"> &nbsp; 
+										<label class="fr-label" for="suggestion-submit">
+											&nbsp;
 											<span class="fr-hint-text">&nbsp;</span>
 										</label>
 										<button type="button" class="fr-btn fr-btn--primary fr-mt-1w fr-hidden" id="suggestion-submit">Ajouter</button>
@@ -142,87 +160,87 @@
 						</div>
 					</form>
 
-								{# {% if error %}
-									⟿&nbsp;<p style="color: red;">{{ error }}</p>
-								{% endif %}
-								#}
+					{# {% if error %}
+														⟿&nbsp;<p style="color: red;">{{ error }}</p>
+													{% endif %}
+													#}
 
-								<div class="fr-table fr-table--no-scroll" id="table-candidats-component">
-									<div class="fr-table__wrapper">
-										<div class="fr-table__container">
-											<div class="fr-table__content">
-												<table id="table-candidats">
-													<caption class="fr-hidden">Candidats inscrits</caption>
-													<thead>
-														<tr>
-															<th>
-																Nigend
-															</th>
-															<th>
-																Utilisateur
-															</th>
-															<th>
-																Courriel
-															</th>
-															<th>
-																Action
-															</th>
-														</tr>
-													</thead>
-													<tbody id="candidats-tbody">
-														{% if election.candidats | length %}
-															<tr id="table-candidats-row-key-1" data-row-key="1">
-																<td>
-																	Lorem ipsum dolor sit ame
-																</td>
-																<td>
-																	Lorem ipsum dolor sit ame
-																</td>
-																<td>
-																	Lorem ipsum dolor sit ame
-																</td>
-																<td>
-																	Lorem ipsum dolor sit ame
-																</td>
-															</tr>
+					<div class="fr-table fr-table--no-scroll" id="table-candidats-component">
+						<div class="fr-table__wrapper">
+							<div class="fr-table__container">
+								<div class="fr-table__content">
+									<table id="table-candidats">
+										<caption class="fr-hidden">Candidats inscrits</caption>
+										<thead>
+											<tr>
+												<th>
+													Nigend
+												</th>
+												<th>
+													Utilisateur
+												</th>
+												<th>
+													Courriel
+												</th>
+												<th>
+													Action
+												</th>
+											</tr>
+										</thead>
+										<tbody id="candidats-tbody">
+											{% if election.candidats | length %}
+												<tr id="table-candidats-row-key-1" data-row-key="1">
+													<td>
+														Lorem ipsum dolor sit ame
+													</td>
+													<td>
+														Lorem ipsum dolor sit ame
+													</td>
+													<td>
+														Lorem ipsum dolor sit ame
+													</td>
+													<td>
+														Lorem ipsum dolor sit ame
+													</td>
+												</tr>
 
-														{% else %}
+											{% else %}
 
-															<tr id="table-zero-candidat" data-row-key="1">
-																<td colspan="4" class="center">
-																	Il n'y a pas encore de candidat pour cette élection.
-																</td>
-															</tr>
+												<tr id="table-zero-candidat" data-row-key="1">
+													<td colspan="4" class="center">
+														Il n'y a pas encore de candidat pour cette élection.
+													</td>
+												</tr>
 
-														{% endif %}
+											{% endif %}
 
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-
-							</div>
-							<!-- fin .fr-col -->
-
-						{% else %}
-
-							<div class="fr-notice fr-notice--info">
-								<div class="fr-container">
-									<div class="fr-notice__body">
-										<p>
-											<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-											<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
-										</p>
-									</div>
+										</tbody>
+									</table>
 								</div>
 							</div>
-
-						{% endif %}
-
+						</div>
 					</div>
 
-				</main>
+				</div>
+				<!-- fin .fr-col -->
 
-			{% endblock %}
+			{% else %}
+
+				<div class="fr-notice fr-notice--info">
+					<div class="fr-container">
+						<div class="fr-notice__body">
+							<p>
+								<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
+								<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+							</p>
+						</div>
+					</div>
+				</div>
+
+			{% endif %}
+
+		</div>
+
+	</main>
+
+{% endblock %}

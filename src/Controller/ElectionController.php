@@ -140,13 +140,13 @@ final class ElectionController extends AbstractController
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
         foreach ($groupes as $grp) {
-            $election = $this->copy_election($data, $user);
+            $election = $this->copy_election($data, $user, $grp);
             $entityManager->persist($election);
             $entityManager->flush();
         }
     }
 
-    private function copy_election($data, $user)
+    private function copy_election($data, $user, $grp = false)
     {
         $election = new Election();
         $election->setUser($user);
@@ -156,9 +156,13 @@ final class ElectionController extends AbstractController
         $election->setEndDate($data->getEndDate());
         $election->setTitle($data->getTitle());
         $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
-        $groupes  = $data->getGroupesConcernes();
-        foreach ($groupes as $grp)
+        if($grp){
             $election->addGroupesConcerne($grp);
+        }else{
+            $groupes  = $data->getGroupesConcernes();
+            foreach ($groupes as $grp)
+                $election->addGroupesConcerne($grp);
+        }
         $unites_concernees = $data->getUnitesConcernees();
         foreach ($unites_concernees as $unt)
             $election->addUnitesConcernee($unt);
