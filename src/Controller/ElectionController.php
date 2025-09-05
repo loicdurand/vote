@@ -6,12 +6,14 @@ use App\Entity\Election;
 use App\Entity\ElectionHistory;
 use App\Entity\Groupe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
+use App\Entity\Candidat;
 
 use App\Form\ElectionType;
 
@@ -70,7 +72,7 @@ final class ElectionController extends AbstractController
         }
 
         $form = $this->createForm(ElectionType::class, $election);
-        $form->handleRequest($request); 
+        $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
@@ -136,6 +138,84 @@ final class ElectionController extends AbstractController
         ]);
     }
 
+    #[Route("/create/candidat/{election_id}", name: "create_candidat", methods: ["POST"])]
+    public function create_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $nigend = $data['nigend'];
+        $displayname = $data['displayname'];
+        $mail = $data['mail'];
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $candidats = $election->getCandidats();
+
+        $exists = false;
+        foreach ($candidats as $c) {
+            if ($nigend == $c->getUserId())
+                $exists = true;
+        }
+
+        $result = [
+            'nigend' => $nigend,
+            'displayname' => $displayname,
+            'mail' => $mail
+        ];
+
+        if (!$exists) {
+            $candidat = new Candidat();
+            $candidat->setElection($election);
+            $candidat->setUserId($nigend);
+            $candidat->setDisplayname($displayname);
+            $candidat->setMail($mail);
+            $election->addCandidat($candidat);
+
+            $entityManager->persist($election);
+            $entityManager->flush();
+            $result['success'] = true;
+        } else {
+            $result['success'] = false;
+            $result['error'] = 'La candidat a déjà été inscrit.';
+        }
+
+        return new JsonResponse($result);
+    }
+
+    #[Route("/remove/candidat/{election_id}", name: "remove_candidat", methods: ["POST"])]
+    public function remove_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $nigend = $data['nigend'];
+
+        $candidat = $entityManager->getRepository(Candidat::class)->findOneBy(['userId' => $nigend]);
+        if (is_null($candidat))
+            return new JsonResponse(['success' => false]);
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $election->removeCandidat($candidat);
+
+        $entityManager->persist($election);
+        $entityManager->remove($candidat);
+        $entityManager->flush();
+        return new JsonResponse(['success' => true]);
+    }
+
+    #[Route("/setcandidaturesspontanees/{election_id}", name: "setcandidaturesspontanees", methods: ["POST"])]
+    public function setcandidaturesspontanees(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $value = $data['value'];
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $election->setCandidaturesLibres($value);
+
+        $entityManager->persist($election);
+        $entityManager->flush();
+        return new JsonResponse(['value' => $value]);
+    }
+
     private function createElections($data, $user, $entityManager)
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
@@ -146,7 +226,7 @@ final class ElectionController extends AbstractController
         }
     }
 
-    private function copy_election($data, $user, $grp = false)
+    private function copy_election($data, $user, Groupe | false $grp = false)
     {
         $election = new Election();
         $election->setUser($user);
@@ -156,9 +236,9 @@ final class ElectionController extends AbstractController
         $election->setEndDate($data->getEndDate());
         $election->setTitle($data->getTitle());
         $election->setExplaination(is_null($data->getExplaination()) ? '' : $data->getExplaination());
-        if($grp){
+        if ($grp) {
             $election->addGroupesConcerne($grp);
-        }else{
+        } else {
             $groupes  = $data->getGroupesConcernes();
             foreach ($groupes as $grp)
                 $election->addGroupesConcerne($grp);

@@ -31,7 +31,7 @@ class Election
     /**
      * @var Collection<int, Candidat>
      */
-    #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'election')]
+    #[ORM\OneToMany(targetEntity: Candidat::class, mappedBy: 'election', cascade: ['persist'])]
     private Collection $candidats;
 
     /**
@@ -69,6 +69,9 @@ class Election
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $deletedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $candidaturesLibres = null;
 
     public function __construct()
     {
@@ -330,6 +333,18 @@ class Election
     public function setDeletedAt(): static
     {
         $this->deletedAt = new \Datetime('now');
+
+        return $this;
+    }
+
+    public function isCandidaturesLibres(): ?bool
+    {
+        return $this->candidaturesLibres;
+    }
+
+    public function setCandidaturesLibres(?bool $candidaturesLibres): static
+    {
+        $this->candidaturesLibres = $candidaturesLibres;
 
         return $this;
     }

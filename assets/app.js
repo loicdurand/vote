@@ -10,7 +10,7 @@ import * as utils from './javascripts/utils.ts';
 import stepper_init from './javascripts/stepper.ts';
 import autcomplete_candidats_init from './javascripts/autocomplete-candidats.ts';
 
-document.addEventListener('click', ({ target }) => {
+document.addEventListener('click', async ({ target }) => {
 
     // Initialisation du menu dans les tuiles
     if (target.matches('.custom-tile-menu--opener')) {
@@ -21,8 +21,56 @@ document.addEventListener('click', ({ target }) => {
         const tile = utils.getParent(target, '.custom-card-container');
         const menu = tile.querySelector('.custom-tile-menu');
         menu.classList.remove('active');
+        // ^ fin menu dans les tuiles 
+    } else if (target.matches('#candidats-tbody .fr-icon-delete-line')) {
+        // Suppr. d'un candidat
+        const // 
+            nigend = target.dataset.nigend,
+            [, , , election_id] = location.pathname.split(/\//),
+            url = '/remove/candidat/' + election_id,
+            body = JSON.stringify({ nigend }),
+            options = {
+                method: 'post',
+                headers: {},
+                body
+            },
+            response = await fetch(url, options);
+
+        if (!response.ok) {
+            const message = 'Error with Status Code: ' + response.status;
+            throw new Error(message);
+        } else {
+            target.parentElement.parentElement.outerHTML = "";
+        }
     }
 
+});
+
+document.addEventListener('change', async ({ target }) => {
+    if (target.matches('#check-candidatures-libres')) {
+        // active ou désactive les candidatures libres
+        const // 
+            [, , , election_id] = location.pathname.split(/\//),
+            url = '/setcandidaturesspontanees/' + election_id,
+            body = JSON.stringify({ value: target.checked }),
+            options = {
+                method: 'post',
+                headers: {},
+                body
+            },
+            response = await fetch(url, options);
+
+        if (!response.ok) {
+            const message = 'Error with Status Code: ' + response.status;
+            throw new Error(message);
+        } else {
+            const value = await response.json();
+            if (value)
+                target.setAttribute('checked', 'checked');
+            else
+                target.removeAttribute('checked');
+        }
+    }
 });
 
 stepper_init();

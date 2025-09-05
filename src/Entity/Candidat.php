@@ -18,9 +18,6 @@ class Candidat
     #[ORM\ManyToOne(inversedBy: 'candidats')]
     private ?Election $election = null;
 
-    #[ORM\ManyToOne(inversedBy: 'candidats')]
-    private ?Groupe $groupe = null;
-
     #[ORM\Column(length: 8, nullable: true)]
     private ?string $userId = null;
 
@@ -29,6 +26,12 @@ class Candidat
      */
     #[ORM\OneToMany(targetEntity: Vote::class, mappedBy: 'candidat')]
     private Collection $votes;
+
+    #[ORM\Column(length: 255)]
+    private ?string $displayname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $mail = null;
 
     public function __construct()
     {
@@ -48,18 +51,6 @@ class Candidat
     public function setElection(?Election $election): static
     {
         $this->election = $election;
-
-        return $this;
-    }
-
-    public function getGroupe(): ?Groupe
-    {
-        return $this->groupe;
-    }
-
-    public function setGroupe(?Groupe $groupe): static
-    {
-        $this->groupe = $groupe;
 
         return $this;
     }
@@ -102,6 +93,30 @@ class Candidat
                 $vote->setCandidat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDisplayname(): ?string
+    {
+        return $this->displayname;
+    }
+
+    public function setDisplayname(string $displayname): static
+    {
+        $this->displayname = $displayname;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
 
         return $this;
     }
