@@ -201,6 +201,21 @@ final class ElectionController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
+    #[Route("/setcandidaturesspontanees/{election_id}", name: "setcandidaturesspontanees", methods: ["POST"])]
+    public function setcandidaturesspontanees(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $value = $data['value'];
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $election->setCandidaturesLibres($value);
+
+        $entityManager->persist($election);
+        $entityManager->flush();
+        return new JsonResponse(['value' => $value]);
+    }
+
     private function createElections($data, $user, $entityManager)
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();

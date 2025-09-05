@@ -46,6 +46,33 @@ document.addEventListener('click', async ({ target }) => {
 
 });
 
+document.addEventListener('change', async ({ target }) => {
+    if (target.matches('#check-candidatures-libres')) {
+        // active ou désactive les candidatures libres
+        const // 
+            [, , , election_id] = location.pathname.split(/\//),
+            url = '/setcandidaturesspontanees/' + election_id,
+            body = JSON.stringify({ value: target.checked }),
+            options = {
+                method: 'post',
+                headers: {},
+                body
+            },
+            response = await fetch(url, options);
+
+        if (!response.ok) {
+            const message = 'Error with Status Code: ' + response.status;
+            throw new Error(message);
+        } else {
+            const value = await response.json();
+            if (value)
+                target.setAttribute('checked', 'checked');
+            else
+                target.removeAttribute('checked');
+        }
+    }
+});
+
 stepper_init();
 autcomplete_candidats_init();
 

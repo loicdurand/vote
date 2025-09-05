@@ -70,15 +70,15 @@
 								</p>
 
 								{# <div class="fr-tile__start">
-																																																																																																									{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
-																																																																																																									{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
-																																																																																																
-																																																																																																									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
-																																																																																																										{{ election.startDate | date('d/m/Y') }}
-																																																																																																										au
-																																																																																																										{{ election.endDate | date('d/m/Y') }}
-																																																																																																									</p>
-																																																																																																							</div> #}
+																																																																																																																																																																																																																																																									{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+																																																																																																																																																																																																																																																									{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+																																																																																																																																																																																																																																																
+																																																																																																																																																																																																																																																									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
+																																																																																																																																																																																																																																																										{{ election.startDate | date('d/m/Y') }}
+																																																																																																																																																																																																																																																										au
+																																																																																																																																																																																																																																																										{{ election.endDate | date('d/m/Y') }}
+																																																																																																																																																																																																																																																									</p>
+																																																																																																																																																																																																																																																							</div> #}
 							</div>
 							<!-- fin .fr-tile__content -->
 						</div>
@@ -136,6 +136,19 @@
 								<h4 class="fr-h6 fr-col-12 fr-mb-1w fr-mb-0">
 									Inscrire un candidat
 								</h4>
+
+								<div class="fr-col-md-10 fr-col-lg-8">
+									<div class="fr-checkbox-group">
+										<input name="checkbox" id="check-candidatures-libres" type="checkbox" {{ election.candidaturesLibres ? "checked" : "" }} aria-describedby="checkbox-messages">
+										<label class="fr-label" for="check-candidatures-libres">
+											Autoriser les candidatures spontanées
+											<span class="fr-hint-text">Sous réserve pour l'utilisateur de se trouver dans le&nbsp;
+												<abbr title="Corps d'appartenance et unité">périmètre de l'élection</abbr>
+											</span>
+										</label>
+										<div class="fr-messages-group" id="check-candidatures-libres-messages" aria-live="polite"></div>
+									</div>
+								</div>
 
 								<div class="fr-col-md-10 fr-col-lg-8 fr-mb-2w">
 									<div class="fr-input-group" id="input-group-suggest-candidat">
