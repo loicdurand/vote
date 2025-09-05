@@ -105,10 +105,12 @@ export default () => {
             btn.setAttribute('type', 'button');
             btn.innerText = 'Retirer de la liste';
             btn.setAttribute('title', 'Retirer de la liste');
+            btn.dataset.nigend = nigend;
 
             ['fr-btn', 'fr-icon-delete-line', 'fr-btn--tertiary-no-outline'].forEach(cls => {
                 btn.classList.add(cls);
             });
+
             td.appendChild(btn);
             tr.appendChild(td);
 

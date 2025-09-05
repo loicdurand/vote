@@ -181,6 +181,26 @@ final class ElectionController extends AbstractController
         return new JsonResponse($result);
     }
 
+    #[Route("/remove/candidat/{election_id}", name: "remove_candidat", methods: ["POST"])]
+    public function remove_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $nigend = $data['nigend'];
+
+        $candidat = $entityManager->getRepository(Candidat::class)->findOneBy(['userId' => $nigend]);
+        if (is_null($candidat))
+            return new JsonResponse(['success' => false]);
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+        $election->removeCandidat($candidat);
+
+        $entityManager->persist($election);
+        $entityManager->remove($candidat);
+        $entityManager->flush();
+        return new JsonResponse(['success' => true]);
+    }
+
     private function createElections($data, $user, $entityManager)
     {
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
