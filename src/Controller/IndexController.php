@@ -3,32 +3,47 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
+use App\Entity\Election;
+use App\Entity\Candidat;
 
 final class IndexController extends AbstractController
 {
-    private $env;
 
     #[Route('/', name: 'app_index')]
-    public function index(#[CurrentUser] ?User $user, Request $request, ManagerRegistry $doctrine): Response
+    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (is_null($user)) {
-            $user = new User();
-        }
-        $session = $request->getSession();
-        $this->env = $this->getParameter('app.env');
-        if ($this->env == 'prod' && $session->get('HTTP_LOGIN')) {
-            $user->setUserId($session->get('HTTP_LOGIN'));
-            $user->setRoles($session->get('HTTP_ROLES'));
-        }
 
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+
+        $groupe_id = $user->getGroupe()->getId();
         return $this->render('index/index.html.twig', [
-            "user" => $user
+            'user' => $user,
+            'user_groupe_id' => $groupe_id,
+            'elections' => $elections
+        ]);
+    }
+
+    #[Route("/index/candidat/{election_id}", name: "app_candidat")]
+    public function remove_candidat(string $election_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    {
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+
+        return $this->render('index/candidat.html.twig', [
+            'user' => $user,
+            'election' => $election
         ]);
     }
 }

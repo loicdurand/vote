@@ -47,6 +47,9 @@ class User implements UserInterface
     #[ORM\Column(length: 25, nullable: true)]
     private ?string $specialite = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $mail = null;
+
     public function __construct()
     {
         $this->elections = new ArrayCollection();
@@ -206,6 +209,18 @@ class User implements UserInterface
     public function setSpecialite(?string $specialite): static
     {
         $this->specialite = $specialite;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
 
         return $this;
     }

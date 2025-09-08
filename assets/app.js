@@ -70,6 +70,45 @@ document.addEventListener('change', async ({ target }) => {
             else
                 target.removeAttribute('checked');
         }
+    } else if (target.matches('#toggle-print-all')) {
+        // affiche toutes les élections, même si celles qui ne me concernent pas
+        const main = document.getElementById('main-elections_en_cours');
+        main.classList.toggle('print-all');
+    } else if (target.matches('#check-soumettre-candidature')) {
+        // case "je me porte candidat" cochée ou décochée
+        const { checked } = target;
+        if (checked) {
+            const // 
+                data = { ...target.dataset },
+                [, , , election_id] = location.pathname.split(/\//),
+                url = '/create/candidat/' + election_id,
+                body = JSON.stringify(data),
+                options = {
+                    method: 'post',
+                    headers: {},
+                    body
+                },
+                response = await fetch(url, options),
+                result = await response.json();
+
+            if (result.success)
+                location.reload();
+        } else {
+            const // 
+                nigend = target.dataset.nigend,
+                [, , , election_id] = location.pathname.split(/\//),
+                url = '/remove/candidat/' + election_id,
+                body = JSON.stringify({ nigend }),
+                options = {
+                    method: 'post',
+                    headers: {},
+                    body
+                },
+                response = await fetch(url, options),
+                result = await response.json();
+            if (result.success)
+                location.reload();
+        }
     }
 });
 

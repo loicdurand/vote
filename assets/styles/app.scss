@@ -1,5 +1,13 @@
 @use "./colors";
 
+.election-hidden {
+    display: none;
+}
+
+.print-all .election-hidden {
+    display: block;
+}
+
 .center {
     text-align: center !important;
     width: 100%;
