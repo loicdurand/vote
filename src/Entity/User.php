@@ -50,9 +50,16 @@ class User implements UserInterface
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
+    /**
+     * @var Collection<int, Registre>
+     */
+    #[ORM\OneToMany(targetEntity: Registre::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $registres;
+
     public function __construct()
     {
         $this->elections = new ArrayCollection();
+        $this->registres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +228,36 @@ class User implements UserInterface
     public function setMail(string $mail): static
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Registre>
+     */
+    public function getRegistres(): Collection
+    {
+        return $this->registres;
+    }
+
+    public function addRegistre(Registre $registre): static
+    {
+        if (!$this->registres->contains($registre)) {
+            $this->registres->add($registre);
+            $registre->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegistre(Registre $registre): static
+    {
+        if ($this->registres->removeElement($registre)) {
+            // set the owning side to null (unless already changed)
+            if ($registre->getUser() === $this) {
+                $registre->setUser(null);
+            }
+        }
 
         return $this;
     }
