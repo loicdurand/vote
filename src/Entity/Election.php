@@ -288,7 +288,7 @@ class Election
     public function isClosed(): bool
     {
         $now = new \DateTime("now");
-        return $this->startDate < $now;
+        return $this->endDate < $now;
     }
 
     public function isCancelled(): ?bool

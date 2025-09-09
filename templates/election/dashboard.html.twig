@@ -95,8 +95,16 @@
 							<menu class="fr-btns-group">
 								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 								<li><a target="_self" href="/election/action/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
-								<li><a target="_self" href="/election/action/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
-								<li><a target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
+								{% if election.isOpen() != true and election.isClosed() !=true %}
+									<li><a target="_self" href="/election/action/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
+								{% endif %}
+								{% if election.isNotOpenYet() %}
+									<li><a target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
+								{% elseif election.isClosed() %}
+									<li>
+										<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+									</li>
+								{% endif %}
 								<li><button disabled target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
 								<li><a target="_self" href="/election/action/cancel/{{election.id}}" class="custom-link--icon fr-link">Annuler cette élection</a></li>
 							</menu>

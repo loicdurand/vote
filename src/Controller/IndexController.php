@@ -34,7 +34,7 @@ TXT;
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
-        $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+        $elections = $entityManager->getRepository(Election::class)->findBy(['isCancelled' => false]);
 
         foreach ($elections as $election) {
             $aDejaVote = $entityManager->getRepository(Registre::class)->findOneBy([
@@ -170,7 +170,9 @@ TXT;
     #[Route("/index/retrieve-data", name: "app_retrieve_data", methods: ["POST"])]
     public function retrieve_data(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
-        $secret = $request->query->get('secret') ?? $request->request->get('secret');
+        $request = Request::createFromGlobals();
+        $data = (array) json_decode($request->getContent());
+        $secret = $data['secret'] ?? $data['secret'];
         $registreHash = hash('sha256', $secret . 'registre');
         $voteHash = hash('sha256', $secret . 'vote');
 

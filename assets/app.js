@@ -9,6 +9,7 @@ import './bootstrap.ts';
 import * as utils from './javascripts/utils.ts';
 import stepper_init from './javascripts/stepper.ts';
 import autcomplete_candidats_init from './javascripts/autocomplete-candidats.ts';
+import stats_init from './javascripts/stats.ts';
 
 document.addEventListener('click', async ({ target }) => {
 
@@ -149,4 +150,5 @@ document.addEventListener('change', async ({ target }) => {
 
 stepper_init();
 autcomplete_candidats_init();
+stats_init();
 

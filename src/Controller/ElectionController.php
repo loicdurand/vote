@@ -81,7 +81,12 @@ final class ElectionController extends AbstractController
             if ($form->isValid()) {
                 // Si on a coché la case "une élection par corps d'appartenance"
                 if ($checkboxValue) {
-                    $this->createElections($data, $user, $entityManager);
+                    $elections = $this->createElections($data, $user, $entityManager);
+                    foreach ($elections as $election) {
+                        $election->addCandidat($this->createCandidatBlanc($election));
+                        $entityManager->persist($election);
+                        $entityManager->flush();
+                    }
                 } else {
                     if ($action === 'cancel') {
                         $data->setIsCancelled(true);
@@ -100,10 +105,14 @@ final class ElectionController extends AbstractController
                         $grps = $data->getGroupesConcernes();
                         foreach ($grps as $grp) {
                             $copy = $this->copy_election($data, $user);
+                            $candidats = $copy->getCandidats();
+                            foreach ($candidats as $candidat)
+                                $election->removeCandidat($candidat);
                             $entityManager->persist($copy);
                         }
                     } else {
                         $data->setCreatedAt();
+                        $data->addCandidat($this->createCandidatBlanc($data));
                         $entityManager->persist($data);
                     }
                     $entityManager->flush();
@@ -218,12 +227,12 @@ final class ElectionController extends AbstractController
 
     private function createElections($data, $user, $entityManager)
     {
+        $elections = [];
         $groupes = $entityManager->getRepository(Groupe::class)->findAll();
         foreach ($groupes as $grp) {
-            $election = $this->copy_election($data, $user, $grp);
-            $entityManager->persist($election);
-            $entityManager->flush();
+            $elections[] = $this->copy_election($data, $user, $grp);
         }
+        return $elections;
     }
 
     private function copy_election($data, $user, Groupe | false $grp = false)
@@ -247,6 +256,19 @@ final class ElectionController extends AbstractController
         foreach ($unites_concernees as $unt)
             $election->addUnitesConcernee($unt);
         $election->setCreatedAt();
+        $candidats = $data->getCandidats();
+        foreach ($candidats as $candidat)
+            $election->addCandidat($candidat);
         return $election;
+    }
+
+    private function createCandidatBlanc(Election $election)
+    {
+        $candidat = new Candidat();
+        $candidat->setElection($election);
+        $candidat->setUserId("");
+        $candidat->setDisplayname("VOTE BLANC");
+        $candidat->setMail("");
+        return $candidat;
     }
 }

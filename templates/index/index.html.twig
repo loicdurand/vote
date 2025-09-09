@@ -115,6 +115,10 @@
 											<a target="_self" href="/index/cgv/{{election.id}}" class="fr-btn fr-btn--tertiary">Participer au vote</a>
 										{% endif %}
 										</li>
+									{% elseif election.isClosed() %}
+										<li>
+											<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+										</li>
 									{% endif %}
 								</menu>
 							</div>

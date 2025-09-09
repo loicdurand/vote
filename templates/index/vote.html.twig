@@ -22,16 +22,16 @@
 	{# Fin fil d'arianne #}
 
 	{# <h2 class="fr-mt-2w">
-																																											Interface de vote
-																																										</h2>
-																																									
-																																										<p class="fr-text--sm fr-mb-1w">
-																																											À l'étape suivante, vous allez voter pour le candidat de votre choix.
-																																											<br>
-																																											Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
-																																										</p>
-																																									
-																																										<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
+																																																									Interface de vote
+																																																								</h2>
+																																																							
+																																																								<p class="fr-text--sm fr-mb-1w">
+																																																									À l'étape suivante, vous allez voter pour le candidat de votre choix.
+																																																									<br>
+																																																									Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
+																																																								</p>
+																																																							
+																																																								<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
 
 	<main>
 
@@ -121,13 +121,26 @@
 											<h4 class="fr-card__title">
 												{{ candidat.displayname }}
 											</h4>
-											<p>NIGEND:
-												{{ candidat.userId }}</p>
+											{% if candidat.displayname!= 'VOTE BLANC' %}
+												<p>NIGEND:
+													{{ candidat.userId }}
+												</p>
+											{% else %}
+												<p>
+													Je ne vote pour aucun des candidats
+												</p>
+											{% endif %}
 										</div>
 										<div class="fr-card__footer">
 											<ul class="fr-btns-group fr-btns-group--inline-reverse fr-btns-group--inline-lg">
 												<li>
-													<button aria-controls="modal-{{ candidat.id }}" data-fr-opened="false" type="button" class="fr-btn fr-btn--secondary">Je vote pour ce personnel</button>
+													<button aria-controls="modal-{{ candidat.id }}" data-fr-opened="false" type="button" class="fr-btn fr-btn--secondary">
+														{% if candidat.displayname!= 'VOTE BLANC' %}
+															Je vote pour ce personnel
+														{% else %}
+															Je vote blanc
+														{% endif %}
+													</button>
 												</li>
 											</ul>
 										</div>
@@ -179,15 +192,29 @@
 										<span class="fr-icon-info-line fr-icon--lg" aria-hidden="true"></span>
 										Confirmation de vote
 									</h2>
-									<p>
-										Vous êtes sur le point de donner votre vote au candidat
-										<br>
-										<span class="bold fr-mb-2w">{{ candidat.displayname }}
-											- nigend:
-											{{ candidat.userId }}</span>.
-										<br>
-										Nous vous rappelons que vous ne pouvez voter qu'une seule fois, pour un seul candidat par élection, et que votre vote est définitif.
-									</p>
+									{% if candidat.displayname!= 'VOTE BLANC' %}
+										<p>
+											Vous êtes sur le point de donner votre vote au candidat
+											<br>
+											<span class="bold fr-mb-2w">{{ candidat.displayname }}
+												- nigend:
+												{{ candidat.userId }}</span>.
+											<br>
+											Nous vous rappelons que vous ne pouvez voter qu'une seule fois, et que votre vote est définitif.
+										</p>
+									{% else %}
+										<p>
+											Vous êtes sur le point d'enregistrer ce que l'on appelle
+											<br>
+											- un
+											<span class="bold fr-mb-2w">{{ candidat.displayname }}</span>.
+											<br>
+											Cela signifie que vous avez fait l'effort de voter, mais que vous ne souhaitez donner votre voix à aucun des candidats.
+											<br>
+											Nous vous rappelons que vous ne pouvez voter qu'une seule fois et que votre vote est définitif.
+										</p>
+
+									{% endif %}
 								</div>
 								<div class="fr-modal__footer">
 									<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
