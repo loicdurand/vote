@@ -1,17 +1,41 @@
 @use "./colors";
 
+.election-hidden {
+    display: none;
+}
+
+.print-all .election-hidden {
+    display: block;
+}
+
 .center {
     text-align: center !important;
     width: 100%;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
 }
 
 .fr-mb-0 {
     margin-bottom: 0 !important;
 }
 
+.fr-ml-0 {
+    margin-left: 0 !important;
+}
+
 [type="submit"],
 [type="reset"] {
     z-index: 1000;
+}
+
+.fr-quote.fr-quote--green-menthe.fr-quote--column {
+    min-height: 5rem;
 }
 
 fieldset.custom-form-disable {
@@ -38,39 +62,54 @@ fieldset.custom-form-disable {
     padding: 1px 0;
 }
 
-.custom-card-container .custom-tile-menu {
-    position: absolute;
-    bottom: 3px;
-    left: -1px;
-    width: 100%;
-    padding: 2rem 0.5rem 1rem 0.5rem;
-    text-align: left;
-    border: 1px solid var(--border-action-low-beige-gris-galet);
-    background: rgb(255, 255, 255);
-    max-height: 0;
-    transition: max-height 0.25s ease;
-    -webkit-transition: max-height 0.25s ease;
-    display: none;
-
-    &.active {
-        max-height: unset;
-        display: block;
+.custom-card-container {
+    & .fr-tile.fr-enlarge-link {
+        max-height: 475px;
     }
 
-    & menu {
-        padding: 0;
+    & .custom-tile-menu {
+        position: absolute;
+        bottom: 3px;
+        left: -1px;
+        width: 100%;
+        padding: 2rem 0.5rem 1rem 0.5rem;
+        text-align: left;
+        border: 1px solid var(--border-action-low-beige-gris-galet);
+        background: rgb(255, 255, 255);
+        max-height: 0;
+        transition: max-height 0.25s ease;
+        -webkit-transition: max-height 0.25s ease;
+        display: none;
 
-        li {
-            list-style-type: none;
-            position: relative;
+        &.active {
+            max-height: unset;
+            display: block;
+        }
 
-            & .custom-tile-menu--closer {
-                position: absolute;
-                top: -3rem;
-                right: 0px;
-                min-width: 10ch;
+        & menu {
+            padding: 0;
+
+            li {
+                list-style-type: none;
+                position: relative;
+
+                & .custom-tile-menu--closer {
+                    position: absolute;
+                    top: -3rem;
+                    right: 0px;
+                    min-width: 10ch;
+                }
             }
         }
+    }
+
+    & .fr-card .fr-card__img img {
+        object-fit: contain;
+    }
+
+    & .fr-card .fr-card__body .fr-card__content .fr-card__title {
+        font-size: 1.05rem;
+        line-height: 1.5;
     }
 }
 

@@ -2,23 +2,28 @@
 
 namespace App\Entity;
 
-use App\Repository\VoteRepository;
+use App\Repository\RegistreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: VoteRepository::class)]
-class Vote
+#[ORM\Entity(repositoryClass: RegistreRepository::class)]
+class Registre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'votes')]
+    #[ORM\ManyToOne(inversedBy: 'registres')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Election $election = null;
 
-    #[ORM\ManyToOne(inversedBy: 'votes')]
-    private ?Candidat $candidat = null;
+    #[ORM\ManyToOne(inversedBy: 'registres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\Column]
+    private ?\DateTime $votedAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $verification_hash = null;
@@ -40,14 +45,26 @@ class Vote
         return $this;
     }
 
-    public function getCandidat(): ?Candidat
+    public function getUser(): ?User
     {
-        return $this->candidat;
+        return $this->user;
     }
 
-    public function setCandidat(?Candidat $candidat): static
+    public function setUser(?User $user): static
     {
-        $this->candidat = $candidat;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getVotedAt(): ?\DateTime
+    {
+        return $this->votedAt;
+    }
+
+    public function setVotedAt(\DateTime $votedAt): static
+    {
+        $this->votedAt = $votedAt;
 
         return $this;
     }

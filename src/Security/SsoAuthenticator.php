@@ -87,6 +87,7 @@ class SsoAuthenticator extends AbstractAuthenticator
             $user->setGrade($ssoData->title);
             $user->setTitle($ssoData->displayname);
             $user->setSpecialite($ssoData->specialite);
+            $user->setMail($ssoData->mail);
             $grp_shortname = $ssoData->employeeType;
             $groupe = $this->entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
             $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);

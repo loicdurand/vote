@@ -56,7 +56,7 @@ export default () => {
     });
 
     submit.addEventListener('click', async e => {
-        console.log(data);
+
         const tbody = document.getElementById('candidats-tbody');
         const zero = document.getElementById('table-zero-candidat');
         const tr = document.createElement('tr');

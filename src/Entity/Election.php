@@ -73,12 +73,19 @@ class Election
     #[ORM\Column(nullable: true)]
     private ?bool $candidaturesLibres = null;
 
+    /**
+     * @var Collection<int, Registre>
+     */
+    #[ORM\OneToMany(targetEntity: Registre::class, mappedBy: 'election', orphanRemoval: true)]
+    private Collection $registres;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
         $this->votes = new ArrayCollection();
         $this->groupesConcernes = new ArrayCollection();
         $this->unitesConcernees = new ArrayCollection();
+        $this->registres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -345,6 +352,36 @@ class Election
     public function setCandidaturesLibres(?bool $candidaturesLibres): static
     {
         $this->candidaturesLibres = $candidaturesLibres;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Registre>
+     */
+    public function getRegistres(): Collection
+    {
+        return $this->registres;
+    }
+
+    public function addRegistre(Registre $registre): static
+    {
+        if (!$this->registres->contains($registre)) {
+            $this->registres->add($registre);
+            $registre->setElection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegistre(Registre $registre): static
+    {
+        if ($this->registres->removeElement($registre)) {
+            // set the owning side to null (unless already changed)
+            if ($registre->getElection() === $this) {
+                $registre->setElection(null);
+            }
+        }
 
         return $this;
     }

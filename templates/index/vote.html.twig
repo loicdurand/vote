@@ -1,0 +1,204 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Interface de vote
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/index/vote">Interface de vote</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	{# <h2 class="fr-mt-2w">
+																																											Interface de vote
+																																										</h2>
+																																									
+																																										<p class="fr-text--sm fr-mb-1w">
+																																											À l'étape suivante, vous allez voter pour le candidat de votre choix.
+																																											<br>
+																																											Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
+																																										</p>
+																																									
+																																										<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
+
+	<main>
+
+		<div class="fr-stepper fr-mt-4w">
+			<h2 class="fr-stepper__title">
+				Sélection du candidat
+				<span class="fr-stepper__state">Étape 2 sur 3</span>
+			</h2>
+			<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
+			<p class="fr-stepper__details">
+				<span class="fr-text--bold">Étape suivante :</span>
+				Confirmation de vote</p>
+		</div>
+
+		<h3 class="fr-mt-6w">
+			Il est temps de procéder au vote!
+		</h3>
+
+
+		<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
+
+			{% if election is not null %}
+
+				<div class="fr-col-sm-12 fr-col-md-5 fr-col-lg-5 fr-col-xl-4 custom-card-container">
+
+					<h3 class="fr-h4 center">Caractéristiques</h3>
+
+					<div class="fr-tile fr-enlarge-link" id="tile-4">
+						<div class="fr-tile__body">
+							<div class="fr-tile__content">
+								<h3 class="fr-tile__title">
+									{{ election.title }}
+								</h3>
+								<p class="fr-tile__desc">{{ election.explaination }}</p>
+								<p class="fr-tile__detail">
+									Créée par&nbsp;
+									{{ election.user.title }}
+
+									<ul class="fr-tags-group">
+										{% for grp in election.groupesConcernes %}
+											<li>
+												<p class="fr-tag fr-tag--défaut" id="tag-group-0">{{ grp.shortName }}</p>
+											</li>
+										{% endfor %}
+									</ul>
+
+								</p>
+
+							</div>
+							<!-- fin .fr-tile__content -->
+						</div>
+						<!-- fin .fr-tile__body -->
+
+						<div class="fr-tile__header">
+							<div class="fr-tile__pictogram">
+								<svg aria-hidden="true" class="fr-artwork" viewbox="0 0 80 80" width="80px" height="80px">
+									<use class="fr-artwork-decorative" href="{{ asset('artwork/pictograms/buildings/city-hall.svg') }}#artwork-decorative"></use>
+									<use class="fr-artwork-minor" href="{{ asset('artwork/pictograms/buildings/city-hall.svg') }}#artwork-minor"></use>
+									<use class="fr-artwork-major" href="{{ asset('artwork/pictograms/buildings/city-hall.svg') }}#artwork-major"></use>
+								</svg>
+							</div>
+						</div>
+
+					</div>
+					<!-- fin .fr-tile -->
+
+				</div>
+				<!-- fin .fr-col -->
+
+				<div class="fr-col-sm-12 fr-col-md-7 fr-col-lg-7 fr-col-xl-8 custom-card-container">
+
+					<h3 class="fr-h4 center">Candidats</h3>
+
+					<p>Les candidats sont classés de manière aléatoire.
+						<br>
+						Choisissez celui pour lequel vous souhaitez voter, puis confirmez.</p>
+
+					<div class="fr-grid-row fr-grid-row--gutters">
+
+						{% for candidat in election.candidats | shuffle %}
+
+							<div class="fr-col-6">
+
+								<div class="fr-card fr-enlarge-link">
+									<div class="fr-card__body">
+										<div class="fr-card__content">
+											<h4 class="fr-card__title">
+												{{ candidat.displayname }}
+											</h4>
+											<p>NIGEND:
+												{{ candidat.userId }}</p>
+										</div>
+										<div class="fr-card__footer">
+											<ul class="fr-btns-group fr-btns-group--inline-reverse fr-btns-group--inline-lg">
+												<li>
+													<button aria-controls="modal-{{ candidat.id }}" data-fr-opened="false" type="button" class="fr-btn fr-btn--secondary">Je vote pour ce personnel</button>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div class="fr-card__header">
+										<div class="fr-card__img">
+											<img class="fr-responsive-img" src="{{ asset('artwork/pictograms/institutions/gendarmerie.svg') }}" alt=""/>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						{% endfor %}
+
+					</div>
+					<!-- fin .fr-col -->
+
+				{% else %}
+
+					<div class="fr-notice fr-notice--info">
+						<div class="fr-container">
+							<div class="fr-notice__body">
+								<p>
+									<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
+									<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+								</p>
+							</div>
+						</div>
+					</div>
+
+				{% endif %}
+
+			</div>
+
+		</main>
+
+		{% for candidat in election.candidats %}
+			<dialog id="modal-{{ candidat.id }}" class="fr-modal" aria-labelledby="modal-{{ candidat.id }}-title" data-fr-concealing-backdrop="true">
+				<div class="fr-container fr-container--fluid fr-container-md">
+					<div class="fr-grid-row fr-grid-row--center">
+						<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+							<div class="fr-modal__body">
+								<div class="fr-modal__header">
+									<button aria-controls="modal-{{ candidat.id }}" title="Fermer" type="button" id="button-5" class="fr-btn--close fr-btn">Fermer</button>
+								</div>
+								<div class="fr-modal__content">
+									<h2 id="modal-{{ candidat.id }}-title" class="fr-modal__title">
+										<span class="fr-icon-info-line fr-icon--lg" aria-hidden="true"></span>
+										Confirmation de vote
+									</h2>
+									<p>
+										Vous êtes sur le point de donner votre vote au candidat
+										<br>
+										<span class="bold fr-mb-2w">{{ candidat.displayname }}
+											- nigend:
+											{{ candidat.userId }}</span>.
+										<br>
+										Nous vous rappelons que vous ne pouvez voter qu'une seule fois, pour un seul candidat par élection, et que votre vote est définitif.
+									</p>
+								</div>
+								<div class="fr-modal__footer">
+									<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+										<a href="/index/confirm/{{ candidat.id }}" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Je confirme mon vote</a>
+										<button aria-controls="modal-{{ candidat.id }}" class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">Fermer</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</dialog>
+		{% endfor %}
+	{% endblock %}
