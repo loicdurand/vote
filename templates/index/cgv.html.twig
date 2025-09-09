@@ -22,16 +22,16 @@
 	{# Fin fil d'arianne #}
 
 	{# <h2 class="fr-mt-2w">
-			Interface de vote
-		</h2>
-	
-		<p class="fr-text--sm fr-mb-1w">
-			À l'étape suivante, vous allez voter pour le candidat de votre choix.
-			<br>
-			Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
-		</p>
-	
-		<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
+												Interface de vote
+											</h2>
+										
+											<p class="fr-text--sm fr-mb-1w">
+												À l'étape suivante, vous allez voter pour le candidat de votre choix.
+												<br>
+												Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
+											</p>
+										
+											<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
 
 	<main>
 
@@ -110,15 +110,15 @@
 		</p>
 
 		<p>
-			Techniquement, nous chiffrons une phrase indiquant:
+			Concrètement, nous créons un hash cryptographique unique qui est l'unique moyen de faire le lien entre le registre "a voté" et votre vote.
 			<br>
-			<span class="italic">"Dans le cadre de l'élection portant l'identifiant [x], l'utilisateur dont le nigend est [XXXXXX] a voté pour le candidat portant le nigend [YYYYYY]."</span>
+			Ce hash ne peut être déchiffré qu'à l'aide de la clé, que vous serez seul à connaître.
 			<br>
-			L'algorythme de chiffrement utilisé rend impossible la reconstitution de cette phrase sans être en possession de cette clé. Ainsi, il est impossible de deviner le contenu de cette phrase, y compris en itérant sur les différentes possibilités.
+			L'algorythme de chiffrement utilisé rend non seulement impossible la reconstitution de cette phrase sans être en possession de la clé, mais il est également impossible de deviner un vote, y compris en itérant sur les différentes possibilités.
 		</p>
 
 		<p>
-			Par conséquent, et c'est aussi l'inconvéniant de ce système, nous vous invitons à conserver précieusement cette clé car il nous sera impossible de la renouveller. Immédiatement après que vous ayez quitté la page sur laquelle elle est affichée, elle sera détruite.
+			Par conséquent, et c'est aussi l'inconvéniant de ce système, nous vous invitons à conserver précieusement cette clé car il nous sera impossible de la renouveller. Immédiatement après que vous ayez quitté la page sur laquelle elle sera affichée, elle sera détruite.
 		</p>
 
 		<h3 class="fr-mt-4w">

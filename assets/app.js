@@ -42,6 +42,41 @@ document.addEventListener('click', async ({ target }) => {
         } else {
             target.parentElement.parentElement.outerHTML = "";
         }
+    } else if (target.matches('#secret-reveal--btn')) {
+        const input = target.previousElementSibling;
+        input.type = input.type === 'password' ? 'text' : 'password';
+        target.classList.toggle('fr-icon-eye-line');
+        target.classList.toggle('fr-icon-eye-off-line');
+    } else if (target.matches('#secret-reveal--submit')) {
+        const // 
+            input = document.getElementById('secret-reveal'),
+            message = document.getElementById('secret-reveal-messages'),
+            secret = input.value,
+            [, , , election_id] = location.pathname.split(/\//),
+            url = '/index/retrieve-data',
+            body = JSON.stringify({ secret }),
+            options = {
+                method: 'post',
+                headers: {},
+                body
+            };
+
+        if (!secret) {
+            message.innerText = "Vous devez saisir une clé pour continuer!";
+            return false;
+        }
+
+        message.innerText = "";
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            const message = 'Error with Status Code: ' + response.status;
+            throw new Error(message);
+        } else {
+            const tables_ctnr = document.getElementById('tables-ctnr');
+            tables_ctnr.innerHTML = await response.text();
+        }
+
     }
 
 });

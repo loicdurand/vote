@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RegistreRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RegistreRepository::class)]
@@ -23,6 +24,9 @@ class Registre
 
     #[ORM\Column]
     private ?\DateTime $votedAt = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $verification_hash = null;
 
     public function getId(): ?int
     {
@@ -61,6 +65,18 @@ class Registre
     public function setVotedAt(\DateTime $votedAt): static
     {
         $this->votedAt = $votedAt;
+
+        return $this;
+    }
+
+    public function getVerificationHash(): ?string
+    {
+        return $this->verification_hash;
+    }
+
+    public function setVerificationHash(string $verification_hash): static
+    {
+        $this->verification_hash = $verification_hash;
 
         return $this;
     }

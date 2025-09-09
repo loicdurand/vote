@@ -83,24 +83,73 @@ final class IndexController extends AbstractController
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
+        $secretKey = bin2hex(random_bytes(16));
+        $registreHash = hash('sha256', $secretKey . 'registre');
+        $voteHash = hash('sha256', $secretKey . 'vote');
+
         $candidat = $entityManager->getRepository(Candidat::class)->findOneBy(['id' => $candidat_id]);
         $election = $candidat->getElection();
         $vote = new Vote();
         $vote->setElection($election);
         $vote->setCandidat($candidat);
+        $vote->setVerificationHash($voteHash);
 
         $registre = new Registre();
         $registre->setElection($election);
         $registre->setUser($user);
         $registre->setVotedAt(new \Datetime('now'));
+        $registre->setVerificationHash($registreHash);
 
         $entityManager->persist($vote);
         $entityManager->persist($registre);
         $entityManager->flush();
 
-        return $this->render('index/vote.html.twig', [
+        return $this->render('index/confirm.html.twig', [
             'user' => $user,
-            'election' => $election
+            'election' => $election,
+            'secret' => $secretKey
+        ]);
+    }
+
+    #[Route("/index/verify", name: "app_verify")]
+    public function verify(#[CurrentUser] ?User $user): Response
+    {
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        return $this->render('index/verify.html.twig', ['user' => $user]);
+    }
+
+    #[Route("/index/retrieve-data", name: "app_retrieve_data", methods: ["POST"])]
+    public function retrieve_data(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $secret = $request->query->get('secret') ?? $request->request->get('secret');
+        $registreHash = hash('sha256', $secret . 'registre');
+        $voteHash = hash('sha256', $secret . 'vote');
+
+        // Recherche dans table "a voté"
+        $registre = $entityManager->getRepository(Registre::class)->findOneBy([
+            'verification_hash' => $registreHash
+        ]);
+
+        // Recherche dans table des votes
+        $vote = $entityManager->getRepository(Vote::class)->findOneBy([
+            'verification_hash' => $voteHash
+        ]);
+
+        if (!$registre || !$vote) {
+            // Affiche "Vote non trouvé ou clé invalide."
+            return $this->render('partials/tables-verif.html.twig', ['err' => 'not_found']);
+        }
+
+        // Vérifie que les election_id matchent .
+        if ($registre->getElection()->getId() !== $vote->getElection()->getId()) {
+            return $this->render('partials/tables-verif.html.twig', ['err' => 'broken']);
+        }
+
+        return $this->render('partials/tables-verif.html.twig', [
+            'registre' => $registre,
+            'vote' => $vote
         ]);
     }
 }

@@ -1,0 +1,147 @@
+<div class="fr-grid-row fr-grid-row--gutters">
+
+	{% if err is defined %}
+
+		<div class="fr-col-12">
+			<div class="fr-callout fr-callout--pink-macaron">
+				<h3 class="fr-callout__title">Une erreur est survenue</h3>
+				{% if err == 'not_found'%}
+					<p class="fr-callout__text">Il n'a pas été possible de retrouver les informations à l'aide de la clé fournie. Êtes-vous sûr de votre saisie?</p>
+				{% elseif err == 'broken' %}
+					<p class="fr-callout__text">Les informations retrouvées à l'aide de la clé saisie semblent discordantes. Nous ne les afficherons pas.</p>
+				{% endif %}
+			</div>
+		</div>
+
+	{% else %}
+
+		<div class="fr-col-6">
+			<div class="fr-table fr-table--sm" id="table-registre-component">
+				<div class="fr-table__wrapper">
+					<div class="fr-table__container">
+						<div class="fr-table__content">
+							<table id="table-registre">
+								<caption>
+									A voté!
+								</caption>
+								<thead>
+									<tr>
+										<th class="fr-cell--fixed" role="columnheader"></th>
+										<th>
+											Information
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr data-row-key="1">
+										<th class="fr-cell--fixed" scope="row">
+											Titre de l'élection
+										</th>
+										<td>
+											{{ registre.election.title }}
+										</td>
+									</tr>
+									<tr data-row-key="2">
+										<th class="fr-cell--fixed" scope="row">
+											Corps d'appartenance concernés
+										</th>
+										<td>
+											{{ registre.election.groupesConcernes | map(grp=>grp.name) | join(', ') }}
+										</td>
+
+									</tr>
+									<tr data-row-key="3">
+										<th class="fr-cell--fixed" scope="row">
+											Nom du participant
+										</th>
+										<td>
+											{{ registre.user.title }}
+										</td>
+									</tr>
+									<tr data-row-key="4">
+										<th class="fr-cell--fixed" scope="row">
+											Corps d'appartenance participant
+										</th>
+										<td>
+											{{ registre.user.groupe.name }}
+										</td>
+									</tr>
+									<tr data-row-key="5">
+										<th class="fr-cell--fixed" scope="row">
+											Date du vote
+										</th>
+										<td>
+											le
+											{{ registre.votedAt | date('Y/m/d à H:i') }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="fr-col-6">
+			<div class="fr-table" id="table-vote-component">
+				<div class="fr-table__wrapper">
+					<div class="fr-table__container">
+						<div class="fr-table__content">
+							<table id="table-vote">
+								<caption>
+									Bulletin de vote
+								</caption>
+								<thead>
+									<tr>
+										<th class="fr-cell--fixed" role="columnheader"></th>
+										<th>
+											Information
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr data-row-key="1">
+										<th class="fr-cell--fixed" scope="row">
+											Titre de l'élection
+										</th>
+										<td>
+											{{ vote.election.title }}
+										</td>
+									</tr>
+									<tr data-row-key="2">
+										<th class="fr-cell--fixed" scope="row">
+											Corps d'appartenance concernés
+										</th>
+										<td>
+											{{ vote.election.groupesConcernes | map(grp=>grp.name) | join(', ') }}
+										</td>
+
+									</tr>
+									<tr data-row-key="3">
+										<th class="fr-cell--fixed" scope="row">
+											Candidat recevant le vote
+										</th>
+										<td>
+											{{ vote.candidat.displayname }}
+										</td>
+									</tr>
+									<tr data-row-key="4">
+										<th class="fr-cell--fixed" scope="row">
+											Nigend du candidat
+										</th>
+										<td>
+											{{ vote.candidat.userId }}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	{% endif %}
+
+</div>

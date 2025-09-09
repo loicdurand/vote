@@ -21,33 +21,18 @@
 	</nav>
 	{# Fin fil d'arianne #}
 
-	{# <h2 class="fr-mt-2w">
-																																											Interface de vote
-																																										</h2>
-																																									
-																																										<p class="fr-text--sm fr-mb-1w">
-																																											À l'étape suivante, vous allez voter pour le candidat de votre choix.
-																																											<br>
-																																											Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
-																																										</p>
-																																									
-																																										<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
-
 	<main>
 
 		<div class="fr-stepper fr-mt-4w">
 			<h2 class="fr-stepper__title">
-				Sélection du candidat
-				<span class="fr-stepper__state">Étape 2 sur 3</span>
+				Confirmation de vote
+				<span class="fr-stepper__state">Étape 3 sur 3</span>
 			</h2>
-			<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
-			<p class="fr-stepper__details">
-				<span class="fr-text--bold">Étape suivante :</span>
-				Confirmation de vote</p>
+			<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
 		</div>
 
 		<h3 class="fr-mt-6w">
-			Il est temps de procéder au vote!
+			Votre vote a bien été enregistré!
 		</h3>
 
 
@@ -103,47 +88,44 @@
 
 				<div class="fr-col-sm-12 fr-col-md-7 fr-col-lg-7 fr-col-xl-8 custom-card-container">
 
-					<h3 class="fr-h4 center">Candidats</h3>
+					<h3 class="fr-h4 center">Votre clé unique</h3>
 
-					<p>Les candidats sont classés de manière aléatoire.
+					<p>
+						Comme indiqué en préambulle, votre vote a été enregistré de manière anonyme et il est impossible de faire le lien entre le registre des votants et leur vote respectif.
+					</p>
+
+					<p>
+						Impossible? Pas tout à fait.
 						<br>
-						Choisissez celui pour lequel vous souhaitez voter, puis confirmez.</p>
+						La clé unique ci-dessous est l'unique moyen de vérifier que votre vote n'a pas été altéré. Vous êtes seul à la connaître. Dès lors que vous quitterez cette page, y compris en raffraichissant la page,
+						<span class="bold">elle sera définitivement détruite et ne pourra pas être récupérée</span>.
+					</p>
 
-					<div class="fr-grid-row fr-grid-row--gutters">
+					<p>
+						En conséquent, révélez la clé en ayant pris soin de vous trouver à l'abris des regards indiscrets.
+						<br>
+						Assurez-vous de la conserver en lieu sûr.
+					</p>
 
-						{% for candidat in election.candidats | shuffle %}
+					<p>
 
-							<div class="fr-col-6">
-
-								<div class="fr-card fr-enlarge-link">
-									<div class="fr-card__body">
-										<div class="fr-card__content">
-											<h4 class="fr-card__title">
-												{{ candidat.displayname }}
-											</h4>
-											<p>NIGEND:
-												{{ candidat.userId }}</p>
-										</div>
-										<div class="fr-card__footer">
-											<ul class="fr-btns-group fr-btns-group--inline-reverse fr-btns-group--inline-lg">
-												<li>
-													<button aria-controls="modal-{{ candidat.id }}" data-fr-opened="false" type="button" class="fr-btn fr-btn--secondary">Je vote pour ce personnel</button>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="fr-card__header">
-										<div class="fr-card__img">
-											<img class="fr-responsive-img" src="{{ asset('artwork/pictograms/institutions/gendarmerie.svg') }}" alt=""/>
-										</div>
-									</div>
-								</div>
-
+						<div class="fr-input-group" id="secret-reveal-group">
+							<label class="fr-label" for="secret-reveal">
+								Votre clé unique
+							</label>
+							<div class="fr-input-wrap fr-input-wrap--action">
+								<input class="fr-input" value="{{ secret }}" aria-describedby="secret-reveal-messages" id="secret-reveal" type="password">
+								<button type="button" id="secret-reveal--btn" title="Révéler" class="fr-btn fr-icon-eye-line fr-btn--secondary">Révéler</button>
 							</div>
+							<div class="fr-messages-group" id="secret-reveal-messages" aria-live="polite"></div>
+						</div>
 
-						{% endfor %}
+					</p>
 
-					</div>
+					<p class="fr-mt-4w">
+						Pour vérifier l'intégrité de votre vote, copier la clé, puis rendez-vous sur
+						<a href="/index/verify" class="fr-link">cette page</a>.
+					</p>
 					<!-- fin .fr-col -->
 
 				{% else %}
