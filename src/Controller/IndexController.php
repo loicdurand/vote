@@ -17,6 +17,15 @@ use App\Entity\Registre;
 
 final class IndexController extends AbstractController
 {
+    private const ERROR_DEJA_VOTE = <<<TXT
+                <p class="fr-mt-2w">
+                    Vous avez déjà participé au vote pour cette élection. Vous ne pouvez pas voter à nouveau.
+                </p>
+                <p class="fr-mt-2w">
+                    Si vous détenez toujours la clé que nous vous avons fournie, vous pouvez consultez le contenu de votre vote précédent sur
+                    <a href="/index/verify" class="fr-link">la page dédiée à la vérification</a> d'intégrité.
+                </p>
+TXT;
 
     #[Route('/', name: 'app_index')]
     public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
@@ -26,6 +35,18 @@ final class IndexController extends AbstractController
             return $this->redirectToRoute('app_login');
 
         $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+
+        foreach ($elections as $election) {
+            $aDejaVote = $entityManager->getRepository(Registre::class)->findOneBy([
+                'election' => $election->getId(),
+                'user' => $user->getId()
+            ]);
+
+            if ($aDejaVote)
+                $election->a_deja_vote = true;
+            else
+                $election->a_deja_vote = false;
+        }
 
         $groupe_id = $user->getGroupe()->getId();
         return $this->render('index/index.html.twig', [
@@ -57,6 +78,14 @@ final class IndexController extends AbstractController
 
         $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
 
+        $aDejaVote = $entityManager->getRepository(Registre::class)->findOneBy([
+            'election' => $election->getId(),
+            'user' => $user->getId()
+        ]);
+
+        if ($aDejaVote)
+            return $this->render('index/error_deja_vote.html.twig', ['error' => $this::ERROR_DEJA_VOTE]);
+
         return $this->render('index/cgv.html.twig', [
             'user' => $user,
             'election' => $election
@@ -71,6 +100,14 @@ final class IndexController extends AbstractController
 
         $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
 
+        $aDejaVote = $entityManager->getRepository(Registre::class)->findOneBy([
+            'election' => $election->getId(),
+            'user' => $user->getId()
+        ]);
+
+        if ($aDejaVote)
+            return $this->render('index/error_deja_vote.html.twig', ['error' => $this::ERROR_DEJA_VOTE]);
+
         return $this->render('index/vote.html.twig', [
             'user' => $user,
             'election' => $election
@@ -84,11 +121,21 @@ final class IndexController extends AbstractController
             return $this->redirectToRoute('app_login');
 
         $secretKey = bin2hex(random_bytes(16));
-        $registreHash = hash('sha256', $secretKey . 'registre');
-        $voteHash = hash('sha256', $secretKey . 'vote');
 
         $candidat = $entityManager->getRepository(Candidat::class)->findOneBy(['id' => $candidat_id]);
         $election = $candidat->getElection();
+
+        $aDejaVote = $entityManager->getRepository(Registre::class)->findOneBy([
+            'election' => $election->getId(),
+            'user' => $user->getId()
+        ]);
+
+        if ($aDejaVote)
+            return $this->render('index/error_deja_vote.html.twig', ['error' => $this::ERROR_DEJA_VOTE]);
+
+        $registreHash = hash('sha256', $secretKey . 'registre');
+        $voteHash = hash('sha256', $secretKey . 'vote');
+
         $vote = new Vote();
         $vote->setElection($election);
         $vote->setCandidat($candidat);

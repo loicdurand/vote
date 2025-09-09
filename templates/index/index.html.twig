@@ -108,7 +108,13 @@
 									{% if election.isNotOpenYet() and election.candidaturesLibres %}
 										<li><a target="_self" href="/index/candidat/{{election.id}}" class="fr-btn fr-btn--tertiary">Soumettre ma candidature</a></li>
 									{% elseif election.isOpen() %}
-										<li><a target="_self" href="/index/cgv/{{election.id}}" class="fr-btn fr-btn--tertiary">Participer au vote</a></li>
+										<li>
+										{% if election.a_deja_vote %}
+											<button disabled title="Vous avez déjà participé au vote" class="fr-btn fr-btn--tertiary">Participer au vote</button>
+										{% else %}
+											<a target="_self" href="/index/cgv/{{election.id}}" class="fr-btn fr-btn--tertiary">Participer au vote</a>
+										{% endif %}
+										</li>
 									{% endif %}
 								</menu>
 							</div>

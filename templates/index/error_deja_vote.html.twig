@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur - Vote déjà enregistré
+{% endblock %}
+
+{% block body %}
+
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="">Page d'erreur</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<main>
+
+		<h2 class="fr-mt-6w">
+			Page d'erreur.
+		</h2>
+
+		<div class="fr-col-12">
+			<div class="fr-callout fr-callout--pink-macaron">
+				<h3 class="fr-callout__title">Une erreur est survenue</h3>
+				<p class="fr-callout__text">{{ error | raw }}</p>
+			</div>
+		</div>
+
+
+	</main>
+
+{% endblock %}
