@@ -5,21 +5,12 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use App\Entity\User;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Doctrine\Persistence\ManagerRegistry;
-
-
-use App\Security\SsoService;
-use App\Security\SsoServiceDEV;
-use App\Security\SsoAuthenticator;
 
 class SecurityController extends AbstractController
 {
-    private $requestStack, $session, $env;
+    private $requestStack;
     public $request;
 
     public function __construct(RequestStack $requestStack)
@@ -30,7 +21,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login', name: 'app_login')]
-    public function login(#[CurrentUser] ?User $user, AuthenticationUtils $authenticationUtils, ManagerRegistry $doctrine): Response
+    public function login(): Response
     {
         return $this->redirectToRoute('app_index');
     }

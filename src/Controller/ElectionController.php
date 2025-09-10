@@ -21,7 +21,7 @@ final class ElectionController extends AbstractController
 {
 
     #[Route('/election/dashboard', name: 'app_election_dashboard')]
-    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function dashboard(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
     {
 
         if (is_null($user))
@@ -36,7 +36,7 @@ final class ElectionController extends AbstractController
     }
 
     #[Route('/election/action/{action}/{election_id}', name: 'app_election_prepare')]
-    public function prepare(string $action, string $election_id = '0', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function prepare(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager, string $action, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -134,7 +134,7 @@ final class ElectionController extends AbstractController
     }
 
     #[Route('/election/candidats/{election_id}', name: 'app_election_candidats')]
-    public function candidats(string $election_id = '0', #[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function candidats(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -148,7 +148,7 @@ final class ElectionController extends AbstractController
     }
 
     #[Route("/create/candidat/{election_id}", name: "create_candidat", methods: ["POST"])]
-    public function create_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    public function create_candidat(EntityManagerInterface $entityManager, string $election_id = '0'): JsonResponse
     {
         $request = Request::createFromGlobals();
         $data = (array) json_decode($request->getContent());
@@ -191,7 +191,7 @@ final class ElectionController extends AbstractController
     }
 
     #[Route("/remove/candidat/{election_id}", name: "remove_candidat", methods: ["POST"])]
-    public function remove_candidat(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    public function remove_candidat(EntityManagerInterface $entityManager, string $election_id = '0'): JsonResponse
     {
         $request = Request::createFromGlobals();
         $data = (array) json_decode($request->getContent());
@@ -211,7 +211,7 @@ final class ElectionController extends AbstractController
     }
 
     #[Route("/setcandidaturesspontanees/{election_id}", name: "setcandidaturesspontanees", methods: ["POST"])]
-    public function setcandidaturesspontanees(string $election_id = '0', EntityManagerInterface $entityManager): JsonResponse
+    public function setcandidaturesspontanees(EntityManagerInterface $entityManager, string $election_id = '0'): JsonResponse
     {
         $request = Request::createFromGlobals();
         $data = (array) json_decode($request->getContent());

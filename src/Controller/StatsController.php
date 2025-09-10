@@ -6,12 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use App\Entity\User;
 use App\Entity\Election;
-use App\Entity\Candidat;
 use App\Entity\Vote;
 use App\Entity\Registre;
 
@@ -47,7 +44,7 @@ final class StatsController extends AbstractController
     }
 
     #[Route('/stats/afficher/{election_id}', name: 'app_stats')]
-    public function app_stats(string $election_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function app_stats(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');

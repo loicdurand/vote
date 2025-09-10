@@ -10,7 +10,6 @@ use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
 class UserSearchController extends AbstractController
@@ -150,13 +149,13 @@ class UserSearchController extends AbstractController
             return count($results);
         } catch (ConnectionException $e) {
             // Erreur de connexion au serveur LDAP
-            throw new Exception('Erreur de connexion LDAP : ' . $e->getMessage());
+            throw new \Exception('Erreur de connexion LDAP : ' . $e->getMessage());
         } catch (LdapException $e) {
             // Erreur lors de la requête ou du bind
-            throw new Exception('Erreur LDAP : ' . $e->getMessage());
-        } catch (Exception $e) {
+            throw new \Exception('Erreur LDAP : ' . $e->getMessage());
+        } catch (\Exception $e) {
             // Autres erreurs
-            throw new Exception('Erreur générale : ' . $e->getMessage());
+            throw new \Exception('Erreur générale : ' . $e->getMessage());
         }
     }
 }

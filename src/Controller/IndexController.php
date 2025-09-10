@@ -60,7 +60,7 @@ TXT;
     }
 
     #[Route("/index/candidat/{election_id}", name: "app_candidat")]
-    public function candidat(string $election_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function candidat(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -74,7 +74,7 @@ TXT;
     }
 
     #[Route("/index/cgv/{election_id}", name: "app_cgv")]
-    public function cgv(string $election_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function cgv(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -96,7 +96,7 @@ TXT;
     }
 
     #[Route("/index/vote/{election_id}", name: "app_vote")]
-    public function vote(string $election_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function vote(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $election_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -118,7 +118,7 @@ TXT;
     }
 
     #[Route("/index/confirm/{candidat_id}", name: "app_confirm")]
-    public function confirm(string $candidat_id = '0', #[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function confirm(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $candidat_id = '0'): Response
     {
         if (is_null($user))
             return $this->redirectToRoute('app_login');
@@ -171,7 +171,7 @@ TXT;
     }
 
     #[Route("/index/retrieve-data", name: "app_retrieve_data", methods: ["POST"])]
-    public function retrieve_data(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, Request $request): Response
+    public function retrieve_data(EntityManagerInterface $entityManager, Request $request): Response
     {
         $request = Request::createFromGlobals();
         $data = (array) json_decode($request->getContent());
