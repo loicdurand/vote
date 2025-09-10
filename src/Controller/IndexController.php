@@ -28,7 +28,7 @@ final class IndexController extends AbstractController
 TXT;
 
     #[Route('/', name: 'app_index')]
-    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
     {
 
         if (is_null($user))

@@ -115,6 +115,11 @@
 								</a>
 							</li>
 							<li class="fr-nav__item">
+								<a class="fr-nav__link" aria-current="{{ app.request.pathinfo starts with '/stats' ? 'true' : 'false' }}" href="/stats/index" target="_self">
+									Affichage des résultats
+								</a>
+							</li>
+							<li class="fr-nav__item">
 								<a class="fr-nav__link" aria-current="{{ app.request.pathinfo == '/index/verify' ? 'true' : 'false' }}" href="/index/verify" target="_self">
 									Vérification de vote
 								</a>

@@ -16,6 +16,18 @@ class VoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Vote::class);
     }
 
+    public function getVoteRepartition($election)
+    {
+        return $this->createQueryBuilder('v')
+            ->select('c.displayname AS candidat, COUNT(v.id) AS votes')
+            ->join('v.candidat', 'c')
+            ->where('v.election = :election')
+            ->setParameter('election', $election)
+            ->groupBy('c.id')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Vote[] Returns an array of Vote objects
     //     */

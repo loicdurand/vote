@@ -1,67 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Résultats de l'élection
+{% block title %}Accueil
 {% endblock %}
 
 {% block body %}
-	{# Fil d'arianne #}
-	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
-		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+{# Fil d'arianne #}
+<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+	<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
 
-		<div class="fr-collapse" id="breadcrumb">
-			<ol class="fr-breadcrumb__list">
-				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
-				</li>
-				<li>
-					<a class="fr-breadcrumb__link" aria-current="page" id="segment-1" href="/">Résultats de l'élection</a>
-				</li>
-			</ol>
-		</div>
-	</nav>
-	{# Fin fil d'arianne #}
+	<div class="fr-collapse" id="breadcrumb">
+		<ol class="fr-breadcrumb__list">
+			<li>
+				<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+			</li>
+			<li>
+				<a class="fr-breadcrumb__link" aria-current="page" id="segment-0" href="/stats/index">Affichage des résultats</a>
+			</li>
+		</ol>
+	</div>
+</nav>
+{# Fin fil d'arianne #}
 
-	<h2 class="fr-mt-2w">
-		Résultats de l'élection
-	</h2>
+<h2 class="fr-mt-2w">
+	Affichage des résultats
+</h2>
 
-	<main id="stats-page" class="stats-page">
+<p class="fr-text--sm fr-mb-1w">
+	Retrouvez sur cette page les élections terminées.
+	<br>
+	Comme toujours, vous pouvez si vous le souhaitez afficher les élecions qui ne vous concernaient pas:
+	<div class="fr-toggle">
+		<input type="checkbox" class="fr-toggle__input" id="toggle-print-all" aria-describedby="toggle-print-all-messages">
+		<label class="fr-toggle__label" for="toggle-print-all">Afficher les élections qui ne me concernaient pas.</label>
+		<div class="fr-messages-group" id="toggle-print-all-messages" aria-live="polite"></div>
+	</div>
+</p>
 
-		<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
+<main id="main-elections_en_cours">
 
-			{% if election is not null %}
+	<h3>Élections terminées:</h3>
 
-				<div class="fr-col-sm-12 fr-col-md-5 fr-col-lg-5 fr-col-xl-4 custom-card-container">
+	<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
 
-					<h3 class="fr-h4 center">Caractéristiques</h3>
+		{% for election in elections %}
 
-					<div class="fr-tile fr-enlarge-link" id="tile-4">
-						<div class="fr-tile__body">
-							<div class="fr-tile__content">
-								<h3 class="fr-tile__title">
-									<button type="button" class="custom-tile-menu--opener{# fr-icon-more-fill#}" id="election-{{ election.id }}-btn">
+			{% set election_in_perimeter = user_groupe_id in (election.groupesConcernes| map( grp => grp.id )) %}
+
+			<div class="{{ election_in_perimeter ? '' : 'election-hidden ' }}fr-col-sm-6 fr-col-md-4 fr-col-lg-4 custom-card-container">
+
+				<div class="fr-tile fr-enlarge-link" id="tile-4" {{ election_in_perimeter ? null : 'disabled="disabled"' }}>
+					<div class="fr-tile__body">
+						<div class="fr-tile__content">
+							<h3 class="fr-tile__title">
+
+								{% if election_in_perimeter %}
+									<button type="button" class="custom-tile-menu--opener fr-icon-more-fill" id="election-{{ election.id }}-btn">
 										{{ election.title }}
 									</button>
-								</h3>
-								<p class="fr-tile__desc">{{ election.explaination }}</p>
-								<p class="fr-tile__detail">
-									Créée par&nbsp;
-									{{ election.user.title }}
+								{% else %}
+									{{ election.title }}
+								{% endif %}
+							</h3>
+							<p class="fr-tile__desc">{{ election.explaination }}</p>
+							<p class="fr-tile__detail">
+								Créée par&nbsp;
+								{{ election.user.title }}
 
-									<ul class="fr-tags-group">
-										{% for grp in election.groupesConcernes %}
-											<li>
-												<p class="fr-tag fr-tag--défaut" id="tag-group-0">{{ grp.shortName }}</p>
-											</li>
-										{% endfor %}
-									</ul>
+								<ul class="fr-tags-group">
+									{% for grp in election.groupesConcernes %}
+										<li>
+											<p class="fr-tag fr-tag--défaut" id="tag-group-0">{{ grp.shortName }}</p>
+										</li>
+									{% endfor %}
+								</ul>
 
-								</p>
+							</p>
 
+							<div class="fr-tile__start">
+								{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+								{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+
+									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
+										{{ election.startDate | date('d/m/Y') }}
+										au
+										{{ election.endDate | date('d/m/Y') }}
+									</p>
 							</div>
-							<!-- fin .fr-tile__content -->
-						</div>
-						<!-- fin .fr-tile__body -->
+						</div> <!-- fin .fr-tile__content -->
+					</div> <!-- fin .fr-tile__body -->
 
 						<div class="fr-tile__header">
 							<div class="fr-tile__pictogram">
@@ -73,69 +99,39 @@
 							</div>
 						</div>
 
-					</div>
-					<!-- fin .fr-tile -->
+						{% if election_in_perimeter %}
 
+							<div class="custom-tile-menu">
+								<menu class="fr-btns-group">
+									<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
+									<li>
+										<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+									</li>
+								</menu>
+							</div>
+
+						{% endif %}
+
+					</div> <!-- fin .fr-tile -->
+					
+				</div> <!-- fin .fr-col -->
+
+			{% else %}
+					
+			<div class="fr-notice fr-notice--info">
+				<div class="fr-container">
+					<div class="fr-notice__body">
+					<p>
+						<span class="fr-notice__title">Il n'y a encore aucune élection terminée. Patience, ça va venir!</span>
+						<a href="/election/action/create/0" target="_self" class="fr-notice__link">Revenir à la page d'accueil</a>
+					</p>
 				</div>
-				<!-- fin .fr-col -->
-
-				<div class="fr-col-sm-12 fr-col-md-7 fr-col-lg-7 fr-col-xl-8 custom-card-container">
-
-					<div class="fr-grid-row fr-container">
-
-						<h3 class="fr-h4 center">Résultats</h3>
-
-						<!-- Taux de participation -->
-						<div class="stats-section">
-							<h4 class="fr-h6">Candidat élu</h4>
-							<div class="participation">
-								BLANC
-							</div>
-						</div>
-
-						<!-- Taux de participation -->
-						<div class="stats-section">
-							<h4 class="fr-h6">Taux de participation</h4>
-							<div class="participation" id="participationRate">
-								{{participationRate}}% ({{voterCount}}
-								votants sur
-								{{invitedCount}}
-								invités)
-							</div>
-						</div>
-
-						<!-- Répartition des votes -->
-						<div class="stats-section">
-							<h4 class="fr-h6">Répartition des votes par candidat</h4>
-							<canvas id="voteDistributionChart"></canvas>
-						</div>
-
-						<!-- Participation par heure -->
-						<div class="stats-section">
-							<h4 class="fr-h6">Participation par journée</h4>
-							<canvas id="dailyParticipationChart"></canvas>
-						</div>
-
-
-					</div>
-					<!-- fin .fr-col -->
-
-				{% else %}
-
-					<div class="fr-notice fr-notice--info">
-						<div class="fr-container">
-							<div class="fr-notice__body">
-								<p>
-									<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-									<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
-								</p>
-							</div>
-						</div>
-					</div>
-
-				{% endif %}
-
 			</div>
 
-		</main>
-	{% endblock %}
+		{% endfor %}
+
+								</div>
+
+							</main>
+
+						{% endblock %}
