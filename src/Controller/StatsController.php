@@ -36,9 +36,12 @@ final class StatsController extends AbstractController
         }
 
         $groupe_id = $user->getGroupe()->getId();
+        $unite_id = $user->getUnite()->getId();
+
         return $this->render('stats/index.html.twig', [
             'user' => $user,
             'user_groupe_id' => $groupe_id,
+            'user_unite_id' => $unite_id,
             'elections' => $elections_passees
         ]);
     }

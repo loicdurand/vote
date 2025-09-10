@@ -45,6 +45,7 @@
 		{% for election in elections %}
 
 			{% set election_in_perimeter = user_groupe_id in (election.groupesConcernes| map( grp => grp.id )) %}
+			{% set election_in_perimeter = election_in_perimeter and user_unite_id in (election.unitesConcernees| map( unt => unt.id )) %}
 
 			<div class="{{ election_in_perimeter ? '' : 'election-hidden ' }}fr-col-sm-6 fr-col-md-4 fr-col-lg-4 custom-card-container">
 
