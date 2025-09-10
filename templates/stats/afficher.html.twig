@@ -34,7 +34,7 @@
 
 			{% if election is not null %}
 
-				<div class="fr-col-sm-12 fr-col-md-5 fr-col-lg-4 fr-col-xl-3 custom-card-container">
+				<div class="fr-col-sm-12 fr-col-md-4 fr-col-lg-4 fr-col-xl-3 custom-card-container">
 
 					<h3 class="fr-h4 center">Caractéristiques</h3>
 
@@ -90,14 +90,14 @@
 				</div>
 				<!-- fin .fr-col -->
 
-				<div class="fr-col-sm-12 fr-col-md-7 fr-col-lg-8 fr-col-xl-9 custom-card-container">
+				<div class="fr-col-sm-12 fr-col-md-8 fr-col-lg-8 fr-col-xl-9 custom-card-container">
 
 					<div class="fr-grid-row fr-container">
 
 						<h3 class="fr-h4 center">Résultats</h3>
 
 						<!-- Taux de participation -->
-						<div class="stats-section fr-col-6">
+						<div class="stats-section fr-col-sm-12 fr-col-md-6">
 							<h4 class="fr-h6">Candidat élu</h4>
 							<div class="participation">
 								{{ winner ? winner.candidat ~ ' avec ' ~ winner.votes ~ ' voix' : 'Égalité' }}
@@ -105,7 +105,7 @@
 						</div>
 
 						<!-- Taux de participation -->
-						<div class="stats-section fr-col-6">
+						<div class="stats-section fr-col-sm-12 fr-col-md-6">
 							<h4 class="fr-h6">Taux de participation</h4>
 							<div class="participation" id="participationRate">
 								{{participationRate}}% ({{voterCount}}
@@ -116,13 +116,13 @@
 						</div>
 
 						<!-- Répartition des votes -->
-						<div class="stats-section fr-col-6">
+						<div class="stats-section fr-col-sm-12 fr-col-md-5 fr-col-lg-4">
 							<h4 class="fr-h6">Répartition des votes par candidat</h4>
 							<canvas id="voteDistributionChart" data-distribution="{{voteDistribution | map(dist => dist.candidat ~ '=' ~ dist.votes) | join('|') }}"></canvas>
 						</div>
 
 						<!-- Participation par heure -->
-						<div class="stats-section fr-col-6">
+						<div class="stats-section fr-col-sm-12 fr-col-md-7 fr-col-lg-8">
 							<h4 class="fr-h6">Participation par journée</h4>
 							<canvas id="dailyParticipationChart" data-daylyparticipation="{{ dailyParticipation | map(day => day.date ~ '=' ~ day.votes) | join('|') }}"></canvas>
 						</div>
