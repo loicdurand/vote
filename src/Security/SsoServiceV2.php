@@ -5,7 +5,7 @@ namespace App\Security;
 /* Version 2.7.0 (contribution ADC Guillaume Deborde) */
 /* avec commentaires et norme >= php7 */
 
-class SsoServiceDEV
+class SsoServiceV2
 {
     // const COOKIE_NAME   = 'lldap';
     // const COOKIE_DOMAIN = 'localhost';
@@ -21,7 +21,7 @@ class SsoServiceDEV
         }
 
         if (!isset($_SESSION['user'])) {
-            SsoServiceDEV::authenticate();
+            SsoServiceV2::authenticate();
         }
     }
 
@@ -42,13 +42,17 @@ class SsoServiceDEV
             // supprimer le cookie pour éviter qu'il ne soit détourné par une autre appli dans le même domaine
             setcookie($_ENV['COOKIE_NAME'], "", time() - 3600, "/", $_ENV['COOKIE_DOMAIN']);
             if ($json = file_get_contents($url, false, stream_context_create($opts))) {
-                $payload = json_decode($json);
-                $user = $payload->user_data;
-                $grp = $payload->group_data;
-                unset($user->memberOf);
-                $user->codeunite = $grp->codeunite;
-                $user->unite = $grp->displayname;
-                $_SESSION['user'] = $user;
+                if ($_ENV['APP_ENV'] === 'dev') {
+                    $payload = json_decode($json);
+                    $user = $payload->user_data;
+                    $grp = $payload->group_data;
+                    unset($user->memberOf);
+                    $user->codeunite = $grp->codeunite;
+                    $user->unite = $grp->displayname;
+                    $_SESSION['user'] = $user;
+                } else {
+                    $_SESSION['user'] = json_decode($json);
+                }
             } else {
                 echo '<html><body>BAD<pre>X ' . $url . ' X</pre>' . file_get_contents($url, false, stream_context_create($opts)) . '</body></html>';
             }

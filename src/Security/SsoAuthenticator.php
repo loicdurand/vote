@@ -17,30 +17,22 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-use App\Security\SsoService;
-use App\Security\SsoServiceDEV;
+use App\Security\SsoServiceV2;
 
 class SsoAuthenticator extends AbstractAuthenticator
 {
     private $entityManager;
     private $urlGenerator;
-    private $parameterBag;
 
     private $sso;
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, ParameterBagInterface $parameterBag)
+    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator)
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
-        $this->parameterBag = $parameterBag;
 
-        $env = $this->parameterBag->get('app.env');
-        if ($env === 'prod')
-            $this->sso = new SsoService();
-        else
-            $this->sso = new SsoServiceDEV();
+        $this->sso = new SsoServiceV2();
     }
 
     public function supports(Request $request): ?bool
