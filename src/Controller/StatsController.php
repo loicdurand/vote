@@ -15,7 +15,7 @@ use App\Entity\Candidat;
 use App\Entity\Vote;
 use App\Entity\Registre;
 
-use App\Service\LdapService;
+use App\Controller\UserSearchController;
 
 final class StatsController extends AbstractController
 {
@@ -49,7 +49,6 @@ final class StatsController extends AbstractController
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
-        $ldap = new LdapService();
         $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
         $unites = $election->getUnitesConcernees();
 
@@ -57,7 +56,7 @@ final class StatsController extends AbstractController
         // @TODO trier par catégorie/corps
         $invitedCount = 0;
         foreach ($unites as $unite) {
-            $invitedCount += $ldap->countGroupMembers($unite->getName());
+            $invitedCount += UserSearchController::countGroupMembers($unite->getName());
         }
 
         $voterCount = $entityManager->getRepository(Vote::class)->count(['election' => $election]);

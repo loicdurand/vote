@@ -10,12 +10,11 @@ use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Ldap\Exception\LdapException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
 
 class UserSearchController extends AbstractController
 {
-    private $ldapHost = 'lldap';
-    private $ldapPort = 3890;
-    private $baseDn = 'dc=gendarmerie,dc=defense,dc=gouv,dc=fr';
     /**
      * Route pour la recherche complète (par nom ou par NI).
      */
@@ -85,8 +84,9 @@ class UserSearchController extends AbstractController
     {
         try {
             // Crée une instance LDAP (sans config yaml pour simplicité)
-            $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://lldap:3890']);
-            $ldap->bind('uid=admin,ou=people,dc=gendarmerie,dc=defense,dc=gouv,dc=fr', 'my_password');
+            $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT']]);
+            if ($_ENV['APP_ENV'] === 'dev')
+                $ldap->bind('uid=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
 
             $filter = '(objectClass=person)';
             if ($lastname) {
@@ -95,7 +95,7 @@ class UserSearchController extends AbstractController
                 $filter = sprintf('(&(objectClass=person)(nigend=%s))', $ldap->escape($nigend, '', LDAP_ESCAPE_FILTER));
             }
 
-            $query = $ldap->query($this->baseDn, $filter);
+            $query = $ldap->query($_ENV['BASE_DN'], $filter);
 
             $results = $query->execute()->toArray();
 
@@ -118,6 +118,45 @@ class UserSearchController extends AbstractController
             return ['error' => 'Impossible de se connecter au serveur LDAP : ' . $e->getMessage()];
         } catch (LdapException $e) {
             return ['error' => 'Erreur lors de la recherche LDAP : ' . $e->getMessage()];
+        }
+    }
+
+    public static function countGroupMembers(string $groupDn): int
+    {
+        try {
+            // Créer la connexion LDAP
+            $ldap = Ldap::create('ext_ldap', [
+                'connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT'],
+            ]);
+
+            // Bind avec l'utilisateur admin
+            $ldap->bind('cn=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+
+            // Construire le filtre (ajusté pour LLDAP)
+            $filter = '(&(objectClass=inetOrgPerson)(memberOf=cn=' . $groupDn . ',ou=groups,' . $_ENV['BASE_DN'] . '))';
+
+            // Exécuter la requête
+            $query = $ldap->query($_ENV['BASE_DN'], $filter, [
+                'filter' => ['dn'], // Ne récupérer que le DN pour compter
+                'scope' => 'sub',
+            ]);
+
+            $results = $query->execute()->toArray();
+
+            // Débogage : afficher les résultats bruts
+            //dd(count($results)); // Décommente pour inspecter les entrées
+
+            // Compter les résultats
+            return count($results);
+        } catch (ConnectionException $e) {
+            // Erreur de connexion au serveur LDAP
+            throw new Exception('Erreur de connexion LDAP : ' . $e->getMessage());
+        } catch (LdapException $e) {
+            // Erreur lors de la requête ou du bind
+            throw new Exception('Erreur LDAP : ' . $e->getMessage());
+        } catch (Exception $e) {
+            // Autres erreurs
+            throw new Exception('Erreur générale : ' . $e->getMessage());
         }
     }
 }
