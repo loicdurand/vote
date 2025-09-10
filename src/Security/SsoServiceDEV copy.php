@@ -7,10 +7,10 @@ namespace App\Security;
 
 class SsoServiceDEV
 {
-    // const COOKIE_NAME   = 'lldap';
-    // const COOKIE_DOMAIN = 'localhost';
-    // const PORTAL_URL    = 'http://localhost/sso/login'; // <- l'URL est http://localhost car l'utilisateur est redirigé
-    // const REST_URL      = 'http://sso:5000/validate';  // <- l'URL est http://sso car on requête en GET le service sso
+    const COOKIE_NAME   = 'lldap';
+    const COOKIE_DOMAIN = 'localhost';
+    const PORTAL_URL    = 'http://localhost/sso/login'; // <- l'URL est http://localhost car l'utilisateur est redirigé
+    const REST_URL      = 'http://sso:5000/validate';  // <- l'URL est http://sso car on requête en GET le service sso
     // const MAIL_URL      = 'https://localhost:5000/mail';
     // const GRP_URL       = 'https://localhost:5000/getgroups.pl';
 
@@ -37,10 +37,10 @@ class SsoServiceDEV
             ]
         ];
 
-        if (isset($_COOKIE[$_ENV['COOKIE_NAME']])) {
-            $url = $_ENV['REST_URL'] . "?id=" . $_COOKIE[$_ENV['COOKIE_NAME']] . "&host=" . $_SERVER['HTTP_HOST'];
+        if (isset($_COOKIE[self::COOKIE_NAME])) {
+            $url = self::REST_URL . "?id=" . $_COOKIE[self::COOKIE_NAME] . "&host=" . $_SERVER['HTTP_HOST'];
             // supprimer le cookie pour éviter qu'il ne soit détourné par une autre appli dans le même domaine
-            setcookie($_ENV['COOKIE_NAME'], "", time() - 3600, "/", $_ENV['COOKIE_DOMAIN']);
+            setcookie(self::COOKIE_NAME, "", time() - 3600, "/", self::COOKIE_DOMAIN);
             if ($json = file_get_contents($url, false, stream_context_create($opts))) {
                 $payload = json_decode($json);
                 $user = $payload->user_data;
@@ -75,7 +75,7 @@ class SsoServiceDEV
         $requestProtocol = $isSecure ? 'https' : 'http';
         $url = $requestProtocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-        header('Location: ' . $_ENV['PORTAL_URL'] . '?url=' . base64_encode($url));
+        header('Location: ' . self::PORTAL_URL . '?url=' . base64_encode($url));
         exit;
     }
 

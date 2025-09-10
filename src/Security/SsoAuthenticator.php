@@ -51,12 +51,12 @@ class SsoAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        if (!isset($_COOKIE[$this->sso::COOKIE_NAME])) {
+        if (!isset($_COOKIE[$_ENV['COOKIE_NAME']])) {
             $this->sso::redirect();
         }
 
         // Récupère le token SSO
-        $ssoToken = $_COOKIE[$this->sso::COOKIE_NAME];
+        $ssoToken = $_COOKIE[$_ENV['COOKIE_NAME']];
 
         // Simule une requête au mock SSO pour récupérer les infos utilisateur
         $ssoData = $this->fetchSsoUserData($ssoToken); // Implémente cette méthode selon ton SSO
