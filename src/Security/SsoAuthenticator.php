@@ -31,8 +31,6 @@ class SsoAuthenticator extends AbstractAuthenticator
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
-
-        $this->sso = new SsoServiceV2();
     }
 
     public function supports(Request $request): ?bool
@@ -43,7 +41,9 @@ class SsoAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        if (!isset($_COOKIE[$_ENV['COOKIE_NAME']])) {
+        $this->sso = new SsoServiceV2();
+
+        if (!isset($_SESSION['user'])) {
             $this->sso::redirect();
         }
 
@@ -58,7 +58,7 @@ class SsoAuthenticator extends AbstractAuthenticator
         }
 
         // Cherche ou crée l'unité dans la base
-        $codeunite = $ssoData->codeunite;
+        $codeunite = $_ENV['APP_ENV'] === 'dev' ? $ssoData->codeunite : $ssoData->codeUnite;
         $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
         if (!$unite) {
             $unite = new Unite();
