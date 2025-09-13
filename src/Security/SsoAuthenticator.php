@@ -31,20 +31,20 @@ class SsoAuthenticator extends AbstractAuthenticator
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
+        $this->sso = new SsoServiceV2();
     }
 
     public function supports(Request $request): ?bool
     {
         // Détermine si cet authenticator doit être utilisé (ex. : sur une route spécifique)
-        return $request->getPathInfo() === '/login';
+        return $request->getPathInfo() === '/' && (isset($_COOKIE[$_ENV['COOKIE_NAME']]));
     }
 
     public function authenticate(Request $request): Passport
     {
-        $this->sso = new SsoServiceV2();
 
-        if (!isset($_SESSION['user'])) {
-            $this->sso::redirect();
+        if (!isset($_COOKIE[$_ENV['COOKIE_NAME']])) {
+            $this->sso::authenticate();
         }
 
         // Récupère le token SSO
@@ -102,7 +102,7 @@ class SsoAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         // Redirige ou affiche une erreur en cas d'échec
-        return new RedirectResponse($this->urlGenerator->generate('login'));
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 
     private function fetchSsoUserData(?string $ssoToken): ?object
