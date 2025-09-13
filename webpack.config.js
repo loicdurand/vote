@@ -15,7 +15,7 @@ Encore
     .setPublicPath(env === 'dev' ? '/eleksyon/build' : "https://comgend971.local.gendarmerie.fr/eleksyon/build")
 
     // only needed for CDN's or subdirectory deploy
-    .setManifestKeyPrefix('build/')
+    .setManifestKeyPrefix('build/') // <- à tester
 
     /*
      * ENTRY CONFIG
