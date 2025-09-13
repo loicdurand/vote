@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Interface de vote
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="{{ path('app_vote') }}">Interface de vote</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<main>
+
+		<div class="fr-stepper fr-mt-4w">
+			<h2 class="fr-stepper__title">
+				À lire avant de voter
+				<span class="fr-stepper__state">Étape 1 sur 3</span>
+			</h2>
+			<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
+			<p class="fr-stepper__details">
+				<span class="fr-text--bold">Étape suivante :</span>
+				Sélection du candidat</p>
+		</div>
+
+		<h3 class="fr-mt-6w">
+			1. Votre vote est
+			<span class="bold">anonyme</span>.
+		</h3>
+
+
+		<figure class="fr-quote fr-quote--green-menthe fr-quote--column fr-ml-0">
+			<blockquote>
+				<p class="fr-text--md">« Ah bon? Pourtant j'ai dû m'authentifier pour accéder à ce vote ! »</p>
+			</blockquote>
+		</figure>
+
+		<p class="fr-mt-4w">
+
+			<span class="bold">Remarque pertinente!</span>
+			<br>
+			Votre authentification est requise, car elle nous permet de contrôler que vous ne participez qu'une seule fois au vote.
+			<br>
+			Lorsque vous votez pour un candidat, nous enregistrons les informations liées au vote sous deux formes:
+
+			<ul>
+				<li>
+					Comme dans un bureau de vote traditionnel, nous tenons à registre "a voté", comportant la date et l'heure de votre vote, l'identifiant de l'élection concernée et votre identifiant utilisateur.
+				</li>
+				<li>
+					Votre vote est quant à lui enregistré sous la forme d'une voix au profit du candidat choisi. Nous enregistrons l'identifiant de l'élection et l'identifiant du candidat, et c'est tout!
+				</li>
+			</ul>
+
+		</p>
+
+		<h3 class="fr-mt-4w">
+			2. Vous ne pouvez voter qu'une seule fois, et votre vote est définitif.
+		</h3>
+
+		<p class="fr-mt-4w">
+
+			Votre vote étant totalement anonyme, il nous est impossible de modifier votre vote précédant afin de donner votre voix à un autre candidat, puisque nous ne pouvons pas savoir pour qui vous avez déjà voté!
+			<br>
+			Toutefois, et comme indiqué ci-dessus, nous avons bien pris en compte votre participation au vote (dans le registre "a voté"). Nous pouvons donc vous empêcher de participer au vote une seconde fois.
+
+		</p>
+
+		<h3 class="fr-mt-4w">
+			3. Personne ne peut falsifier l'élection.
+		</h3>
+
+		<figure class="fr-quote fr-quote--green-menthe fr-quote--column fr-ml-0">
+			<blockquote>
+				<p class="fr-text--md">« Qu'est-ce qui vous empêche de remplacer une voix pour un candidat par une voix pour un autre candidat ? »</p>
+			</blockquote>
+		</figure>
+
+		<p class="fr-mt-4w">
+
+			Cette application ne comporte aucune fonction permettant de modifier ou supprimer un vote. Il en va de même pour le registre "a voté".
+			<br>
+			Toutefois, les administrateurs du site, en ayant accès au contenu de la base de données, pourraient techniquement altérer les votes.
+			<br>
+			Pour palier à ce problème, nous vous donnons, après avoir enregistré votre vote, une clé unique vous permettant de vérifier que le vote enregistré dans notre base de donnée est bien identique à celui que vous avez effectué.
+
+		</p>
+
+		<p>
+			Concrètement, nous créons un hash cryptographique unique qui est l'unique moyen de faire le lien entre le registre "a voté" et votre vote.
+			<br>
+			Ce hash ne peut être déchiffré qu'à l'aide de la clé, que vous serez seul à connaître.
+			<br>
+			L'algorythme de chiffrement utilisé rend non seulement impossible la reconstitution de cette phrase sans être en possession de la clé, mais il est également impossible de deviner un vote, y compris en itérant sur les différentes possibilités.
+		</p>
+
+		<p>
+			Par conséquent, et c'est aussi l'inconvéniant de ce système, nous vous invitons à conserver précieusement cette clé car il nous sera impossible de la renouveller. Immédiatement après que vous ayez quitté la page sur laquelle elle sera affichée, elle sera détruite.
+		</p>
+
+		<h3 class="fr-mt-4w">
+			4. Les votes "blancs" sont pris en compte.
+		</h3>
+
+		<p>
+			Si aucun candidat ne trouve grâce à vos yeux, nous vous permettons de voter "blanc". Celà signifie que vous n'avez voté pour personne, mais que vous avez bien pris part au vote.
+			<br>
+			En effet, sans ce mécanisme, nous ne pourrions pas nous assurer que le nombre de votes total correspond bien au nombre de personnes qui ont voté!
+		</p>
+
+		<p class="fr-mt-4w bold">À présent, il est temps de passer au vote!</p>
+
+		<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+
+			<li>
+				<a href="{{ path('app_index') }}" type="button" class="fr-btn fr-btn fr-btn--secondary">
+					Revenir à la page d'accueil
+				</a>
+			</li>
+
+			<li>
+				<a href="{{ path('app_vote', {election_id: election.id} )}}" type="button" class="fr-btn">
+					Étape suivante
+				</a>
+			</li>
+
+		</ul>
+
+	</main>
+{% endblock %}

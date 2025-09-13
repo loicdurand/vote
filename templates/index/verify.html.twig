@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Interface de vote
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="{{ path('app_verify') }}">Vérification de l'intégrité de votre vote</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<main>
+
+		<h2 class="fr-mt-6w">
+			Vérification de l'intégrité de votre vote.
+		</h2>
+
+
+		<div class="fr-mt-4w">
+
+			<div class="custom-card-container">
+
+				<p>
+					Si vous avez déjà voté, vous avez obtenu une clé unique, vous permettant de faire le lien entre notre registre "a voté" et votre bulletin de vote.
+					<br>
+					Vous et vous seul détenez cette clé, de sorte que personne (y compris les administrateurs du site) ne peut briser l'anonymat de votre vote.
+				</p>
+				<p>
+					Depuis cette page, vous obtiendrez le détail des enregistrements présents en base de données, notamment:
+					<ul>
+						<li>
+							<span class="bold">Registre "a voté":</span>&nbsp;la date et l'heure de votre vote et l'élection concernée,
+						</li>
+						<li>
+							<span class="bold">Enregistrement du vote:</span>&nbsp;l'élection concernée et le candidat qui a reçu le vote.
+						</li>
+					</ul>
+					<br>
+					Comme vous pourrez le constater, il n'existe pas de lien entre ces deux entrées. Il est impossible de retouver la personne pour qui vous avez voté en se basant sur le registre des votants.
+				</p>
+
+				<h3 class="fr-h4 center">Votre clé unique</h3>
+
+				<p>
+
+					<div class="fr-input-group" id="secret-reveal-group">
+						<label class="fr-label" for="secret-reveal">
+							Saisissez votre clé unique, puis validez.
+						</label>
+						<div class="fr-input-wrap fr-input-wrap--action">
+							<input class="fr-input" value="" aria-describedby="secret-reveal-messages" id="secret-reveal" type="password">
+							<button type="button" id="secret-reveal--btn" title="Révéler" class="fr-btn fr-icon-eye-line fr-btn--secondary">Révéler</button>
+						</div>
+						<div class="fr-messages-group" id="secret-reveal-messages" aria-live="polite"></div>
+					</div>
+
+					<ul class="fr-btns-group fr-btns-group--inline">
+						<li>
+							<button type="button" id="secret-reveal--submit" class="fr-btn">Valider</button>
+						</li>
+					</ul>
+
+				</p>
+
+				<div id="tables-ctnr"></div>
+
+			</div>
+
+		</main>
+
+	{% endblock %}

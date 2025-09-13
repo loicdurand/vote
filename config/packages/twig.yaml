@@ -1,5 +1,11 @@
 twig:
     file_name_pattern: '*.twig'
+    form_themes: ['form/dsfr.html.twig']
+    globals:
+        app_env: '%env(APP_ENV)%'
+        app_name: 'Elèksyon' 
+        app_tagline: 'COMGENDGP'
+        app_slug: 'Le système de vote en ligne du COMGENDGP'
 
 when@test:
     twig:

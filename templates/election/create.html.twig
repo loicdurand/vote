@@ -1,0 +1,289 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ disable ? 'Annulation' : 'Création' }}&nbsp;d'une élection
+{% endblock %}
+
+{% block body %}
+	{# Fil d'arianne #}
+	<nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+		<button type="button" class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb">Voir le fil d&#39;arianne</button>
+
+		<div class="fr-collapse" id="breadcrumb">
+			<ol class="fr-breadcrumb__list">
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-1" href="{{ path('app_election_dashboard') }}">Tableau de bord des élections</a>
+				</li>
+				<li>
+					<a class="fr-breadcrumb__link" id="segment-2" aria-current="page" href="#">{{ disable ? 'Annulation' : 'Création' }}&nbsp;d'une élection</a>
+				</li>
+			</ol>
+		</div>
+	</nav>
+	{# Fin fil d'arianne #}
+
+	<h2 class="fr-mt-2w">
+		{{ disable ? 'Annulation' : 'Création' }}&nbsp;d'une élection
+	</h2>
+
+	{% if status == "error" %}
+		<div class="fr-alert fr-alert--error fr-mb-2w">
+			<h3 class="fr-alert__title">Le formulaire a été soumis avec des données invalides.</h3>
+		</div>
+	{% endif %}
+
+	{% if not disable %}
+		<p class="fr-text--sm fr-mb-1w">
+			{% if is_clone %}
+				Ce formulaire vous permet de créer une élection en reprenant les données saisies pour une élection précédente.
+				<br>
+				Apportez les modifications que vous jugez nécessaires.
+			{% else %}
+				Ce formulaire vous permet de créer une élection.
+				<br>
+				Vous devez lui donner un titre, par exemple: "Élection du conseil d'administration du Cercle-Mixte Gendarmerie de Baie-Mahaut".
+				<br>
+				Vous pouvez fournir des renseignements utiles aux électeurs, tels qu'une note de service, une référence de courriel, etc...
+				<br>
+				Ne précisez pas le corps d'appartenance auquel l'élection est réservée, il sera ajouté en fonction des groupes que vous choisirez.
+			{% endif %}
+		</p>
+		{%else%}
+		<p class="fr-text--sm fr-mb-1w">
+			Vous êtes sur le point d'annuler l'élection dont les caractéristiques figurent ci-dessous.
+			<br>
+			Elle ne sera pas supprimée mais bien annulée. Si vous souhaitez la réactiver, vous devrez contacter votre support technique.
+		</p>
+		{%endif%}
+
+		{{ form_start(form) }}
+
+		<main>
+
+			<fieldset class="custom-form-disable" {{ disable ? ' disabled' : '' }}>
+
+				<div id="step-0">
+
+					<div class="fr-stepper">
+						<h2 class="fr-stepper__title">
+							Informations concernant l'élection:
+							<span class="fr-stepper__state">Étape 1 sur 3</span>
+						</h2>
+						<div class="fr-stepper__steps" data-fr-current-step="1" data-fr-steps="3"></div>
+						<p class="fr-stepper__details">
+							<span class="fr-text--bold">Étape suivante :</span>
+							Dates d'ouverture et de fermeture des votes.
+						</p>
+					</div>
+
+					{{ form_row(form.user) }}
+
+					{{ form_row(form.unite) }}
+
+					{{ form_row(form.title) }}
+
+					<div class="fr-mb-2w"></div>
+
+					{{ form_row(form.explaination) }}
+
+				</div>
+
+				<div id="step-1" class="fr-hidden">
+
+					<div class="fr-stepper">
+						<h2 class="fr-stepper__title">
+							Dates d'ouverture et de fermeture des votes:
+							<span class="fr-stepper__state">Étape 2 sur 3</span>
+						</h2>
+						<div class="fr-stepper__steps" data-fr-current-step="2" data-fr-steps="3"></div>
+						<p class="fr-stepper__details">
+							<span class="fr-text--bold">Étape suivante :</span>
+							Sélection des participants à l'élection.
+						</p>
+					</div>
+
+					{{ form_row(form.startDate) }}
+
+					<div class="fr-mb-2w"></div>
+
+					{{ form_row(form.endDate) }}
+
+				</div>
+
+				<div id="step-2" class="fr-hidden">
+
+					<div class="fr-stepper">
+						<h2 class="fr-stepper__title">
+							Périmètre des participants à l'élection:
+							<span class="fr-stepper__state">Étape 2 sur 3</span>
+						</h2>
+						<div class="fr-stepper__steps" data-fr-current-step="3" data-fr-steps="3"></div>
+					</div>
+
+					<div class="fr-highlight fr-mb-2w {{ disable ? " fr-hidden" : '' }}">
+						<p class="fr-highlight__text">Si vous souhaitez créer une élection par corps d'appartenance, cochez la case ci-dessous.
+							<br>
+							<div class="fr-checkbox-group">
+								{{ form_widget(form.one_election_by_group) }}
+								{{ form_label(form.one_election_by_group) }}
+								<div class="fr-messages-group" id="one_election_by_group-messages" aria-live="polite"></div>
+							</div>
+						</p>
+					</div>
+
+					{{ form_row(form.groupesConcernes) }}
+
+					{{ form_row(form.unitesConcernees) }}
+
+				</div>
+
+			</fieldset>
+
+			{% if not disable %}
+
+				<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+
+					<li>
+						<!-- Bouton d'ouverture de la modale -->
+						<button type="button" class="fr-btn fr-btn--secondary" data-fr-opened="false" aria-controls="fr-modal--reset">
+							Réinitialiser le formulaire
+						</button>
+					</li>
+
+					<li>
+						<button type="button" id="prev-btn" class="fr-hidden fr-btn fr-btn fr-btn--secondary">
+							Étape précendante
+						</button>
+					</li>
+
+					<li>
+						<button type="button" id="next-btn" class="fr-btn">
+							Étape suivante
+						</button>
+					</li>
+
+					<li>
+						<button type="button" id="pre-submit" class="fr-hidden fr-btn" data-fr-opened="false" aria-controls="fr-modal--submit">
+							Enregistrer cette élection
+						</button>
+					</li>
+
+				</ul>
+
+			{% else %}
+
+				<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
+					<li>
+						<button type="button" id="pre-submit" class="fr-btn" data-fr-opened="false" aria-controls="fr-modal--submit" {{ disable ? 'onclick="document.querySelector(\'fieldset.custom-form-disable\').removeAttribute(\'disabled\');"' : '' }}>
+							Annuler cette élection
+						</button>
+					</li>
+				{% endif %}
+
+			</main>
+
+			{% if not disable %}
+				{# MODALE DE CONFIRMATION DE RÉINITIALISATION DU FORMULAIRE #}
+				<dialog aria-labelledby="fr-modal--reset-title" id="fr-modal--reset" class="fr-modal" role="dialog" data-fr-concealing-backdrop="false">
+					<div class="fr-container fr-container--fluid fr-container-md">
+						<div class="fr-grid-row fr-grid-row--center">
+							<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+								<div class="fr-modal__body">
+									<div class="fr-modal__header">
+										<button class="fr-btn--close fr-btn" aria-controls="fr-modal--reset">
+											Fermer
+										</button>
+									</div>
+									<div class="fr-modal__content">
+										<h1 id="fr-modal--reset-title" class="fr-modal__title">
+											<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+											Confirmer
+										</h1>
+										<p>
+											Vous allez réinitialiser le formulaire.
+											<br/>
+											Tous les champs remplis précédemment vont être effacés.
+											<br/>
+											Cliquez sur le bouton ci-dessous pour confirmer cette action.
+										</p>
+									</div>
+									<div class="fr-modal__footer">
+										<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+											<button type="reset" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--reset">
+												Réinitialiser le formulaire
+											</button>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</dialog>
+			{% endif %}
+
+			{# MODALE DE CONFIRMATION D'ENREGISTREMENT DES DONNÉES DU FORMULAIRE #}
+			<dialog aria-labelledby="fr-modal--submit-title" id="fr-modal--submit" class="fr-modal" role="dialog" data-fr-concealing-backdrop="false">
+				<div class="fr-container fr-container--fluid fr-container-md">
+					<div class="fr-grid-row fr-grid-row--center">
+						<div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
+							<div class="fr-modal__body">
+								<div class="fr-modal__header">
+									<button class="fr-btn--close fr-btn" aria-controls="fr-modal--submit" {{ disable ? 'onclick="document.querySelector(\'fieldset.custom-form-disable\').setAttribute(\'disabled\');"' : '' }}>
+										Fermer
+									</button>
+								</div>
+								<div class="fr-modal__content">
+									<h1 id="fr-modal--submit-title" class="fr-modal__title">
+										<span class="fr-icon-arrow-right-line fr-icon--lg"></span>
+										À lire avant
+										{{ disable ? 'de confirmer' : "d'enregister" }}
+									</h1>
+									{% if not disable %}
+										<p>
+											Depuis votre tableau de bord, vous pourrez cloner cette élection, de manière par exemple à en créer une nouvelle portant les mêmes caractéristiques mais ouverte à un corps d'appartenance différent.
+											<br>
+											<br>
+											Vous pourrez également paramétrer les candidats à l'élection:
+											<ul>
+												<li>si vous avez déjà une liste de candidats, vous pourrez les inscrire directement,</li>
+												<li>sinon, vous pourrez permettre à tout utilisateur dans le périmètre de l'élection (corps d'appartenance, unité) de se porter candidat.</li>
+											</ul>
+										</p>
+									{% else %}
+										<p>
+											L'élection est sur le point d'être annulée définitivement.
+											<br>
+											Si vous souhaitez la réactiver, vous devrez contacter votre support technique.
+										</p>
+									{% endif %}
+								</div>
+								<div class="fr-modal__footer">
+									<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+										<button type="submit" id="submit" class="fr-btn--close fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left fr-btn--secondary" aria-controls="fr-modal--submit">
+											{{ disable ? "J'annule" : "J'enregistre" }}&nbsp;cette élection
+										</button>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</dialog>
+
+			{{ form_end(form) }}
+
+			<script>
+				var checkbox = document.getElementById('election_one_election_by_group');
+var target = document.querySelector('.select-groups');
+console.log({checkbox, target});
+checkbox.addEventListener('change', function () {
+target.classList[checkbox.checked ? 'add' : 'remove']('fr-hidden');
+});
+			</script>
+
+		{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>Recherche d'utilisateurs</h1>
+	<form method="GET" action="{{ path('search_users') }}">
+		<label for="lastname">Nom de famille :</label>
+		<input type="text" id="lastname" name="lastname" placeholder="Saisir nom..." list="lastname-suggestions">
+		<datalist id="lastname-suggestions"></datalist>
+
+		<label for="ni">Identifiant NI :</label>
+		<input type="text" id="nigend" name="nigend" placeholder="Saisir NIGEND...">
+
+		<button type="submit">Rechercher</button>
+	</form>
+
+	{% if error %}
+		⟿
+		<p style="color: red;">{{ error }}</p>
+	{% endif %}
+
+	<script>
+		const lastnameInput = document.getElementById('lastname');
+const suggestionsList = document.getElementById('lastname-suggestions');
+
+lastnameInput.addEventListener('input', async () => {
+const term = lastnameInput.value.trim();
+if (term.length < 2) {
+suggestionsList.innerHTML = ''; // Vide les suggestions si saisie trop courte
+return;
+}
+
+try {
+const response = await fetch (`{{ path('autocomplete_lastname') }}?term=${
+encodeURIComponent(term)
+}`);
+const suggestions = await response.json();
+
+// Vide la liste actuelle
+suggestionsList.innerHTML = '';
+
+// Remplit la datalist avec les nouvelles suggestions
+suggestions.forEach(suggestion => {
+const option = document.createElement('option');
+option.value = suggestion.value; // Valeur insérée dans l'input
+option.textContent = suggestion.label; // Texte affiché (ex: "Doe (12345)")
+suggestionsList.appendChild(option);
+});
+} catch (error) {
+console.error('Erreur lors de la récupération des suggestions:', error);
+suggestionsList.innerHTML = '';
+}
+});
+	</script>
+{% endblock %}
