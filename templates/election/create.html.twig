@@ -12,13 +12,13 @@
 		<div class="fr-collapse" id="breadcrumb">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" href="/election/dashboard">Tableau de bord des élections</a>
+					<a class="fr-breadcrumb__link" id="segment-1" href="{{ path('app_election_dashboard') }}">Tableau de bord des élections</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-2" aria-current="page" href="/election/create">{{ disable ? 'Annulation' : 'Création' }}&nbsp;d'une élection</a>
+					<a class="fr-breadcrumb__link" id="segment-2" aria-current="page" href="#">{{ disable ? 'Annulation' : 'Création' }}&nbsp;d'une élection</a>
 				</li>
 			</ol>
 		</div>

@@ -11,10 +11,10 @@
 	<div class="fr-collapse" id="breadcrumb">
 		<ol class="fr-breadcrumb__list">
 			<li>
-				<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 			</li>
 			<li>
-				<a class="fr-breadcrumb__link" aria-current="page" id="segment-0" href="/stats/index">Affichage des résultats</a>
+				<a class="fr-breadcrumb__link" aria-current="page" id="segment-0" href="#">Affichage des résultats</a>
 			</li>
 		</ol>
 	</div>
@@ -106,7 +106,7 @@
 								<menu class="fr-btns-group">
 									<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 									<li>
-										<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+										<a target="_self" href="{{ path('app_stats', {election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
 									</li>
 								</menu>
 							</div>
@@ -124,7 +124,7 @@
 					<div class="fr-notice__body">
 					<p>
 						<span class="fr-notice__title">Il n'y a encore aucune élection terminée. Patience, ça va venir!</span>
-						<a href="/election/action/create/0" target="_self" class="fr-notice__link">Revenir à la page d'accueil</a>
+						<a href="{{ path('app_election_prepare', {action: 'create', election_id: '0'} )}}" target="_self" class="fr-notice__link">Revenir à la page d'accueil</a>
 					</p>
 				</div>
 			</div>

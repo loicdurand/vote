@@ -16,7 +16,7 @@ export default () => {
         }
 
         try {
-            const response = await fetch(`/autocomplete/candidat?term=${encodeURIComponent(term)}`);
+            const response = await fetch(`/eleksyon/autocomplete/candidat?term=${encodeURIComponent(term)}`);
             const suggestions = await response.json();
 
             // Vide la liste actuelle (hors choix dans la datalist)
@@ -66,7 +66,7 @@ export default () => {
         // AJAX POST
         const // 
             [, , , election_id] = location.pathname.split(/\//),
-            url = '/create/candidat/' + election_id,
+            url = '/eleksyon/create/candidat/' + election_id,
             body = JSON.stringify(data),
             options = {
                 method: 'post',

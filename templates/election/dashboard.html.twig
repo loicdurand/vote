@@ -11,10 +11,10 @@
 	<div class="fr-collapse" id="breadcrumb">
 		<ol class="fr-breadcrumb__list">
 			<li>
-				<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+				<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 			</li>
 			<li>
-				<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/election/dashboard">Tableau de bord des élections</a>
+				<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="{{ path('app_election_dashboard') }}">Tableau de bord des élections</a>
 			</li>
 		</ol>
 	</div>
@@ -37,7 +37,7 @@
 
 	<h3>Élections créées au sein de mon unité:</h3>
 
-	<a href="/election/action/create/0" target="_self" class="fr-link fr-icon-add-line fr-link--icon-left fr-mt-2w">Créer une nouvelle élection</a>
+	<a href="{{ path('app_election_prepare', {action: 'create', election_id: '0'} )}}" target="_self" class="fr-link fr-icon-add-line fr-link--icon-left fr-mt-2w">Créer une nouvelle élection</a>
 
 	<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
 
@@ -94,19 +94,19 @@
 						<div class="custom-tile-menu">
 							<menu class="fr-btns-group">
 								<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
-								<li><a target="_self" href="/election/action/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
+								<li><a target="_self" href="{{ path('app_election_prepare', {action: 'clone', election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a></li>
 								{% if election.isOpen() != true and election.isClosed() !=true %}
-									<li><a target="_self" href="/election/action/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
+									<li><a target="_self" href="{{ path('app_election_prepare', {action: 'edit', election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a></li>
 								{% endif %}
 								{% if election.isNotOpenYet() %}
-									<li><a target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
+									<li><a target="_self" href="{{ path('app_election_candidats', {election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Gérer les candidats</a></li>
 								{% elseif election.isClosed() %}
 									<li>
-										<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+										<a target="_self" href="{{ path('app_stats', {election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
 									</li>
 								{% endif %}
 								<li><button disabled target="_self" href="#" class="fr-btn fr-btn--tertiary">Partager cette élection</button></li>
-								<li><a target="_self" href="/election/action/cancel/{{election.id}}" class="custom-link--icon fr-link">Annuler cette élection</a></li>
+								<li><a target="_self" href="{{ path('app_election_prepare', {action: 'cancel', election_id: election.id} )}}" class="custom-link--icon fr-link">Annuler cette élection</a></li>
 							</menu>
 						</div>
 
@@ -121,7 +121,7 @@
 					<div class="fr-notice__body">
 					<p>
 						<span class="fr-notice__title">Vous n'avez pas encore créé d'élection.</span>
-						<a href="/election/action/create/0" target="_self" class="fr-notice__link">C'est le moment de s'y mettre!</a>
+						<a href="{{ path('app_election_prepare', {action: 'create', election_id: '0'} )}}" target="_self" class="fr-notice__link">C'est le moment de s'y mettre!</a>
 					</p>
 				</div>
 			</div>

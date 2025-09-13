@@ -11,13 +11,13 @@
 		<div class="fr-collapse" id="breadcrumb">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" href="/stats/index">Affichage des résultats</a>
+					<a class="fr-breadcrumb__link" id="segment-1" href="{{ path('app_stats_index') }}">Affichage des résultats</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" aria-current="page" id="segment-1" href="/stats/afficher">Résultats de l'élection</a>
+					<a class="fr-breadcrumb__link" aria-current="page" id="segment-1" href="#">Résultats de l'élection</a>
 				</li>
 			</ol>
 		</div>
@@ -138,7 +138,7 @@
 							<div class="fr-notice__body">
 								<p>
 									<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-									<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+									<a href="{{ path('app_election_dashboard') }}" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
 								</p>
 							</div>
 						</div>

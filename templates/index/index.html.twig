@@ -11,7 +11,7 @@
 	<div class="fr-collapse" id="breadcrumb">
 		<ol class="fr-breadcrumb__list">
 			<li>
-				<a class="fr-breadcrumb__link" aria-current="page" id="segment-0" href="/">Accueil</a>
+				<a class="fr-breadcrumb__link" aria-current="page" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 			</li>
 		</ol>
 	</div>
@@ -39,7 +39,7 @@
 
 	<h3>Élections en cours:</h3>
 
-	<a href="/election/action/create/0" target="_self" class="fr-link fr-icon-add-line fr-link--icon-left fr-mt-2w">Créer une nouvelle élection</a>
+	<a href="{{ path('app_election_prepare', {action: 'create', election_id: '0'}) }}" target="_self" class="fr-link fr-icon-add-line fr-link--icon-left fr-mt-2w">Créer une nouvelle élection</a>
 
 	<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
 
@@ -107,18 +107,18 @@
 								<menu class="fr-btns-group">
 									<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 									{% if election.isNotOpenYet() and election.candidaturesLibres %}
-										<li><a target="_self" href="/index/candidat/{{election.id}}" class="fr-btn fr-btn--tertiary">Soumettre ma candidature</a></li>
+										<li><a target="_self" href="{{ path('app_election_candidats', {election_id: election.id}) }}" class="fr-btn fr-btn--tertiary">Soumettre ma candidature</a></li>
 									{% elseif election.isOpen() %}
 										<li>
 										{% if election.a_deja_vote %}
 											<button disabled title="Vous avez déjà participé au vote" class="fr-btn fr-btn--tertiary">Participer au vote</button>
 										{% else %}
-											<a target="_self" href="/index/cgv/{{election.id}}" class="fr-btn fr-btn--tertiary">Participer au vote</a>
+											<a target="_self" href="{{ path('app_cgv', {election_id: election.id}) }}" class="fr-btn fr-btn--tertiary">Participer au vote</a>
 										{% endif %}
 										</li>
 									{% elseif election.isClosed() %}
 										<li>
-											<a target="_self" href="/stats/afficher/{{election.id}}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
+											<a target="_self" href="{{ path('app_stats', {election_id:election.id}) }}" class="fr-btn fr-btn--tertiary">Afficher les résultats</a>
 										</li>
 									{% endif %}
 								</menu>
@@ -137,7 +137,7 @@
 					<div class="fr-notice__body">
 					<p>
 						<span class="fr-notice__title">Vous n'avez pas encore créé d'élection.</span>
-						<a href="/election/action/create/0" target="_self" class="fr-notice__link">C'est le moment de s'y mettre!</a>
+						<a href="{{ path(' app_election_prepare', {action:'create', election_id: '0'}) }}" target="_self" class="fr-notice__link">C'est le moment de s'y mettre!</a>
 					</p>
 				</div>
 			</div>

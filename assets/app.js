@@ -28,7 +28,7 @@ document.addEventListener('click', async ({ target }) => {
         const // 
             nigend = target.dataset.nigend,
             [, , , election_id] = location.pathname.split(/\//),
-            url = '/remove/candidat/' + election_id,
+            url = '/eleksyon/remove/candidat/' + election_id,
             body = JSON.stringify({ nigend }),
             options = {
                 method: 'post',
@@ -54,7 +54,7 @@ document.addEventListener('click', async ({ target }) => {
             message = document.getElementById('secret-reveal-messages'),
             secret = input.value,
             [, , , election_id] = location.pathname.split(/\//),
-            url = '/index/retrieve-data',
+            url = '/eleksyon/index/retrieve-data',
             body = JSON.stringify({ secret }),
             options = {
                 method: 'post',
@@ -87,7 +87,7 @@ document.addEventListener('change', async ({ target }) => {
         // active ou désactive les candidatures libres
         const // 
             [, , , election_id] = location.pathname.split(/\//),
-            url = '/setcandidaturesspontanees/' + election_id,
+            url = '/eleksyon/setcandidaturesspontanees/' + election_id,
             body = JSON.stringify({ value: target.checked }),
             options = {
                 method: 'post',
@@ -117,7 +117,7 @@ document.addEventListener('change', async ({ target }) => {
             const // 
                 data = { ...target.dataset },
                 [, , , election_id] = location.pathname.split(/\//),
-                url = '/create/candidat/' + election_id,
+                url = '/eleksyon/create/candidat/' + election_id,
                 body = JSON.stringify(data),
                 options = {
                     method: 'post',
@@ -133,7 +133,7 @@ document.addEventListener('change', async ({ target }) => {
             const // 
                 nigend = target.dataset.nigend,
                 [, , , election_id] = location.pathname.split(/\//),
-                url = '/remove/candidat/' + election_id,
+                url = '/eleksyon/remove/candidat/' + election_id,
                 body = JSON.stringify({ nigend }),
                 options = {
                     method: 'post',

@@ -11,10 +11,10 @@
 		<div class="fr-collapse" id="breadcrumb">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/index/candidat">Soumettre ma candidature</a>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="#">Soumettre ma candidature</a>
 				</li>
 			</ol>
 		</div>
@@ -30,7 +30,7 @@
 		<br>
 		Pour soumettre votre candidature, cochez la case ci-dessous.
 		<br>
-		<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left">Revenir à l'accueil.</a>
+		<a href="{{ path('app_index') }}" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left">Revenir à l'accueil.</a>
 	</p>
 
 	<main>
@@ -67,15 +67,15 @@
 								</p>
 
 								{# <div class="fr-tile__start">
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		{{ election.startDate | date('d/m/Y') }}
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		au
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		{{ election.endDate | date('d/m/Y') }}
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	</p>
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																															</div> #}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										{{ election.startDate | date('d/m/Y') }}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										au
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										{{ election.endDate | date('d/m/Y') }}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									</p>
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							</div> #}
 							</div>
 							<!-- fin .fr-tile__content -->
 						</div>
@@ -97,19 +97,19 @@
 									<button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button>
 								</li>
 								<li>
-									<a target="_self" href="/election/clone/{{election.id}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a>
+									<a target="_self" href="{{ path('app_election_prepare', {action: 'clone', election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Cloner cette élection</a>
 								</li>
 								<li>
-									<a target="_self" href="/election/edit/{{election.id}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a>
+									<a target="_self" href="{{ path('app_election_prepare', {action: 'edit', election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Modifier cette élection</a>
 								</li>
 								<li>
 									<a target="_self" href="#" class="fr-btn fr-btn--tertiary">Gérer les candidats</a>
 								</li>
 								<li>
-									<button disabled target="_self" href="/election/candidats/{{election.id}}" class="fr-btn fr-btn--tertiary">Partager cette élection</button>
+									<button disabled target="_self" href="{{ path('app_election_candidats', {election_id: election.id} )}}" class="fr-btn fr-btn--tertiary">Partager cette élection</button>
 								</li>
 								<li>
-									<a target="_self" href="/election/cancel/{{election.id}}" class="custom-link--icon fr-link">Annuler cette élection</a>
+									<a target="_self" href="{{ path('app_election_prepare', {action: 'cancel', election_id: election.id} )}}" class="custom-link--icon fr-link">Annuler cette élection</a>
 								</li>
 							</menu>
 						</div>
@@ -213,7 +213,7 @@
 					<div class="fr-notice__body">
 						<p>
 							<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-							<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+							<a href="{{ path('app_election_dashboard') }}" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
 						</p>
 					</div>
 				</div>

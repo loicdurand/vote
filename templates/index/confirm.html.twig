@@ -11,10 +11,10 @@
 		<div class="fr-collapse" id="breadcrumb">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/index/vote">Interface de vote</a>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="#">Interface de vote</a>
 				</li>
 			</ol>
 		</div>
@@ -124,7 +124,7 @@
 
 					<p class="fr-mt-4w">
 						Pour vérifier l'intégrité de votre vote, copier la clé, puis rendez-vous sur
-						<a href="/index/verify" class="fr-link">cette page</a>.
+						<a href="{{ path('app_verify') }}" class="fr-link">cette page</a>.
 					</p>
 					<!-- fin .fr-col -->
 
@@ -135,7 +135,7 @@
 							<div class="fr-notice__body">
 								<p>
 									<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-									<a href="/election/dashboard" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+									<a href="{{ path('app_election_dashboard') }}" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
 								</p>
 							</div>
 						</div>
@@ -173,7 +173,7 @@
 								</div>
 								<div class="fr-modal__footer">
 									<div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-										<a href="/index/confirm/{{ candidat.id }}" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Je confirme mon vote</a>
+										<a href="{{ path('app_confirm', { candidat_id: candidat.id}) }}" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Je confirme mon vote</a>
 										<button aria-controls="modal-{{ candidat.id }}" class="fr-btn fr-icon-close-line fr-btn--icon-left fr-btn--secondary">Fermer</button>
 									</div>
 								</div>

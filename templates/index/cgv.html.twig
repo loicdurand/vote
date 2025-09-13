@@ -11,27 +11,15 @@
 		<div class="fr-collapse" id="breadcrumb">
 			<ol class="fr-breadcrumb__list">
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-0" href="/">Accueil</a>
+					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="/index/vote">Interface de vote</a>
+					<a class="fr-breadcrumb__link" id="segment-1" aria-current="page" href="{{ path('app_vote') }}">Interface de vote</a>
 				</li>
 			</ol>
 		</div>
 	</nav>
 	{# Fin fil d'arianne #}
-
-	{# <h2 class="fr-mt-2w">
-												Interface de vote
-											</h2>
-										
-											<p class="fr-text--sm fr-mb-1w">
-												À l'étape suivante, vous allez voter pour le candidat de votre choix.
-												<br>
-												Nous vous invitons, au préalable, à prendre connaissance des règles concernant ce processus.
-											</p>
-										
-											<a href="/" target="_self" class="fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mt-2w">Revenir à l'accueil.</a> #}
 
 	<main>
 
@@ -136,13 +124,13 @@
 		<ul class="fr-mt-4w fr-btns-group fr-btns-group--inline-md">
 
 			<li>
-				<a href="/" type="button" class="fr-btn fr-btn fr-btn--secondary">
+				<a href="{{ path('app_index') }}" type="button" class="fr-btn fr-btn fr-btn--secondary">
 					Revenir à la page d'accueil
 				</a>
 			</li>
 
 			<li>
-				<a href="/index/vote/{{ election.id }}" type="button" class="fr-btn">
+				<a href="{{ path('app_vote', {election_id: election.id} )}}" type="button" class="fr-btn">
 					Étape suivante
 				</a>
 			</li>
