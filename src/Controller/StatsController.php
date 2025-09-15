@@ -60,7 +60,7 @@ final class StatsController extends AbstractController
         }
 
         $voterCount = $entityManager->getRepository(Vote::class)->count(['election' => $election]);
-        $participationRate = $voterCount / $invitedCount * 100;
+        $participationRate = $voterCount / ($invitedCount || 1) * 100;
 
         $voteDistribution = $entityManager->getRepository(Vote::class)->getVoteRepartition($election);
         $winner = $this->findElectionWinner($voteDistribution);

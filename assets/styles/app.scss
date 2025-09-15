@@ -1,5 +1,9 @@
 @use "./colors";
 
+.fr-container main {
+    min-height: 45em;
+}
+
 .election-hidden {
     display: none;
 }

@@ -148,9 +148,11 @@ class UserSearchController extends AbstractController
             $ldap = Ldap::create('ext_ldap', [
                 'connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT'],
             ]);
-
-            // Bind avec l'utilisateur admin
-            $ldap->bind('cn=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+            if ($_ENV['APP_ENV'] === 'dev')
+                // Bind avec l'utilisateur admin
+                $ldap->bind('cn=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+            else
+                $ldap->bind(null, null);
 
             // Construire le filtre (ajusté pour LLDAP)
             $filter = '(&(objectClass=inetOrgPerson)(memberOf=cn=' . $groupDn . ',ou=groups,' . $_ENV['BASE_DN'] . '))';

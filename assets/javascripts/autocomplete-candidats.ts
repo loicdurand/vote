@@ -32,8 +32,8 @@ export default () => {
             });
 
             // actions déclenchées lors du choix dans la datalist
-            const input = e.target as HTMLInputElement;
-            const [nigend] = input.value.split(/\s/);
+            const target = e.target as HTMLInputElement;
+            const [nigend] = target.value.split(/\s/);
             const list = input.getAttribute('list');
             const listEl = document.getElementById(list);
             const options = listEl.childNodes;
@@ -65,7 +65,7 @@ export default () => {
 
         // AJAX POST
         const // 
-            [, , , election_id] = location.pathname.split(/\//),
+            [, , , , election_id] = location.pathname.split(/\//),
             url = '/eleksyon/create/candidat/' + election_id,
             body = JSON.stringify(data),
             options = {
@@ -96,7 +96,7 @@ export default () => {
             values.forEach(v => {
                 const td = document.createElement('td');
                 td.innerText = v;
-                tr.appendChild(td);
+                // tr.appendChild(td);
             })
 
             // ajout d'un bouton de suppr. du candidat

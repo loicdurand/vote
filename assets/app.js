@@ -27,7 +27,7 @@ document.addEventListener('click', async ({ target }) => {
         // Suppr. d'un candidat
         const // 
             nigend = target.dataset.nigend,
-            [, , , election_id] = location.pathname.split(/\//),
+            [, , , , election_id] = location.pathname.split(/\//),
             url = '/eleksyon/remove/candidat/' + election_id,
             body = JSON.stringify({ nigend }),
             options = {
@@ -53,7 +53,6 @@ document.addEventListener('click', async ({ target }) => {
             input = document.getElementById('secret-reveal'),
             message = document.getElementById('secret-reveal-messages'),
             secret = input.value,
-            [, , , election_id] = location.pathname.split(/\//),
             url = '/eleksyon/index/retrieve-data',
             body = JSON.stringify({ secret }),
             options = {
@@ -86,7 +85,7 @@ document.addEventListener('change', async ({ target }) => {
     if (target.matches('#check-candidatures-libres')) {
         // active ou désactive les candidatures libres
         const // 
-            [, , , election_id] = location.pathname.split(/\//),
+            [, , , , election_id] = location.pathname.split(/\//),
             url = '/eleksyon/setcandidaturesspontanees/' + election_id,
             body = JSON.stringify({ value: target.checked }),
             options = {
@@ -116,7 +115,7 @@ document.addEventListener('change', async ({ target }) => {
         if (checked) {
             const // 
                 data = { ...target.dataset },
-                [, , , election_id] = location.pathname.split(/\//),
+                [, , , , election_id] = location.pathname.split(/\//),
                 url = '/eleksyon/create/candidat/' + election_id,
                 body = JSON.stringify(data),
                 options = {
@@ -132,7 +131,7 @@ document.addEventListener('change', async ({ target }) => {
         } else {
             const // 
                 nigend = target.dataset.nigend,
-                [, , , election_id] = location.pathname.split(/\//),
+                [, , , , election_id] = location.pathname.split(/\//),
                 url = '/eleksyon/remove/candidat/' + election_id,
                 body = JSON.stringify({ nigend }),
                 options = {
