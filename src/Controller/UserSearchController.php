@@ -86,12 +86,17 @@ class UserSearchController extends AbstractController
             $ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT']]);
             if ($_ENV['APP_ENV'] === 'dev')
                 $ldap->bind('uid=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+            else
+                $ldap->bind(null, null);
 
             $filter = '(objectClass=person)';
             if ($lastname) {
                 $filter = sprintf('(&(objectClass=person)(displayname=*%s*))', $ldap->escape($lastname, '', LDAP_ESCAPE_FILTER));
             } elseif ($nigend) {
-                $filter = sprintf('(&(objectClass=person)(nigend=%s))', $ldap->escape($nigend, '', LDAP_ESCAPE_FILTER));
+                if ($_ENV['APP_ENV'] === 'dev')
+                    $filter = sprintf('(&(objectClass=person)(nigend=%s))', $ldap->escape($nigend, '', LDAP_ESCAPE_FILTER));
+                else
+                    $filter = sprintf('(&(objectClass=person)(employeeNumber=%s))', $ldap->escape($nigend, '', LDAP_ESCAPE_FILTER));
             }
 
             $query = $ldap->query($_ENV['BASE_DN'], $filter);
@@ -105,9 +110,25 @@ class UserSearchController extends AbstractController
             // Convertit les Entry objects en tableau compatible avec le code existant
             $entries = [];
             foreach ($results as $entry) {
+
                 $attributes = [];
-                foreach (['displayname', 'nigend', 'mail', 'dptunite', 'employeetype', 'title', 'specialite'] as $attr) {
-                    $attributes[$attr] = $entry->getAttribute($attr) ?? [];
+                if ($_ENV['APP_ENV'] === 'dev') {
+                    foreach (['displayname', 'nigend', 'mail', 'dptunite', 'employeetype', 'title', 'specialite'] as $attr) {
+                        $attributes[$attr] = $entry->getAttribute($attr) ?? [];
+                    }
+                } else {
+                    foreach (['displayName', 'employeeNumber', 'mail', 'postalCode', 'employeeType', 'title', 'specialite'] as $attr) {
+                        if ($attr === "postalCode") {
+                            $at = $entry->getAttribute($attr);
+                            $postcode = $at[0];
+                            $dptCode = str_starts_with($postcode, '97') ? substr($postcode, 0, 3) : substr($postcode, 0, 2);
+                            $attributes[$attr] = [$dptCode];
+                        } else if ($attr === "employeeNumber") {
+                            $attributes["nigend"] = $entry->getAttribute($attr) ?? [];
+                        } else {
+                            $attributes[strtolower($attr)] = $entry->getAttribute($attr) ?? [];
+                        }
+                    }
                 }
                 $entries[] = $attributes;
             }
