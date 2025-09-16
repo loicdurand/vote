@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -55,6 +56,9 @@ class User implements UserInterface
      */
     #[ORM\OneToMany(targetEntity: Registre::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $registres;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $departement = null;
 
     public function __construct()
     {
@@ -258,6 +262,18 @@ class User implements UserInterface
                 $registre->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDepartement(): ?int
+    {
+        return $this->departement;
+    }
+
+    public function setDepartement(?int $departement): static
+    {
+        $this->departement = $departement;
 
         return $this;
     }

@@ -94,6 +94,9 @@ final class ElectionController extends AbstractController
                         $entityManager->persist($data);
                     } else if ($action === 'edit') {
                         $copy = $this->copy_election($data, $user);
+                        $candidats = $copy->getCandidats();
+                        foreach ($candidats as $candidat)
+                            $election->removeCandidat($candidat);
                         $prev_election->setIsCancelled(true);
                         $history = new ElectionHistory();
                         $history->setCurrent($copy);
@@ -102,15 +105,17 @@ final class ElectionController extends AbstractController
                         $entityManager->persist($copy);
                         $entityManager->persist($prev_election);
                     } else if ($action === 'clone') {
-                        $grps = $data->getGroupesConcernes();
-                        foreach ($grps as $grp) {
-                            $copy = $this->copy_election($data, $user);
-                            $candidats = $copy->getCandidats();
-                            foreach ($candidats as $candidat)
-                                $election->removeCandidat($candidat);
-                            $entityManager->persist($copy);
-                        }
+                        // $grps = $data->getGroupesConcernes();
+                        // foreach ($grps as $grp) {
+                        $copy = $this->copy_election($data, $user);
+                        $candidats = $copy->getCandidats();
+                        foreach ($candidats as $candidat)
+                            $election->removeCandidat($candidat);
+                        $entityManager->persist($copy);
+                        // }
                     } else {
+                        $data->setUser($user);
+                        $data->setUnite($user->getUnite());
                         $data->setCreatedAt();
                         $data->addCandidat($this->createCandidatBlanc($data));
                         $entityManager->persist($data);

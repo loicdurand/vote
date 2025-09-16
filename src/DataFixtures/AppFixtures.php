@@ -63,6 +63,7 @@ class AppFixtures extends Fixture
             $unt = new Unite();
             $unt->setCodeunite($unite->getAttribute('codeUnite')[0]);
             $unt->setName($unite->getAttribute('businessOu')[0]);
+            $unt->setDepartement(971);
             $manager->persist($unt);
         }
 
@@ -85,9 +86,8 @@ class AppFixtures extends Fixture
 
             // Construire le filtre (ajusté pour LLDAP)
             $filter = "(&(objectclass=organizationalUnit)(memberOf=cn=g_tu-fo_12609,dmdName=Groupes,dc=gendarmerie,dc=defense,dc=gouv,dc=fr))"; //departmentNumber=GEND/COMGENDGP))";
-            //$filter = '(&(objectClass=organizationalUnit)(codeunite=00086977,ou=groups,' . $_ENV['BASE_DN'] . '))';
 
-            //         // Exécuter la requête
+            // Exécution de la requête
             $query = $ldap->query($_ENV['BASE_DN'], $filter, [
                 'filter' => ['codeUnite', 'businessOu'], // Ne récupérer que le DN pour compter
                 //'scope' => 'sub',
@@ -95,11 +95,8 @@ class AppFixtures extends Fixture
 
             $results = $query->execute()->toArray();
 
-            //         // Débogage : afficher les résultats bruts
-            //dd($results); // Décommente pour inspecter les entrées
 
-            //         // Compter les résultats
-            return (array) $results;
+            return $results;
         } catch (ConnectionException $e) {
             //         // Erreur de connexion au serveur LDAP
             throw new \Exception('Erreur de connexion LDAP : ' . $e->getMessage());

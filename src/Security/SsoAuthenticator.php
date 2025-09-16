@@ -64,6 +64,7 @@ class SsoAuthenticator extends AbstractAuthenticator
             $unite = new Unite();
             $unite->setCodeunite($codeunite);
             $unite->setName($ssoData->unite);
+            $unite->setDepartement(971);
             $this->entityManager->persist($unite);
             $this->entityManager->flush();
         }
@@ -86,6 +87,7 @@ class SsoAuthenticator extends AbstractAuthenticator
             $user->setUnite($unite);
             $user->setGroupe($groupe);
             $user->setRoles(['ROLE_USER']);
+            $user->setDepartement(971);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
         }
