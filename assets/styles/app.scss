@@ -122,6 +122,26 @@ table#table-candidats {
     width: 100% !important;
 }
 
+/* AUTOCOMPLETE CANDIDATS */
+ul.suggest-candidat-list {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid;
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin-top: 0;
+
+    li {
+        border-bottom: 1px solid rgba(0, 0, 0, .2);
+        list-style-type: none;
+        padding: 8px 12px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+    }
+}
+
 /* STATISTIQUES */
 .stats-page {
     .stats-section {

@@ -44,7 +44,7 @@
 	<div class="fr-grid-row fr-grid-row--gutters fr-mt-4w">
 
 		{% for election in elections %}
-			{{election.id}}
+
 			{% set election_in_perimeter = user_groupe_id in (election.groupesConcernes| map( grp => grp.id )) %}
 			{% set election_in_perimeter = election_in_perimeter and user_unite_id in (election.unitesConcernees| map( unt => unt.id )) %}
 

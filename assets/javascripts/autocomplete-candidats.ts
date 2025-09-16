@@ -3,13 +3,13 @@ export default () => {
     if (document.getElementById('suggest-candidat-list') === null)
         return false;
 
-    const input = document.getElementById('suggest-candidat');
+    const input = document.getElementById('suggest-candidat') as HTMLInputElement;
     const suggestionsList = document.getElementById('suggest-candidat-list');
     const submit = document.getElementById('suggestion-submit');
     let data;
 
     input.addEventListener('input', async (e) => {
-        const term = (input as HTMLInputElement).value.trim();
+        const term = input.value.trim();
         if (term.length < 2) {
             suggestionsList.innerHTML = ''; // Vide les suggestions si saisie trop courte
             return;
@@ -23,31 +23,13 @@ export default () => {
             if (e instanceof InputEvent)
                 suggestionsList.innerHTML = '';
 
-            // Remplit la datalist avec les nouvelles suggestions
+            // Remplit la list avec les nouvelles suggestions
             suggestions.forEach(suggestion => {
-                const option = document.createElement('option');
-                option.dataset.value = suggestion.value; // Valeur insérée dans l'input
-                option.textContent = suggestion.label; // Texte affiché (ex: "Doe (12345)")
-                suggestionsList.appendChild(option);
+                const listElt = document.createElement('li');
+                listElt.dataset.value = suggestion.value; // Valeur insérée dans l'input
+                listElt.textContent = suggestion.label; // Texte affiché (ex: "Doe (12345)")
+                suggestionsList.appendChild(listElt);
             });
-
-            // actions déclenchées lors du choix dans la datalist
-            const target = e.target as HTMLInputElement;
-            const [nigend] = target.value.split(/\s/);
-            const list = input.getAttribute('list');
-            const listEl = document.getElementById(list);
-            const options = listEl.childNodes;
-
-            for (var i = 0; i < options.length; i++) {
-
-                if ((options[i] as HTMLElement).dataset.value.trim() === nigend.trim()) {
-                    const [nigend, displayname, mail] = options[i].textContent.split(' - ');
-                    data = { nigend, displayname, mail };
-                    submit.classList.remove('fr-hidden');
-                    console.log('item selected: ' + nigend);
-                    break;
-                }
-            }
 
         } catch (error) {
             console.error('Erreur lors de la récupération des suggestions:', error);
@@ -55,12 +37,34 @@ export default () => {
         }
     });
 
+    suggestionsList.addEventListener('click', (e) => {
+        // actions déclenchées lors du choix dans la datalist
+        const target = e.target as HTMLInputElement;
+        // const [nigend] = target.dataset.value.split(/\s/);
+        // const list = input.dataset.list;
+        // const listEl = document.getElementById(list);
+        // const listElts = listEl.childNodes;
+
+        // for (var i = 0; i < listElts.length; i++) {
+
+        //     if ((listElts[i] as HTMLElement).dataset.value.trim() === nigend.trim()) {
+        const [nigend, displayname, mail] = target.textContent.split(' - ');
+        data = { nigend, displayname, mail };
+        input.value = target.textContent;
+        suggestionsList.innerHTML = '';
+        submit.classList.remove('fr-hidden');
+        console.log('item selected: ' + nigend);
+        // break;
+        //     }
+        // }
+    });
+
     submit.addEventListener('click', async e => {
 
         const tbody = document.getElementById('candidats-tbody');
         const zero = document.getElementById('table-zero-candidat');
         const tr = document.createElement('tr');
-        const { nigend, displayname } = data;
+        const [nigend, displayname] = input.value.split(' - ');
         const values = [nigend, displayname];
 
         // AJAX POST
@@ -96,7 +100,7 @@ export default () => {
             values.forEach(v => {
                 const td = document.createElement('td');
                 td.innerText = v;
-                // tr.appendChild(td);
+                tr.appendChild(td);
             })
 
             // ajout d'un bouton de suppr. du candidat
@@ -115,6 +119,7 @@ export default () => {
             tr.appendChild(td);
 
             tbody.appendChild(tr);
+            input.value = "";
         } else {
             alert_title.innerText = result.error;
             alert.classList.remove('fr-hidden');
