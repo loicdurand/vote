@@ -1,5 +1,46 @@
 export default () => {
 
+    const // 
+
+        debounce = (func, delay) => {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        },
+
+        fetchAutocompleteData = debounce(async (e) => {
+            const term = input.value.trim();
+            if (term.length < 2) {
+                suggestionsList.innerHTML = ''; // Vide les suggestions si saisie trop courte
+                return;
+            }
+
+            try {
+                const response = await fetch(`/eleksyon/autocomplete/candidat?term=${encodeURIComponent(term)}`);
+                const suggestions = await response.json();
+
+                // Vide la liste actuelle (hors choix dans la datalist)
+                if (e instanceof InputEvent)
+                    suggestionsList.innerHTML = '';
+
+                // Remplit la list avec les nouvelles suggestions
+                suggestions.forEach(suggestion => {
+                    const listElt = document.createElement('li');
+                    listElt.dataset.value = suggestion.value; // Valeur insérée dans l'input
+                    listElt.textContent = suggestion.label; // Texte affiché (ex: "Doe (12345)")
+                    suggestionsList.appendChild(listElt);
+                });
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des suggestions:', error);
+                suggestionsList.innerHTML = '';
+            }
+        }, 450);
+
     if (document.getElementById('suggest-candidat-list') === null)
         return false;
 
@@ -8,34 +49,7 @@ export default () => {
     const submit = document.getElementById('suggestion-submit');
     let data;
 
-    input.addEventListener('input', async (e) => {
-        const term = input.value.trim();
-        if (term.length < 2) {
-            suggestionsList.innerHTML = ''; // Vide les suggestions si saisie trop courte
-            return;
-        }
-
-        try {
-            const response = await fetch(`/eleksyon/autocomplete/candidat?term=${encodeURIComponent(term)}`);
-            const suggestions = await response.json();
-
-            // Vide la liste actuelle (hors choix dans la datalist)
-            if (e instanceof InputEvent)
-                suggestionsList.innerHTML = '';
-
-            // Remplit la list avec les nouvelles suggestions
-            suggestions.forEach(suggestion => {
-                const listElt = document.createElement('li');
-                listElt.dataset.value = suggestion.value; // Valeur insérée dans l'input
-                listElt.textContent = suggestion.label; // Texte affiché (ex: "Doe (12345)")
-                suggestionsList.appendChild(listElt);
-            });
-
-        } catch (error) {
-            console.error('Erreur lors de la récupération des suggestions:', error);
-            suggestionsList.innerHTML = '';
-        }
-    });
+    input.addEventListener('input', async e => fetchAutocompleteData(e));
 
     suggestionsList.addEventListener('click', (e) => {
         // actions déclenchées lors du choix dans la datalist
