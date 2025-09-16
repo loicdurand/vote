@@ -56,44 +56,59 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
+
+        $ldap_unites = $this->getAllGroups(); //dd($ldap_unites);
+
+        foreach ($ldap_unites as $unite) {
+            $unt = new Unite();
+            $unt->setCodeunite($unite->getAttribute('codeUnite')[0]);
+            $unt->setName($unite->getAttribute('businessOu')[0]);
+            $manager->persist($unt);
+        }
+
+        $manager->flush();
     }
 
-    // private static function getAllGroups(): int
-    // {
-    //     try {
-    //         // Créer la connexion LDAP
-    //         $ldap = Ldap::create('ext_ldap', [
-    //             'connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT'],
-    //         ]);
+    private static function getAllGroups(): array
+    {
+        try {
+            // Créer la connexion LDAP
+            $ldap = Ldap::create('ext_ldap', [
+                'connection_string' => 'ldap://' . $_ENV['LDAP_HOST'] . ':' . $_ENV['LDAP_PORT'],
+            ]);
 
-    //         // Bind avec l'utilisateur admin
-    //         $ldap->bind('cn=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+            // Bind avec l'utilisateur admin
+            if ($_ENV['APP_ENV'] === 'dev')
+                $ldap->bind('cn=' . $_ENV['LDAP_USER'] . ',ou=people,' . $_ENV['BASE_DN'], $_ENV['LDAP_PASSWORD']);
+            else
+                $ldap->bind(null, null);
 
-    //         // Construire le filtre (ajusté pour LLDAP)
-    //         $filter = '(&(objectClass=inetOrgPerson)(memberOf=cn=' . $groupDn . ',ou=groups,' . $_ENV['BASE_DN'] . '))';
+            // Construire le filtre (ajusté pour LLDAP)
+            $filter = "(&(objectclass=organizationalUnit)(memberOf=cn=g_tu-fo_12609,dmdName=Groupes,dc=gendarmerie,dc=defense,dc=gouv,dc=fr))"; //departmentNumber=GEND/COMGENDGP))";
+            //$filter = '(&(objectClass=organizationalUnit)(codeunite=00086977,ou=groups,' . $_ENV['BASE_DN'] . '))';
 
-    //         // Exécuter la requête
-    //         $query = $ldap->query($_ENV['BASE_DN'], $filter, [
-    //             'filter' => ['dn'], // Ne récupérer que le DN pour compter
-    //             'scope' => 'sub',
-    //         ]);
+            //         // Exécuter la requête
+            $query = $ldap->query($_ENV['BASE_DN'], $filter, [
+                'filter' => ['codeUnite', 'businessOu'], // Ne récupérer que le DN pour compter
+                //'scope' => 'sub',
+            ]);
 
-    //         $results = $query->execute()->toArray();
+            $results = $query->execute()->toArray();
 
-    //         // Débogage : afficher les résultats bruts
-    //         //dd(count($results)); // Décommente pour inspecter les entrées
+            //         // Débogage : afficher les résultats bruts
+            //dd($results); // Décommente pour inspecter les entrées
 
-    //         // Compter les résultats
-    //         return count($results);
-    //     } catch (ConnectionException $e) {
-    //         // Erreur de connexion au serveur LDAP
-    //         throw new \Exception('Erreur de connexion LDAP : ' . $e->getMessage());
-    //     } catch (LdapException $e) {
-    //         // Erreur lors de la requête ou du bind
-    //         throw new \Exception('Erreur LDAP : ' . $e->getMessage());
-    //     } catch (\Exception $e) {
-    //         // Autres erreurs
-    //         throw new \Exception('Erreur générale : ' . $e->getMessage());
-    //     }
-    // }
+            //         // Compter les résultats
+            return (array) $results;
+        } catch (ConnectionException $e) {
+            //         // Erreur de connexion au serveur LDAP
+            throw new \Exception('Erreur de connexion LDAP : ' . $e->getMessage());
+        } catch (LdapException $e) {
+            //         // Erreur lors de la requête ou du bind
+            throw new \Exception('Erreur LDAP : ' . $e->getMessage());
+        } catch (\Exception $e) {
+            //         // Autres erreurs
+            throw new \Exception('Erreur générale : ' . $e->getMessage());
+        }
+    }
 }
