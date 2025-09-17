@@ -81,8 +81,36 @@ class SsoAuthenticator extends AbstractAuthenticator
             $user->setTitle($ssoData->displayname);
             $user->setSpecialite($ssoData->specialite);
             $user->setMail($ssoData->mail);
-            $grp_shortname = $ssoData->employeeType;
-            $groupe = $this->entityManager->getRepository(Groupe::class)->findOneBy(['shortName' => $grp_shortname]);
+            $type = $ssoData->employeeType;
+
+            $grps = [
+                [
+                    'cat' => 'CIV',
+                    'types' => ['CONTR S TECH', 'ADJ TECH', 'OUVR ETAT MA']
+                ],
+                [
+                    'cat' => 'GAV',
+                    'types' => ['GAV']
+                ],
+                [
+                    'cat' => 'SOG',
+                    'types' => ['SOG', ' CSTAGN', 'PERS EXT MILIT']
+                ],
+                [
+                    'cat' => 'OG',
+                    'types' => ['OFF GIE', 'OFF CTA']
+                ]
+            ];
+
+            $grp_nickname = 'CIV'; // par défaut
+            foreach ($grps as $grp) {
+                if (in_array($type, $grp['types'])) {
+                    $grp_nickname = $grp['cat'];
+                    break;
+                }
+            }
+
+            $groupe = $this->entityManager->getRepository(Groupe::class)->findOneBy(['nickname' => $grp_nickname]);
             $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
             $user->setUnite($unite);
             $user->setGroupe($groupe);

@@ -101,7 +101,7 @@ final class StatsController extends AbstractController
                 ];
             } elseif ($votes === $maxVotes && $votes > 0) {
                 // Gérer les égalités : on peut réinitialiser le vainqueur si égalité
-                $winner = false; // Pas de vainqueur clair en cas d'égalité
+                $winner = []; // Pas de vainqueur clair en cas d'égalité
             }
         }
 

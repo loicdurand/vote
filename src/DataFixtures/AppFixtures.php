@@ -32,26 +32,32 @@ class AppFixtures extends Fixture
 
         $groups = [
             [
-                'OG',
-                'Officier'
+                'Off.',
+                'Officier',
+                'OG'
+                
             ],
             [
-                'SOG',
-                'Sous-Officier'
+                'S-Off.',
+                'Sous-Officier',
+                'SOG'
             ],
             [
-                'GAV',
-                'Volontaire'
+                'Volont.',
+                'Volontaire',
+                'GAV'
             ],
             [
-                'CIV',
-                'Civil'
+                'Civil',
+                'Civil',
+                'CIV'
             ]
         ];
         foreach ($groups as $grp) {
             $groupe = new Groupe();
             $groupe->setShortName($grp[0]);
             $groupe->setName($grp[1]);
+            $groupe->setNickname($grp[2]);
             $manager->persist($groupe);
         }
 
