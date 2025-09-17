@@ -47,6 +47,9 @@
             "migrations/.gitignore"
         ]
     },
+    "endroid/qr-code-bundle": {
+        "version": "6.0.0"
+    },
     "nelmio/cors-bundle": {
         "version": "2.5",
         "recipe": {

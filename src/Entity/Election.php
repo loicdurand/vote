@@ -28,6 +28,8 @@ class Election
     #[ORM\Column(nullable: true)]
     private ?\DateTime $endDate = null;
 
+    private ?string $shareLink = null;
+
     /**
      * @var Collection<int, Candidat>
      */
@@ -383,6 +385,17 @@ class Election
             }
         }
 
+        return $this;
+    }
+
+    public function getShareLink(): ?string
+    {
+        return $this->shareLink;
+    }
+
+    public function setShareLink(string $base_url): static
+    {
+        $this->shareLink = $base_url . '/eleksyon/index/cgv/' . $this->id;
         return $this;
     }
 }

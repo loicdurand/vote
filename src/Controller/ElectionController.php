@@ -21,13 +21,18 @@ final class ElectionController extends AbstractController
 {
 
     #[Route('/election/dashboard', name: 'app_election_dashboard')]
-    public function dashboard(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager): Response
+    public function dashboard(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
 
         if (is_null($user))
             return $this->redirectToRoute('app_login');
 
+        $baseurl = $request->getScheme() . '://' . $request->getHttpHost();
+
         $elections = $entityManager->getRepository(Election::class)->findBy(['unite' => $user->getUnite(), 'isCancelled' => false]);
+        foreach ($elections as $election) {
+            $election->setShareLink($baseurl);
+        }
 
         return $this->render('election/dashboard.html.twig', [
             'user' => $user,
