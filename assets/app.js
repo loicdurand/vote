@@ -105,17 +105,13 @@ document.addEventListener('change', async ({ target }) => {
             else
                 target.removeAttribute('checked');
         }
-    } else if (target.matches('#toggle-print-all')) {
-        // affiche toutes les élections, même si celles qui ne me concernent pas
-        const main = document.getElementById('main-elections_en_cours');
-        main.classList.toggle('print-all');
-    } else if (target.matches('#check-soumettre-candidature')) {
-        // case "je me porte candidat" cochée ou décochée
+    } else if (target.matches('#check-candidature-spontanee')) {
+        // soumission d'une candidature libre
         const { checked } = target;
         if (checked) {
             const // 
                 data = { ...target.dataset },
-                [, , , , election_id] = location.pathname.split(/\//),
+                [, , , , , election_id] = location.pathname.split(/\//),
                 url = '/eleksyon/create/candidat/' + election_id,
                 body = JSON.stringify(data),
                 options = {
@@ -131,7 +127,7 @@ document.addEventListener('change', async ({ target }) => {
         } else {
             const // 
                 nigend = target.dataset.nigend,
-                [, , , , election_id] = location.pathname.split(/\//),
+                [, , , , , election_id] = location.pathname.split(/\//),
                 url = '/eleksyon/remove/candidat/' + election_id,
                 body = JSON.stringify({ nigend }),
                 options = {
@@ -144,6 +140,10 @@ document.addEventListener('change', async ({ target }) => {
             if (result.success)
                 location.reload();
         }
+    } else if (target.matches('#toggle-print-all')) {
+        // affiche toutes les élections, même si celles qui ne me concernent pas
+        const main = document.getElementById('main-elections_en_cours');
+        main.classList.toggle('print-all');
     }
 });
 

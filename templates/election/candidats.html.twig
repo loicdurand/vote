@@ -13,28 +13,63 @@
 				<li>
 					<a class="fr-breadcrumb__link" id="segment-0" href="{{ path('app_index') }}">Accueil</a>
 				</li>
+				{% if not spontanee %}
+					<li>
+						<a class="fr-breadcrumb__link" id="segment-1" href="{{ path('app_election_dashboard') }}">Tableau de bord des élections</a>
+					</li>
+				{% endif %}
 				<li>
-					<a class="fr-breadcrumb__link" id="segment-1" href="{{ path('app_election_dashboard') }}">Tableau de bord des élections</a>
-				</li>
-				<li>
-					<a class="fr-breadcrumb__link" id="segment-2" aria-current="page" href="{{ path('app_election_candidats') }}">Gestion des candidats</a>
+					<a class="fr-breadcrumb__link" id="segment-2" aria-current="page" href="{{ path('app_election_candidats') }}">{{ spontanee ? 'Soumettre ma candidature' : 'Gestion des candidats' }}</a>
 				</li>
 			</ol>
 		</div>
 	</nav>
 	{# Fin fil d'arianne #}
+	{% if spontanee %}
 
-	<h2 class="fr-mt-2w">
-		Gestion des candidats
-	</h2>
+		<h2 class="fr-mt-2w">
+			Soumettre ma candidature
+		</h2>
 
-	<p class="fr-text--sm fr-mb-1w">
-		Cette page vous permet, au choix:
-		<br>
-		- d'ajouter les candidats directement, si vous en avez déjà la liste,
-		<br>
-		- de consulter les utilisateurs qui se sont portés candidat à leur initiative.
-	</p>
+		<p class="fr-text--sm fr-mb-3w">
+			L'organisateur de cette élection a autorisé les candidatures spontanées.
+			<br>
+			Par conséquent, vous avez la possibilité de soumettre votre candidature à l'élection intitulée&nbsp;"<strong>{{ election.title }}</strong>".
+		</p>
+
+		{% if election.explaination != '' %}
+			<figure class="fr-quote">
+				<blockquote>
+					<p class="fr-text--md">«
+						{{ election.explaination }}
+						»</p>
+				</blockquote>
+				<figcaption>
+					<p class="fr-quote__author">{{ user.title }}</p>
+					<ul class="fr-quote__source">
+						<li>
+							<cite>Organisateur</cite>
+						</li>
+					</ul>
+				</figcaption>
+			</figure>
+		{% endif %}
+
+	{% else %}
+
+		<h2 class="fr-mt-2w">
+			Gestion des candidats
+		</h2>
+
+		<p class="fr-text--sm fr-mb-1w">
+			Cette page vous permet, au choix:
+			<br>
+			- d'ajouter les candidats directement, si vous en avez déjà la liste,
+			<br>
+			- de consulter les utilisateurs qui se sont portés candidat à leur initiative.
+		</p>
+
+	{% endif %}
 
 	<main>
 
@@ -69,16 +104,6 @@
 
 								</p>
 
-								{# <div class="fr-tile__start">
-																																																																																																																																																																																																																																																																																																																																																																																																	{% set badge_class = election.isNotOpenYet()? 'fr-badge--purple-glycine' : election.isOpen() ? 'fr-badge--success': '' %}
-																																																																																																																																																																																																																																																																																																																																																																																																	{% set badge_title = election.isNotOpenYet()? 'Ouverture prochaine' : election.isOpen() ? 'L\'élection est ouverte': 'Élection fermée' %}
-																																																																																																																																																																																																																																																																																																																																																																																								
-																																																																																																																																																																																																																																																																																																																																																																																																	<p class="fr-badge {{ badge_class }}" title="{{ badge_title }}">Votes ouverts du
-																																																																																																																																																																																																																																																																																																																																																																																																		{{ election.startDate | date('d/m/Y') }}
-																																																																																																																																																																																																																																																																																																																																																																																																		au
-																																																																																																																																																																																																																																																																																																																																																																																																		{{ election.endDate | date('d/m/Y') }}
-																																																																																																																																																																																																																																																																																																																																																																																																	</p>
-																																																																																																																																																																																																																																																																																																																																																																																															</div> #}
 							</div>
 							<!-- fin .fr-tile__content -->
 						</div>
@@ -127,131 +152,163 @@
 
 					<div class="fr-grid-row">
 
-						<h3 class="fr-h4 center">Candidatures</h3>
+						<h3 class="fr-h4 center">{{ spontanee ? 'Candidats inscrits' : 'Candidatures' }}</h3>
 
-						<form method="GET" action="{{ path('search_users') }}">
+						{% if not spontanee  %}
+
+							<form method="GET" action="{{ path('search_users') }}">
+
+								<div class="fr-grid-row fr-grid-row--gutters">
+
+									<h4 class="fr-h6 fr-col-12 fr-mb-0">
+										Inscrire un candidat
+									</h4>
+
+									<div class="fr-col-md-10 fr-col-lg-8">
+										<div class="fr-checkbox-group">
+											<input name="checkbox" id="check-candidatures-libres" type="checkbox" {{ election.candidaturesLibres ? "checked" : "" }} aria-describedby="checkbox-messages">
+											<label class="fr-label" for="check-candidatures-libres">
+												Autoriser les candidatures spontanées
+												<span class="fr-hint-text">Sous réserve pour l'utilisateur de se trouver dans le&nbsp;
+													<abbr title="Corps d'appartenance et unité">périmètre de l'élection</abbr>
+												</span>
+											</label>
+											<div class="fr-messages-group" id="check-candidatures-libres-messages" aria-live="polite"></div>
+										</div>
+									</div>
+
+									<div class="fr-col-md-10 fr-col-lg-8 fr-mb-2w">
+										<div class="fr-input-group relative" id="input-group-suggest-candidat">
+											<label class="fr-label" for="suggest-candidat">
+												Recherche d'utilisateur
+												<span class="fr-hint-text">Recherche possible par nom ou par nigend.</span>
+											</label>
+											<input class="fr-input" id="suggest-candidat" type="search" placeholder="Nom ou nigend de l'utilisateur" data-list="suggest-candidat-list">
+											<ul
+												class="fr-messages-group suggest-candidat-list" id="suggest-candidat-list" aria-live="polite"><!-- Les suggestions sont insérées ici par JavaScript -->
+											</ul>
+										</div>
+									</div>
+									<div class="fr-col-md-2 fr-col-lg-4 fr-mb-2w">
+										<div class="fr-input-group">
+											<label class="fr-label" for="suggestion-submit">
+												&nbsp;
+												<span class="fr-hint-text">&nbsp;</span>
+											</label>
+											<button type="button" class="fr-btn fr-btn--primary fr-mt-1w fr-hidden" id="suggestion-submit">Ajouter</button>
+										</div>
+									</div>
+
+								</div>
+								{# </div> #}
+							</form>
+
+						{% endif %}
+
+						<div id="error-insertion-candidat" class="fr-alert fr-alert--error fr-hidden">
+							<h3 id="error-insertion-candidat__title" class="fr-alert__title"></h3>
+						</div>
+
+						<div class="fr-table fr-table--no-scroll fr-col-12" id="table-candidats-component">
+							<div class="fr-table__wrapper">
+								<div class="fr-table__container">
+									<div class="fr-table__content">
+										<table id="table-candidats">
+											<caption class="fr-hidden">Candidats inscrits</caption>
+											<thead>
+												<tr>
+													<th>
+														Nigend
+													</th>
+													<th>
+														Utilisateur
+													</th>
+													<th>
+														Action
+													</th>
+												</tr>
+											</thead>
+											<tbody id="candidats-tbody">
+												{% for candidat in election.candidats %}
+
+													<tr id="table-candidats-row-key-1" data-row-key="1">
+														<td>
+															{{ candidat.userId }}
+														</td>
+														<td>
+															{{ candidat.displayname }}
+														</td>
+														<td>
+															{% if candidat.displayname != 'VOTE BLANC' and not spontanee %}
+																<button type="button" data-nigend="{{ candidat.userId }}" title="Retirer de la liste" class="fr-btn fr-icon-delete-line fr-btn--tertiary-no-outline">
+																	Retirer de la liste
+																</button>
+															{% endif %}
+														</td>
+													</tr>
+
+												{% else %}
+
+													<tr id="table-zero-candidat" data-row-key="1">
+														<td colspan="4" class="center">
+															Il n'y a pas encore de candidat pour cette élection.
+														</td>
+													</tr>
+
+												{% endfor %}
+											</tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						{% if spontanee %}
 
 							<div class="fr-grid-row fr-grid-row--gutters">
 
-								<h4 class="fr-h6 fr-col-12 fr-mb-1w fr-mb-0">
-									Inscrire un candidat
+								<h4 class="fr-h6 fr-col-12 fr-mt-4w fr-mb-0">
+									Je soumets ma candidature
 								</h4>
 
-								<div class="fr-col-md-10 fr-col-lg-8">
+								<div class="fr-col-12">
 									<div class="fr-checkbox-group">
-										<input name="checkbox" id="check-candidatures-libres" type="checkbox" {{ election.candidaturesLibres ? "checked" : "" }} aria-describedby="checkbox-messages">
-										<label class="fr-label" for="check-candidatures-libres">
-											Autoriser les candidatures spontanées
-											<span class="fr-hint-text">Sous réserve pour l'utilisateur de se trouver dans le&nbsp;
-												<abbr title="Corps d'appartenance et unité">périmètre de l'élection</abbr>
+										<input data-nigend="{{ user.userId }}" data-displayname="{{user.title}}" data-mail="{{user.mail}}" name="checkbox" id="check-candidature-spontanee" type="checkbox" {{ user.userId in (election.candidats.map(c=>c.userId)) ? "checked" : "" }} aria-describedby="checkbox-spontanee-messages">
+										<label class="fr-label" for="check-candidature-spontanee">
+											En cochant le case ci-contre, je confirme ma volonté de me porter candidat à cette élection.
+											<span id="checkbox-spontanee-messages" class="fr-hint-text">
+												Vous avez la possibilité de retirer votre candidature tant que les votes ne sont pas ouverts, soit jusqu'au
+												{{ election.startDate | date('d/m/Y à H:i') }}.
 											</span>
 										</label>
-										<div class="fr-messages-group" id="check-candidatures-libres-messages" aria-live="polite"></div>
+										<div class="fr-messages-group" id="check-candidature-spontanee-messages" aria-live="polite"></div>
 									</div>
 								</div>
 
-								<div class="fr-col-md-10 fr-col-lg-8 fr-mb-2w">
-									<div class="fr-input-group relative" id="input-group-suggest-candidat">
-										<label class="fr-label" for="suggest-candidat">
-											Recherche d'utilisateur
-											<span class="fr-hint-text">Recherche possible par nom ou par nigend.</span>
-										</label>
-										<input class="fr-input" id="suggest-candidat" type="search" placeholder="Nom ou nigend de l'utilisateur" data-list="suggest-candidat-list">
-										<ul
-											class="fr-messages-group suggest-candidat-list" id="suggest-candidat-list" aria-live="polite"><!-- Les suggestions sont insérées ici par JavaScript -->
-										</ul>
-									</div>
-								</div>
-								<div class="fr-col-md-2 fr-col-lg-4 fr-mb-2w">
-									<div class="fr-input-group">
-										<label class="fr-label" for="suggestion-submit">
-											&nbsp;
-											<span class="fr-hint-text">&nbsp;</span>
-										</label>
-										<button type="button" class="fr-btn fr-btn--primary fr-mt-1w fr-hidden" id="suggestion-submit">Ajouter</button>
-									</div>
-								</div>
 							</div>
-						</div>
-					</form>
 
-					<div id="error-insertion-candidat" class="fr-alert fr-alert--error fr-hidden">
-						<h3 id="error-insertion-candidat__title" class="fr-alert__title"></h3>
+						{% endif %}
 					</div>
 
-					<div class="fr-table fr-table--no-scroll" id="table-candidats-component">
-						<div class="fr-table__wrapper">
-							<div class="fr-table__container">
-								<div class="fr-table__content">
-									<table id="table-candidats">
-										<caption class="fr-hidden">Candidats inscrits</caption>
-										<thead>
-											<tr>
-												<th>
-													Nigend
-												</th>
-												<th>
-													Utilisateur
-												</th>
-												<th>
-													Action
-												</th>
-											</tr>
-										</thead>
-										<tbody id="candidats-tbody">
-											{% for candidat in election.candidats %}
+				</div>
+				<!-- fin .fr-col -->
 
-												<tr id="table-candidats-row-key-1" data-row-key="1">
-													<td>
-														{{ candidat.userId }}
-													</td>
-													<td>
-														{{ candidat.displayname }}
-													</td>
-													<td>
-														{% if candidat.displayname != 'VOTE BLANC' %}
-															<button type="button" data-nigend="{{ candidat.userId }}" title="Retirer de la liste" class="fr-btn fr-icon-delete-line fr-btn--tertiary-no-outline">
-																Retirer de la liste
-															</button>
-														{% endif %}
-													</td>
-												</tr>
+			{% else %}
 
-											{% else %}
-
-												<tr id="table-zero-candidat" data-row-key="1">
-													<td colspan="4" class="center">
-														Il n'y a pas encore de candidat pour cette élection.
-													</td>
-												</tr>
-
-											{% endfor %}
-										</tbody>
-									</tbody>
-								</table>
-							</div>
+				<div class="fr-notice fr-notice--info">
+					<div class="fr-container">
+						<div class="fr-notice__body">
+							<p>
+								<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
+								<a href="{{ path('app_election_dashboard') }}" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
+							</p>
 						</div>
 					</div>
 				</div>
 
-			</div>
-			<!-- fin .fr-col -->
+			{% endif %}
 
-		{% else %}
+		</div>
 
-			<div class="fr-notice fr-notice--info">
-				<div class="fr-container">
-					<div class="fr-notice__body">
-						<p>
-							<span class="fr-notice__title">Aucune élection n'a été trouvée avec les caractéristiques demandées.</span>
-							<a href="{{ path('app_election_dashboard') }}" target="_self" class="fr-notice__link">Accédez à cette page depuis le tableau de bord!</a>
-						</p>
-					</div>
-				</div>
-			</div>
-
-		{% endif %}
-
-	</div>
-
-</main>{% endblock %}
+	</main>
+{% endblock %}

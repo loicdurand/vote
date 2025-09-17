@@ -107,7 +107,7 @@
 								<menu class="fr-btns-group">
 									<li><button type="button" class="custom-tile-menu--closer fr-btn fr-icon-close-line fr-btn--icon-right fr-btn--tertiary-no-outline">Fermer</button></li>
 									{% if election.isNotOpenYet() and election.candidaturesLibres %}
-										<li><a target="_self" href="{{ path('app_election_candidats', {election_id: election.id}) }}" class="fr-btn fr-btn--tertiary">Soumettre ma candidature</a></li>
+										<li><a target="_self" href="{{ path('app_candidature_submit', {election_id: election.id}) }}" class="fr-btn fr-btn--tertiary">Soumettre ma candidature</a></li>
 									{% elseif election.isOpen() %}
 										<li>
 										{% if election.a_deja_vote %}

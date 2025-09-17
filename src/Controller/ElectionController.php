@@ -96,7 +96,8 @@ final class ElectionController extends AbstractController
                         $copy = $this->copy_election($data, $user);
                         $candidats = $copy->getCandidats();
                         foreach ($candidats as $candidat)
-                            $election->removeCandidat($candidat);
+                            $copy->removeCandidat($candidat);
+                        $copy->addCandidat($this->createCandidatBlanc($election));
                         $prev_election->setIsCancelled(true);
                         $history = new ElectionHistory();
                         $history->setCurrent($copy);
@@ -110,7 +111,8 @@ final class ElectionController extends AbstractController
                         $copy = $this->copy_election($data, $user);
                         $candidats = $copy->getCandidats();
                         foreach ($candidats as $candidat)
-                            $election->removeCandidat($candidat);
+                            $copy->removeCandidat($candidat);
+                        $copy->addCandidat($this->createCandidatBlanc($election));
                         $entityManager->persist($copy);
                         // }
                     } else {
@@ -148,7 +150,23 @@ final class ElectionController extends AbstractController
 
         return $this->render('election/candidats.html.twig', [
             'user' => $user,
-            'election' => $election
+            'election' => $election,
+            'spontanee' => false
+        ]);
+    }
+
+    #[Route('/election/candidature/submit/{election_id}', name: 'app_candidature_submit')]
+    public function candidature_submit(#[CurrentUser] ?User $user, EntityManagerInterface $entityManager, string $election_id = '0'): Response
+    {
+        if (is_null($user))
+            return $this->redirectToRoute('app_login');
+
+        $election = $entityManager->getRepository(Election::class)->findOneBy(['id' => $election_id]);
+
+        return $this->render('election/candidats.html.twig', [
+            'user' => $user,
+            'election' => $election,
+            'spontanee' => true
         ]);
     }
 
