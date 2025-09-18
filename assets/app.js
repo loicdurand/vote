@@ -1,9 +1,9 @@
-import '@gouvfr/dsfr/dist/dsfr.css';
-import "@gouvfr/dsfr/dist/utility/icons/icons.main.min.css";
+import '/node_modules/@gouvfr/dsfr/dist/dsfr.css';
+import "/node_modules/@gouvfr/dsfr/dist/utility/icons/icons.main.min.css";
 import './styles/app.scss';
 
 // JAVASCRIPTS
-import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
+import "/node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module";
 import './bootstrap.ts';
 
 import * as utils from './javascripts/utils.ts';
@@ -12,7 +12,6 @@ import autcomplete_candidats_init from './javascripts/autocomplete-candidats.ts'
 import stats_init from './javascripts/stats.ts';
 
 document.addEventListener('click', async ({ target }) => {
-
     // Initialisation du menu dans les tuiles
     if (target.matches('.custom-tile-menu--opener')) {
         const tile = utils.getParent(target, '.custom-card-container');
@@ -77,6 +76,10 @@ document.addEventListener('click', async ({ target }) => {
             tables_ctnr.innerHTML = await response.text();
         }
 
+    } else if (target.matches('#copy-link-to-clipboard *')) {
+        const btn = utils.getParent(target, '#copy-link-to-clipboard');
+        const link = btn.dataset.link;
+        utils.copyTextToClipboard(link);
     }
 
 });

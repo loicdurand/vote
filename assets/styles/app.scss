@@ -166,3 +166,46 @@ ul.suggest-candidat-list {
         margin-bottom: 20px;
     }
 }
+
+/* QR-CODE */
+.qr-ctnr {
+    padding: 1rem;
+    border: 2px solid rgba(0, 0, 0, .25);
+    border-radius: 6px;
+
+    img {
+        margin: 0 auto 1rem auto;
+        display: block;
+        width: 100px;
+    }
+
+    figcaption {
+        text-align: center;
+        position: relative;
+
+
+        & button {
+            display: contents;
+            color: var(--text-action-high-blue-france);
+
+            &:before {
+                content: 'copié !';
+                position: absolute;
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+                font-size: 0.85rem;
+                top: -1.5rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            &:active:before {
+                opacity: 1;
+            }
+
+            & svg {
+                max-height: 1rem;
+            }
+        }
+    }
+}
