@@ -14,7 +14,7 @@ security:
             custom_authenticator: App\Security\SsoAuthenticator
             logout:
                 path: app_logout
-                target: app_index
+                target: /../
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

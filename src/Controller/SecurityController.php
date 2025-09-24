@@ -10,14 +10,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class SecurityController extends AbstractController
 {
-    private $requestStack;
     public $request;
 
     public function __construct(RequestStack $requestStack)
     {
         $this->request = Request::createFromGlobals();
         $this->requestStack = $requestStack;
-        $this->session = $this->requestStack->getSession();
     }
 
     #[Route(path: '/login', name: 'app_login')]

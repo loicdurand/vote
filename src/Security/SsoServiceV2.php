@@ -20,9 +20,9 @@ class SsoServiceV2
             session_start();
         }
 
-        if (!isset($_SESSION['user'])) {
-            SsoServiceV2::authenticate();
-        }
+        // if (!isset($_SESSION['user'])) {
+        //     SsoServiceV2::authenticate();
+        // }
     }
 
     /**
@@ -83,6 +83,16 @@ class SsoServiceV2
         exit;
     }
 
+    static function logout(): void
+    {
+        setcookie($_ENV['COOKIE_NAME'], "", time() - 3600, "/", $_ENV['COOKIE_DOMAIN']);
+        unset($_ENV['COOKIE_NAME']);
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+    }
+
     /**
      * Retourne les informations de l'utilisateur stockées en session
      *
@@ -90,7 +100,7 @@ class SsoServiceV2
      */
     static public function user()
     {
-        return $_SESSION['user'];
+        return array_key_exists('user', $_SESSION) ?  $_SESSION['user'] : null;
     }
 
     /**

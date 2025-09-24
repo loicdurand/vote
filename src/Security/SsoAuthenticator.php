@@ -37,21 +37,33 @@ class SsoAuthenticator extends AbstractAuthenticator
     public function supports(Request $request): ?bool
     {
         // Détermine si cet authenticator doit être utilisé (ex. : sur une route spécifique)
-        return $request->getPathInfo() === '/' && (isset($_COOKIE[$_ENV['COOKIE_NAME']]));
+        if ($request->getPathInfo() == '/logout')
+            return false;
+
+        if (is_null($this->sso::user()))
+            return true;
+
+        if (!isset($_COOKIE[$_ENV['COOKIE_NAME']]))
+            return true;
+
+        if ($request->getPathInfo() == '/login')
+            return true;
+
+        return false; //isset($_COOKIE[$_ENV['COOKIE_NAME']]) && $request->getPathInfo() == '/';
     }
 
     public function authenticate(Request $request): Passport
     {
 
-        if (!isset($_COOKIE[$_ENV['COOKIE_NAME']])) {
-            $this->sso::authenticate();
+        if ($request->getPathInfo() === '/logout') {
+            $this->sso::logout();
+            return new SelfValidatingPassport(new UserBadge('', fn() => null));
         }
 
-        // Récupère le token SSO
-        $ssoToken = $_COOKIE[$_ENV['COOKIE_NAME']];
+        $this->sso::authenticate();
 
         // Simule une requête au mock SSO pour récupérer les infos utilisateur
-        $ssoData = $this->fetchSsoUserData($ssoToken); // Implémente cette méthode selon ton SSO
+        $ssoData = $this->sso::user();
 
         if (!$ssoData) {
             throw new AuthenticationException('Invalid SSO token');
@@ -133,11 +145,5 @@ class SsoAuthenticator extends AbstractAuthenticator
     {
         // Redirige ou affiche une erreur en cas d'échec
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
-    }
-
-    private function fetchSsoUserData(?string $ssoToken): ?object
-    {
-        $usr = $this->sso::user();
-        return $usr;
     }
 }
