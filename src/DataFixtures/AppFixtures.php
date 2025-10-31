@@ -35,12 +35,17 @@ class AppFixtures extends Fixture
                 'Off.',
                 'Officier',
                 'OG'
-                
+
             ],
             [
-                'S-Off.',
-                'Sous-Officier',
+                'S-Off',
+                'Sous-Officier (cadre général)',
                 'SOG'
+            ],
+            [
+                'S-Off (CSTAGN)',
+                'CSTAGN',
+                'CSTAGN'
             ],
             [
                 'Volont.',
@@ -59,6 +64,7 @@ class AppFixtures extends Fixture
             $groupe->setName($grp[1]);
             $groupe->setNickname($grp[2]);
             $manager->persist($groupe);
+            $manager->flush();
         }
 
         $manager->flush();

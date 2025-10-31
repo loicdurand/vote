@@ -106,7 +106,11 @@ class SsoAuthenticator extends AbstractAuthenticator
                 ],
                 [
                     'cat' => 'SOG',
-                    'types' => ['SOG', ' CSTAGN', 'PERS EXT MILIT']
+                    'types' => ['SOG']
+                ],
+                [
+                    'cat' => 'CSTAGN',
+                    'types' => ['CSTAGN', 'PERS EXT MILIT']
                 ],
                 [
                     'cat' => 'OG',

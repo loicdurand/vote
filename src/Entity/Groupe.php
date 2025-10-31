@@ -15,7 +15,8 @@ class Groupe
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 25, nullable: true)]
+    // ALTER TABLE `groupe` CHANGE `name` `name` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $name = null;
 
     /**
