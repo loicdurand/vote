@@ -33,6 +33,9 @@ class Groupe
     #[ORM\Column(length: 10)]
     private ?string $shortName = null;
 
+    #[ORM\Column(length: 11, nullable: true)]
+    private ?string $nickname = null;
+
     public function __construct()
     {
         $this->candidats = new ArrayCollection();
@@ -121,6 +124,18 @@ class Groupe
     public function setShortName(string $shortName): static
     {
         $this->shortName = $shortName;
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(?string $nickname): static
+    {
+        $this->nickname = $nickname;
 
         return $this;
     }
