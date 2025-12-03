@@ -70,7 +70,7 @@ class SsoAuthenticator extends AbstractAuthenticator
         }
 
         // Cherche ou crée l'unité dans la base
-        $codeunite = $_ENV['APP_ENV'] === 'dev' ? $ssoData->codeunite : $ssoData->codeUnite;
+        $codeunite = $ssoData->codeunite;
         $unite = $this->entityManager->getRepository(Unite::class)->findOneBy(['codeunite' => $codeunite]);
         if (!$unite) {
             $unite = new Unite();

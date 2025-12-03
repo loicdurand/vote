@@ -31,7 +31,7 @@ class Groupe
     #[ORM\ManyToMany(targetEntity: Election::class, mappedBy: 'groupes_concernes')]
     private Collection $elections;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 25)]
     private ?string $shortName = null;
 
     #[ORM\Column(length: 11, nullable: true)]

@@ -69,6 +69,9 @@ class AppFixtures extends Fixture
 
         $manager->flush();
 
+        if ($_ENV['APP_ENV'] !== "prod")
+            return;
+
         $ldap_unites = $this->getAllGroups(); //dd($ldap_unites);
 
         foreach ($ldap_unites as $unite) {
